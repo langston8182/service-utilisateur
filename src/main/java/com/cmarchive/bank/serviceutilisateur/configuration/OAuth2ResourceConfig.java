@@ -15,6 +15,7 @@ public class OAuth2ResourceConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/login/**")
                 .permitAll()
+                .antMatchers("/utilisateurs/**").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated().and()
                 .csrf().disable();
