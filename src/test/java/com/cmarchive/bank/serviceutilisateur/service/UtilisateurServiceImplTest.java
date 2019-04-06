@@ -2,6 +2,7 @@ package com.cmarchive.bank.serviceutilisateur.service;
 
 import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
+import com.cmarchive.bank.serviceutilisateur.modele.Utilisateurs;
 import com.cmarchive.bank.serviceutilisateur.repository.UtilisateurRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,10 +37,10 @@ public class UtilisateurServiceImplTest {
         List<Utilisateur> utilisateurs = Stream.of(cyril, melanie).collect(Collectors.toList());
         given(utilisateurRepository.findAll()).willReturn(utilisateurs);
 
-        List<Utilisateur> resultat = utilisateurService.listerUtilisateurs();
+        Utilisateurs resultat = utilisateurService.listerUtilisateurs();
 
         then(utilisateurRepository).should().findAll();
-        assertThat(resultat).isNotEmpty()
+        assertThat(resultat.getUtilisateurs()).isNotEmpty()
                 .containsExactly(cyril, melanie);
     }
 
