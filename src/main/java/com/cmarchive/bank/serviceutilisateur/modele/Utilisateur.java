@@ -17,8 +17,9 @@ public class Utilisateur {
     private String nom;
     private String prenom;
     private String email;
+    private String motDePasse;
 
-    public Utilisateur(String id) {
+    public Utilisateur() {
         this.id = id;
     }
 
@@ -56,5 +57,14 @@ public class Utilisateur {
 
     public String getEmail() {
         return email;
+    }
+
+    public Utilisateur setMotDePasse(String motDePasse) {
+        this.motDePasse = motDePasse;
+        return this;
+    }
+
+    public String getMotDePasse() {
+        return motDePasse;
     }
 }
