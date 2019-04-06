@@ -3,9 +3,11 @@ package com.cmarchive.bank.serviceutilisateur.service;
 import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import com.cmarchive.bank.serviceutilisateur.repository.UtilisateurRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class UtilisateurServiceImpl implements  UtilisateurService {
 
     private UtilisateurRepository utilisateurRepository;
