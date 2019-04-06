@@ -1,6 +1,7 @@
 package com.cmarchive.bank.serviceutilisateur.controleur;
 
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
+import com.cmarchive.bank.serviceutilisateur.modele.Utilisateurs;
 import com.cmarchive.bank.serviceutilisateur.service.UtilisateurService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -62,14 +63,15 @@ public class UtilisateurControleurTest {
                 .setEmail("melanie.boussat@gmail.com")
                 .setNom("Boussat")
                 .setPrenom("Melanie");
-        List<Utilisateur> utilisateurs = Stream.of(cyril, melanie).collect(Collectors.toList());
+        Utilisateurs utilisateurs = new Utilisateurs()
+                .setUtilisateurs(Stream.of(cyril, melanie).collect(Collectors.toList()));
         given(utilisateurService.listerUtilisateurs()).willReturn(utilisateurs);
 
         mockMvc.perform(get("/utilisateurs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)));
+                .andExpect(jsonPath("$.utilisateurs", hasSize(2)));
     }
 
     @Test
