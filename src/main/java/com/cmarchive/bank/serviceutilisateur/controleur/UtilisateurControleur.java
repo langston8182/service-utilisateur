@@ -2,6 +2,8 @@ package com.cmarchive.bank.serviceutilisateur.controleur;
 
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateurs;
+import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
+import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateursDto;
 import com.cmarchive.bank.serviceutilisateur.service.UtilisateurService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,29 +21,29 @@ public class UtilisateurControleur {
 
     @GetMapping("/utilisateurs")
     @PreAuthorize("#oauth2.hasScope('ADMIN')")
-    public Utilisateurs listerUtilisateur() {
+    public UtilisateursDto listerUtilisateur() {
         return utilisateurService.listerUtilisateurs();
     }
 
     @GetMapping("/utilisateurs/{id}")
-    public Utilisateur recupererUtilisateur(@PathVariable String id) {
+    public UtilisateurDto recupererUtilisateur(@PathVariable String id) {
         return utilisateurService.recupererUtilisateur(id);
     }
 
     @PostMapping("/utilisateurs")
     @ResponseStatus(HttpStatus.CREATED)
-    public Utilisateur sauvegarderUtilisateur(@RequestBody Utilisateur utilisateur) {
-        return utilisateurService.sauvegarderUtilisateur(utilisateur);
+    public UtilisateurDto sauvegarderUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
+        return utilisateurService.sauvegarderUtilisateur(utilisateurDto);
     }
 
     @PutMapping("/utilisateurs")
-    public Utilisateur modifierUtilisateur(@RequestBody Utilisateur utilisateur) {
-        return utilisateurService.sauvegarderUtilisateur(utilisateur);
+    public UtilisateurDto modifierUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
+        return utilisateurService.sauvegarderUtilisateur(utilisateurDto);
     }
 
     @DeleteMapping("/utilisateurs")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void supprimerUtilisateur(@RequestBody Utilisateur utilisateur) {
-        utilisateurService.supprimerUtilisateur(utilisateur);
+    public void supprimerUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
+        utilisateurService.supprimerUtilisateur(utilisateurDto);
     }
 }

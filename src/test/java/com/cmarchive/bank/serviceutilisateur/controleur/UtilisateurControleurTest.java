@@ -1,7 +1,7 @@
 package com.cmarchive.bank.serviceutilisateur.controleur;
 
-import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
-import com.cmarchive.bank.serviceutilisateur.modele.Utilisateurs;
+import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
+import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateursDto;
 import com.cmarchive.bank.serviceutilisateur.service.UtilisateurService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -17,7 +17,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,28 +54,28 @@ public class UtilisateurControleurTest {
 
     @Test
     public void listerUtilisateurs() throws Exception {
-        Utilisateur cyril = new Utilisateur()
+        UtilisateurDto cyril = new UtilisateurDto()
                 .setEmail("cyril.marchive@gmail.com")
                 .setNom("Marchive")
                 .setPrenom("Cyril");
-        Utilisateur melanie = new Utilisateur()
+        UtilisateurDto melanie = new UtilisateurDto()
                 .setEmail("melanie.boussat@gmail.com")
                 .setNom("Boussat")
                 .setPrenom("Melanie");
-        Utilisateurs utilisateurs = new Utilisateurs()
-                .setUtilisateurs(Stream.of(cyril, melanie).collect(Collectors.toList()));
-        given(utilisateurService.listerUtilisateurs()).willReturn(utilisateurs);
+        UtilisateursDto utilisateursDto = new UtilisateursDto()
+                .setUtilisateursDtos(Stream.of(cyril, melanie).collect(Collectors.toList()));
+        given(utilisateurService.listerUtilisateurs()).willReturn(utilisateursDto);
 
         mockMvc.perform(get("/utilisateurs")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.utilisateurs", hasSize(2)));
+                .andExpect(jsonPath("$.utilisateursDtos", hasSize(2)));
     }
 
     @Test
     public void recupererUtilisateur() throws Exception {
-        Utilisateur utilisateur = creerUtilisateur();
+        UtilisateurDto utilisateur = creerUtilisateurDto();
         given(utilisateurService.recupererUtilisateur("1")).willReturn(utilisateur);
 
         mockMvc.perform(get("/utilisateurs/1")
@@ -90,7 +89,7 @@ public class UtilisateurControleurTest {
 
     @Test
     public void supprimerUtilisateur() throws Exception {
-        Utilisateur cyril = creerUtilisateur();
+        UtilisateurDto cyril = creerUtilisateurDto();
         willDoNothing().given(utilisateurService).supprimerUtilisateur(cyril);
 
         mockMvc.perform(delete("/utilisateurs")
@@ -103,10 +102,10 @@ public class UtilisateurControleurTest {
 
     @Test
     public void sauvegarderUtilisateur() throws Exception {
-        Utilisateur cyril = creerUtilisateur();
-        Utilisateur reponse = new Utilisateur()
+        UtilisateurDto cyril = creerUtilisateurDto();
+        UtilisateurDto reponse = new UtilisateurDto()
                 .setId("1");
-        given(utilisateurService.sauvegarderUtilisateur(any(Utilisateur.class))).willReturn(reponse);
+        given(utilisateurService.sauvegarderUtilisateur(any(UtilisateurDto.class))).willReturn(reponse);
 
         mockMvc.perform(post("/utilisateurs")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -118,10 +117,10 @@ public class UtilisateurControleurTest {
 
     @Test
     public void modifierUtilisateur() throws Exception {
-        Utilisateur cyril = creerUtilisateur();
-        Utilisateur reponse = creerUtilisateur()
+        UtilisateurDto cyril = creerUtilisateurDto();
+        UtilisateurDto reponse = creerUtilisateurDto()
                 .setNom("Boussat");
-        given(utilisateurService.sauvegarderUtilisateur(any(Utilisateur.class))).willReturn(reponse);
+        given(utilisateurService.sauvegarderUtilisateur(any(UtilisateurDto.class))).willReturn(reponse);
 
         mockMvc.perform(put("/utilisateurs")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -131,8 +130,8 @@ public class UtilisateurControleurTest {
                 .andExpect(jsonPath("$.nom", equalTo("Boussat")));
     }
 
-    private Utilisateur creerUtilisateur() {
-        return new Utilisateur()
+    private UtilisateurDto creerUtilisateurDto() {
+        return new UtilisateurDto()
                 .setEmail("cyril.marchive@gmail.com")
                 .setNom("Marchive")
                 .setPrenom("Cyril");
