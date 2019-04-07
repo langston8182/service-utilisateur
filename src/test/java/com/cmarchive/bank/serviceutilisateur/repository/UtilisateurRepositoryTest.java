@@ -3,9 +3,12 @@ package com.cmarchive.bank.serviceutilisateur.repository;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -23,6 +26,9 @@ public class UtilisateurRepositoryTest {
 
     @Autowired
     private UtilisateurRepository utilisateurRepository;
+
+    @MockBean
+    private ResourceServerConfiguration resourceServerConfiguration;
 
     @Test
     public void listerUtilisateur() {

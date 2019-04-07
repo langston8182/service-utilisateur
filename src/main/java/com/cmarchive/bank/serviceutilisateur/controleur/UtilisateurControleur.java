@@ -4,12 +4,11 @@ import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateurs;
 import com.cmarchive.bank.serviceutilisateur.service.UtilisateurService;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/")
-@Secured({"ROLE_ADMIN"})
 public class UtilisateurControleur {
 
     private UtilisateurService utilisateurService;
@@ -19,6 +18,7 @@ public class UtilisateurControleur {
     }
 
     @GetMapping("/utilisateurs")
+    @PreAuthorize("#oauth2.hasScope('ADMIN')")
     public Utilisateurs listerUtilisateur() {
         return utilisateurService.listerUtilisateurs();
     }
