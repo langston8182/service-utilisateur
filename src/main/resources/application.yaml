@@ -5,10 +5,7 @@ security:
     enabled: false
   oauth2:
     client:
-      grantType: authorization_code
       clientId: client
       clientSecret: password
-      accessTokenUri: http://localhost:8090/auth/oauth/token
-      userAuthorizationUri: http://localhost:8090/auth/oauth/authorize
     resource:
       userInfoUri: http://localhost:8090/auth/user/me
