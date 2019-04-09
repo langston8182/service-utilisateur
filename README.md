@@ -32,9 +32,15 @@ Pour compiler le projet et créer l'image docker exécuter :
 \
 `mvn package`
 
-Pour push l'image sur dockerHug, exécuter:
+Pour push l'image sur dockerHub, exécuter:
 \
 `mvn dockerfile:push`
+
+# Configuration
+
+Dans le fichier application.yml modifier les adresses Ip suivant si le serveur tourne en local ou dans un container.
+
+Ip serveur autorisation dans un container : 172.21.0.1
 
 # Contributeur
 

@@ -8,4 +8,5 @@ security:
       clientId: client
       clientSecret: password
     resource:
-      userInfoUri: http://localhost:8090/auth/user/me
+      # 172.21.0.1 si le service tourne dans un container localhost sinon
+      userInfoUri: http://172.21.0.1:8090/auth/user/me
