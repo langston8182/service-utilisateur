@@ -26,6 +26,16 @@ Se loguer pour récupérer le token JWT
 Utiliser docker-compose pour lancer le serveur.
 `docker-compose up`
 
+# Kubernetes
+L'ensemble des configurations k8s se trouvent dans le projet Gihub\
+https://github.com/langston8182/kubernetes-bank
+
+Pour lancer le service
+`kubectl create -f utilisateur-service.yaml`
+
+Pour lancer le deploiement
+`kubectl create -f utilisateur-deployment.yaml`
+
 # Maven
 
 Pour compiler le projet et créer l'image docker exécuter :
@@ -40,7 +50,9 @@ Pour push l'image sur dockerHub, exécuter:
 
 Dans le fichier application.yml modifier les adresses Ip suivant si le serveur tourne en local ou dans un container.
 
-Ip serveur autorisation dans un container : 172.21.0.1
+Ip du serveur autorisation dans un container : 172.21.0.1
+
+Ip du servuer autorisation dans k8s : authorization-service
 
 # Contributeur
 
