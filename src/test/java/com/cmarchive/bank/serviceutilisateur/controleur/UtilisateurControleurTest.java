@@ -105,7 +105,7 @@ public class UtilisateurControleurTest {
         UtilisateurDto cyril = creerUtilisateurDto();
         UtilisateurDto reponse = new UtilisateurDto()
                 .setId("1");
-        given(utilisateurService.sauvegarderUtilisateur(any(UtilisateurDto.class))).willReturn(reponse);
+        given(utilisateurService.creerUtilisateur(any(UtilisateurDto.class))).willReturn(reponse);
 
         mockMvc.perform(post("/utilisateurs")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -120,7 +120,7 @@ public class UtilisateurControleurTest {
         UtilisateurDto cyril = creerUtilisateurDto();
         UtilisateurDto reponse = creerUtilisateurDto()
                 .setNom("Boussat");
-        given(utilisateurService.sauvegarderUtilisateur(any(UtilisateurDto.class))).willReturn(reponse);
+        given(utilisateurService.modifierUtilisateur(any(UtilisateurDto.class))).willReturn(reponse);
 
         mockMvc.perform(put("/utilisateurs")
                 .contentType(MediaType.APPLICATION_JSON)

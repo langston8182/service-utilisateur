@@ -1,9 +1,6 @@
 package com.cmarchive.bank.serviceutilisateur.modele;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Utilisateur de l'application bank;
@@ -16,6 +13,8 @@ public class Utilisateur {
     private String id;
     private String nom;
     private String prenom;
+
+    @Column(unique = true)
     private String email;
     private String motDePasse;
 

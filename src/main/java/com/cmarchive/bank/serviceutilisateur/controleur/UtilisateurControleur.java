@@ -31,12 +31,12 @@ public class UtilisateurControleur {
     @PostMapping("/utilisateurs")
     @ResponseStatus(HttpStatus.CREATED)
     public UtilisateurDto sauvegarderUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
-        return utilisateurService.sauvegarderUtilisateur(utilisateurDto);
+        return utilisateurService.creerUtilisateur(utilisateurDto);
     }
 
     @PutMapping("/utilisateurs")
     public UtilisateurDto modifierUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
-        return utilisateurService.sauvegarderUtilisateur(utilisateurDto);
+        return utilisateurService.modifierUtilisateur(utilisateurDto);
     }
 
     @DeleteMapping("/utilisateurs")
