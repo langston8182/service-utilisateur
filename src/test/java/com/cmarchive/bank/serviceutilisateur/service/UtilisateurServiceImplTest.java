@@ -1,5 +1,6 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurDejaPresentException;
 import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateursMapper;
@@ -18,12 +19,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UtilisateurServiceImplTest {
@@ -92,9 +93,38 @@ public class UtilisateurServiceImplTest {
         given(utilisateurMapper.mapVersUtilisateurDto(reponse)).willReturn(cyrilDto);
         given(utilisateurMapper.mapVersUtilisateur(cyrilDto)).willReturn(cyril);
 
-        UtilisateurDto resultat = utilisateurService.sauvegarderUtilisateur(cyrilDto);
+        UtilisateurDto resultat = utilisateurService.creerUtilisateur(cyrilDto);
 
         then(utilisateurRepository).should().save(cyril);
+        assertThat(resultat).isNotNull()
+                .isEqualTo(cyrilDto);
+    }
+
+    @Test
+    public void modifierUtilisateur() {
+        String id = "1";
+        Utilisateur cyrilRecuperedeBdd = new Utilisateur()
+                .setId(id)
+                .setMotDePasse("motDePasse");
+        UtilisateurDto cyrilDtoRecupereDeBdd = new UtilisateurDto()
+                .setId(id)
+                .setMotDePasse("motDePasse");
+        Utilisateur cyril = spy(Utilisateur.class);
+        cyril.setId(id);
+        UtilisateurDto cyrilDto = new UtilisateurDto()
+                .setId(id)
+                .setMotDePasse("motDePasseModifie");
+        given(utilisateurRepository.findById(id)).willReturn(Optional.of(cyrilRecuperedeBdd));
+        given(utilisateurMapper.mapVersUtilisateurDto(cyrilRecuperedeBdd)).willReturn(cyrilDtoRecupereDeBdd);
+        given(utilisateurMapper.mapVersUtilisateur(cyrilDto)).willReturn(cyril);
+        given(utilisateurRepository.save(cyril)).willReturn(cyril);
+        given(utilisateurMapper.mapVersUtilisateurDto(cyril)).willReturn(cyrilDto);
+
+        UtilisateurDto resultat = utilisateurService.modifierUtilisateur(cyrilDto);
+
+        then(utilisateurRepository).should().save(cyril);
+        then(utilisateurRepository).should().findById(id);
+        then(cyril).should().setMotDePasse("motDePasse");
         assertThat(resultat).isNotNull()
                 .isEqualTo(cyrilDto);
     }

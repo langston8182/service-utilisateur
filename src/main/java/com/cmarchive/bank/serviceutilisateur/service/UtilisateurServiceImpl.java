@@ -1,5 +1,6 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurDejaPresentException;
 import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateursMapper;
@@ -11,7 +12,7 @@ import com.cmarchive.bank.serviceutilisateur.repository.UtilisateurRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UtilisateurServiceImpl implements  UtilisateurService {
+public class UtilisateurServiceImpl implements UtilisateurService {
 
     private UtilisateurRepository utilisateurRepository;
     private UtilisateursMapper utilisateursMapper;
@@ -41,9 +42,22 @@ public class UtilisateurServiceImpl implements  UtilisateurService {
     }
 
     @Override
-    public UtilisateurDto sauvegarderUtilisateur(UtilisateurDto utilisateurDto) {
+    public UtilisateurDto creerUtilisateur(UtilisateurDto utilisateurDto) {
         Utilisateur utilisateur = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
+
         Utilisateur reponse = utilisateurRepository.save(utilisateur);
+        return utilisateurMapper.mapVersUtilisateurDto(reponse);
+    }
+
+    @Override
+    public UtilisateurDto modifierUtilisateur(UtilisateurDto utilisateurDto) {
+        UtilisateurDto utilisateurDeBdd = recupererUtilisateur(utilisateurDto.getId());
+
+        Utilisateur utilisateur = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
+        utilisateur.setMotDePasse(utilisateurDeBdd.getMotDePasse());
+
+        Utilisateur reponse = utilisateurRepository.save(utilisateur);
+
         return utilisateurMapper.mapVersUtilisateurDto(reponse);
     }
 

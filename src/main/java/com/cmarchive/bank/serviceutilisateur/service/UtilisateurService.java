@@ -10,6 +10,7 @@ public interface UtilisateurService {
 
     UtilisateursDto listerUtilisateurs();
     UtilisateurDto recupererUtilisateur(String id);
-    UtilisateurDto sauvegarderUtilisateur(UtilisateurDto utilisateur);
+    UtilisateurDto creerUtilisateur(UtilisateurDto utilisateurDto);
+    UtilisateurDto modifierUtilisateur(UtilisateurDto utilisateurDto);
     void supprimerUtilisateur(UtilisateurDto utilisateur);
 }
