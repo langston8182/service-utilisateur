@@ -31,6 +31,12 @@ public class OperationControleur {
         return operationService.ajouterOperationAUtilisateur(utilisateurId, operationDto);
     }
 
+    @PutMapping("/operations")
+    @PreAuthorize("#oauth2.hasScope('USER')")
+    public OperationDto modifierOperationUtilisateur(@RequestBody OperationDto operationDto) {
+        return operationService.modifierOperationUtilisateur(operationDto);
+    }
+
     @DeleteMapping("/operations")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void supprimerOperationUtilisateur(@RequestBody OperationDto operationDto) {

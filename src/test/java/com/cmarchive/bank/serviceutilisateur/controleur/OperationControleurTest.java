@@ -91,6 +91,25 @@ public class OperationControleurTest {
     }
 
     @Test
+    public void modifierOperationUtilisateur() throws Exception {
+        UtilisateurDto utilisateurDto = creerUtilisateurDto();
+        OperationDto operationDto = creerOperationDto(utilisateurDto);
+        OperationDto reponse = new OperationDto()
+                .setIntitule("test")
+                .setUtilisateurDto(utilisateurDto);
+        given(operationService.modifierOperationUtilisateur(any(OperationDto.class)))
+                .willReturn(reponse);
+
+        mockMvc.perform(put("/operations")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(operationDto)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.intitule", equalTo("test")))
+                .andExpect(jsonPath("$.utilisateurDto.prenom", equalTo("Cyril")));
+    }
+
+    @Test
     public void supprimerOperationUtilisateur() throws Exception {
         UtilisateurDto utilisateurDto = creerUtilisateurDto();
         OperationDto operationDto = creerOperationDto(utilisateurDto);
