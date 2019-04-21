@@ -1,5 +1,6 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.serviceutilisateur.exception.OperationNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationsMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
@@ -50,6 +51,23 @@ public class OperationServiceImpl implements OperationService {
 
         Operation reponse = operationRepository.save(operation);
         return operationMapper.mapVersOperationDto(reponse);
+    }
+
+    @Override
+    public OperationDto modifierOperationUtilisateur(OperationDto operationDto) {
+        Operation operationBdd = recupererOperationDansBdd(operationDto);
+
+        Operation operation = operationMapper.mapVersOperation(operationDto);
+        operation.setUtilisateur(operationBdd.getUtilisateur());
+
+        Operation reponse = operationRepository.save(operation);
+
+        return operationMapper.mapVersOperationDto(reponse);
+    }
+
+    private Operation recupererOperationDansBdd(OperationDto operationDto) {
+        return operationRepository.findById(operationDto.getId())
+                    .orElseThrow(() -> new OperationNonTrouveException("Operation non trouvee"));
     }
 
     @Override

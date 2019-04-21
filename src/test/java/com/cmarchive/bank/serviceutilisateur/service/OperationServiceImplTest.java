@@ -1,5 +1,6 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.serviceutilisateur.exception.OperationNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationsMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
@@ -17,14 +18,17 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OperationServiceImplTest {
@@ -87,6 +91,46 @@ public class OperationServiceImplTest {
         then(operationRepository).should().save(operation);
         assertThat(resultat).isNotNull()
                 .isEqualTo(operationDto);
+    }
+
+    @Test
+    public void modifierOperationUtilisateur() {
+        String id = "1";
+        OperationDto operationDto = new OperationDto().setId(id);
+        String email = "email";
+        Operation operationBdd = new Operation()
+                .setUtilisateur(new Utilisateur().setEmail(email));
+        Operation operation = new Operation();
+        Operation operationReponse = new Operation()
+                .setUtilisateur(new Utilisateur().setEmail(email));
+        OperationDto operationDtoReponse = new OperationDto()
+                .setUtilisateurDto(new UtilisateurDto().setEmail(email));
+        given(operationRepository.findById(id)).willReturn(Optional.of(operationBdd));
+        given(operationMapper.mapVersOperation(operationDto)).willReturn(operation);
+        given(operationRepository.save(operation)).willReturn(operationReponse);
+        given(operationMapper.mapVersOperationDto(operationReponse)).willReturn(operationDtoReponse);
+
+        OperationDto resultat = operationService.modifierOperationUtilisateur(operationDto);
+
+        then(operationRepository).should().findById(id);
+        then(operationRepository).should().save(operation);
+        assertThat(resultat).isNotNull();
+        assertThat(resultat.getUtilisateurDto().getEmail()).isEqualTo(email);
+    }
+
+    @Test
+    public void modifierOperationUtilisateur_OperationNonTrouvee() {
+        String id = "1";
+        OperationDto operationDto = new OperationDto().setId(id);
+        given(operationRepository.findById(id)).willThrow(OperationNonTrouveException.class);
+
+        Throwable thrown = catchThrowable(() -> operationService.modifierOperationUtilisateur(operationDto));
+
+        assertThat(thrown).isNotNull();
+        assertThat(thrown).isExactlyInstanceOf(OperationNonTrouveException.class);
+        verifyZeroInteractions(operationMapper);
+        then(operationRepository).should().findById(id);
+        verifyNoMoreInteractions(operationRepository);
     }
 
     @Test

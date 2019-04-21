@@ -10,6 +10,7 @@ public interface OperationService {
 
     OperationsDto listerOperationsParUtilisateur(String utilisateurId);
     OperationDto ajouterOperationAUtilisateur(String utilisateurId, OperationDto operationDto);
+    OperationDto modifierOperationUtilisateur(OperationDto operationDto);
     void supprimerOperation(OperationDto operationDto);
 
 }
