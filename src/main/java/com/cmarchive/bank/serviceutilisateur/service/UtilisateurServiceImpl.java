@@ -48,7 +48,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     public UtilisateurDto creerUtilisateur(UtilisateurDto utilisateurDto) {
         Utilisateur utilisateur = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
 
-        Utilisateur reponse = null;
+        Utilisateur reponse;
         try {
             reponse = utilisateurRepository.save(utilisateur);
         } catch (DataIntegrityViolationException dive) {
