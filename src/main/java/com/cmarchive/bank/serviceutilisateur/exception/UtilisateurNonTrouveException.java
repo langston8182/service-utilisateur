@@ -7,4 +7,9 @@ public class UtilisateurNonTrouveException extends RuntimeException {
     public UtilisateurNonTrouveException(String message) {
         this.message = message;
     }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
 }

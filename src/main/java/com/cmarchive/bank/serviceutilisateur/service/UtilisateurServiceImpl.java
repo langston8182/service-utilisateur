@@ -9,7 +9,10 @@ import com.cmarchive.bank.serviceutilisateur.modele.Utilisateurs;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateursDto;
 import com.cmarchive.bank.serviceutilisateur.repository.UtilisateurRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import javax.validation.ConstraintViolationException;
 
 @Service
 public class UtilisateurServiceImpl implements UtilisateurService {
@@ -45,7 +48,12 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     public UtilisateurDto creerUtilisateur(UtilisateurDto utilisateurDto) {
         Utilisateur utilisateur = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
 
-        Utilisateur reponse = utilisateurRepository.save(utilisateur);
+        Utilisateur reponse = null;
+        try {
+            reponse = utilisateurRepository.save(utilisateur);
+        } catch (DataIntegrityViolationException dive) {
+            throw new UtilisateurDejaPresentException("L'utilisateur est deja présent");
+        }
         return utilisateurMapper.mapVersUtilisateurDto(reponse);
     }
 
