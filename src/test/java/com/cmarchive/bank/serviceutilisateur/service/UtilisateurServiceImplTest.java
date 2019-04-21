@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -98,6 +99,20 @@ public class UtilisateurServiceImplTest {
         then(utilisateurRepository).should().save(cyril);
         assertThat(resultat).isNotNull()
                 .isEqualTo(cyrilDto);
+    }
+
+    @Test
+    public void sauvegarderUtilisateur_DejaExistant() {
+        Utilisateur cyril = new Utilisateur();
+        UtilisateurDto cyrilDto = new UtilisateurDto();
+        given(utilisateurRepository.save(cyril)).willThrow(DataIntegrityViolationException.class);
+        given(utilisateurMapper.mapVersUtilisateur(cyrilDto)).willReturn(cyril);
+
+        Throwable thrown = catchThrowable(() -> utilisateurService.creerUtilisateur(cyrilDto));
+
+        then(utilisateurMapper).should(never()).mapVersUtilisateurDto(any(Utilisateur.class));
+        assertThat(thrown).isNotNull();
+        assertThat(thrown).isExactlyInstanceOf(UtilisateurDejaPresentException.class);
     }
 
     @Test

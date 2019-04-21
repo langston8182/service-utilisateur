@@ -1,5 +1,6 @@
 package com.cmarchive.bank.serviceutilisateur.controleur;
 
+import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurDejaPresentException;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateursDto;
 import com.cmarchive.bank.serviceutilisateur.service.UtilisateurService;
@@ -113,6 +114,19 @@ public class UtilisateurControleurTest {
                 .content(objectMapper.writeValueAsString(cyril)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", equalTo("1")));
+    }
+
+    @Test
+    public void sauvegarderUtilisateur_UtilisateurDejaExistant() throws Exception {
+        UtilisateurDto cyril = creerUtilisateurDto();
+        given(utilisateurService.creerUtilisateur(any(UtilisateurDto.class)))
+                .willThrow(UtilisateurDejaPresentException.class);
+
+        mockMvc.perform(post("/utilisateurs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(cyril)))
+                .andExpect(status().isConflict());
     }
 
     @Test
