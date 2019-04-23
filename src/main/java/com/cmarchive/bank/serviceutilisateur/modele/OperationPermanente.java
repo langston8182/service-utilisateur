@@ -12,10 +12,10 @@ public class OperationPermanente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    String id;
-    String intitule;
-    Integer jour;
-    BigDecimal prix;
+    private String id;
+    private String intitule;
+    private Integer jour;
+    private BigDecimal prix;
 
     @ManyToOne
     private Utilisateur utilisateur;
