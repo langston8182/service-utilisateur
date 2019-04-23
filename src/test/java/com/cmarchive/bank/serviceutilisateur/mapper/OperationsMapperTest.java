@@ -43,11 +43,11 @@ public class OperationsMapperTest {
         OperationsDto operationsDto = new OperationsDto()
                 .setOperationDtos(singletonList(operationDto));
 
-        Operations operations = operationsMapper.mapVersOperations(operationsDto);
+        Operations resultat = operationsMapper.mapVersOperations(operationsDto);
 
-        assertThat(operations.getOperations()).hasSize(1);
-        assertThat(operations.getOperations().get(0).getUtilisateur()).isEqualToComparingFieldByField(utilisateurDto);
-        assertThat(operations.getOperations().get(0))
+        assertThat(resultat.getOperations()).hasSize(1);
+        assertThat(resultat.getOperations().get(0).getUtilisateur()).isEqualToComparingFieldByField(utilisateurDto);
+        assertThat(resultat.getOperations().get(0))
                 .isEqualToIgnoringGivenFields(operationDto, "utilisateur");
     }
 
@@ -58,11 +58,11 @@ public class OperationsMapperTest {
         Operations operations = new Operations()
                 .setOperations(singletonList(operation));
 
-        OperationsDto operationsDto = operationsMapper.mapVersOperationsDto(operations);
+        OperationsDto resultat = operationsMapper.mapVersOperationsDto(operations);
 
-        assertThat(operationsDto.getOperationDtos()).hasSize(1);
-        assertThat(operationsDto.getOperationDtos().get(0).getUtilisateurDto()).isEqualToComparingFieldByField(utilisateur);
-        assertThat(operationsDto.getOperationDtos().get(0))
+        assertThat(resultat.getOperationDtos()).hasSize(1);
+        assertThat(resultat.getOperationDtos().get(0).getUtilisateurDto()).isEqualToComparingFieldByField(utilisateur);
+        assertThat(resultat.getOperationDtos().get(0))
                 .isEqualToIgnoringGivenFields(operation, "utilisateurDto");
     }
 
