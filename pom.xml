@@ -100,9 +100,9 @@
 				<version>1.4.3</version>
 				<executions>
 					<execution>
-						<id>default</id>
+						<id>deploy-image</id>
 						<goals>
-							<goal>build</goal>
+							<!--<goal>build</goal>-->
                             <goal>push</goal>
 						</goals>
 					</execution>
