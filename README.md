@@ -40,7 +40,7 @@ Pour lancer le deploiement
 
 Pour compiler le projet :
 \
-`mvn package`
+`mvn clean install`
 
 Pour construire l'image Docker :
 \
@@ -50,7 +50,7 @@ Pour push l'image sur dockerHub, exécuter:
 \
 `mvn dockerfile:push`
 
-#Concourse
+# Concourse
 Concourse est un outil pour faire du développement continue. A l'instar de Jenkins, 
 il s'agit d'un pipeline as code. Fly est un interpreteur de commandes pour manipuler les pipelines concourse.
 
