@@ -8,9 +8,9 @@ security:
     enabled: false
   oauth2:
     resource:
-      # 172.21.0.1 ou authorization-service si le service tourne dans un container ou k8s,  localhost sinon
-      userInfoUri: http://localhost:8090/auth/user/me
+      # authorization-service si le service tourne dans un container ou k8s,  localhost sinon
+      userInfoUri: http://authorization-service:8090/auth/user/me
 configuration:
-  checkTokenEndpointUrl: http://localhost:8090/auth/oauth/check_token
+  checkTokenEndpointUrl: http://authorization-service:8090/auth/oauth/check_token
   client-id: client
   client-secret: password
