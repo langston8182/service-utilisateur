@@ -29,9 +29,6 @@ public class UtilisateurRepositoryTest {
     @Autowired
     private UtilisateurRepository utilisateurRepository;
 
-    @MockBean
-    private ResourceServerConfiguration resourceServerConfiguration;
-
     @Test
     public void listerUtilisateur() {
         Utilisateur cyril = new Utilisateur()
