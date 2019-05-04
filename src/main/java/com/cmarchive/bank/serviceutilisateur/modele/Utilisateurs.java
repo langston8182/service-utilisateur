@@ -1,17 +1,17 @@
 package com.cmarchive.bank.serviceutilisateur.modele;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
 import java.util.List;
 
+@Data
+@Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class Utilisateurs {
 
     private List<Utilisateur> utilisateurs;
-
-    public Utilisateurs setUtilisateurs(List<Utilisateur> utilisateurs) {
-        this.utilisateurs = utilisateurs;
-        return this;
-    }
-
-    public List<Utilisateur> getUtilisateurs() {
-        return utilisateurs;
-    }
 }
