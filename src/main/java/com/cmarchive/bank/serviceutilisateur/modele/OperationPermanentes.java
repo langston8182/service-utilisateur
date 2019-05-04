@@ -1,17 +1,17 @@
 package com.cmarchive.bank.serviceutilisateur.modele;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
 import java.util.List;
 
+@Data
+@Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class OperationPermanentes {
 
     private List<OperationPermanente> operationPermanentes;
-
-    public List<OperationPermanente> getOperationPermanentes() {
-        return operationPermanentes;
-    }
-
-    public OperationPermanentes setOperationPermanentes(List<OperationPermanente> operationPermanentes) {
-        this.operationPermanentes = operationPermanentes;
-        return this;
-    }
 }

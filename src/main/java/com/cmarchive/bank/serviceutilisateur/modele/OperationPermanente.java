@@ -1,5 +1,10 @@
 package com.cmarchive.bank.serviceutilisateur.modele;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -8,6 +13,10 @@ import java.math.BigDecimal;
  * au meme prix et a la meme date. Il s'agit principalement de factures ou les salaires.
  */
 @Entity
+@Data
+@Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class OperationPermanente {
 
     @Id
@@ -20,48 +29,4 @@ public class OperationPermanente {
     @ManyToOne
     private Utilisateur utilisateur;
 
-    public Utilisateur getUtilisateur() {
-        return utilisateur;
-    }
-
-    public OperationPermanente setUtilisateur(Utilisateur utilisateur) {
-        this.utilisateur = utilisateur;
-        return this;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public OperationPermanente setId(String id) {
-        this.id = id;
-        return this;
-    }
-
-    public String getIntitule() {
-        return intitule;
-    }
-
-    public OperationPermanente setIntitule(String intitule) {
-        this.intitule = intitule;
-        return this;
-    }
-
-    public Integer getJour() {
-        return jour;
-    }
-
-    public OperationPermanente setJour(Integer jour) {
-        this.jour = jour;
-        return this;
-    }
-
-    public BigDecimal getPrix() {
-        return prix;
-    }
-
-    public OperationPermanente setPrix(BigDecimal prix) {
-        this.prix = prix;
-        return this;
-    }
 }

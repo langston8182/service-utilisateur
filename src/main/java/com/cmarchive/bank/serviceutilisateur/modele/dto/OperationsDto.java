@@ -1,17 +1,17 @@
 package com.cmarchive.bank.serviceutilisateur.modele.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
 import java.util.List;
 
+@Data
+@Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class OperationsDto {
 
-    List<OperationDto> operationDtos;
-
-    public List<OperationDto> getOperationDtos() {
-        return operationDtos;
-    }
-
-    public OperationsDto setOperationDtos(List<OperationDto> operationDtos) {
-        this.operationDtos = operationDtos;
-        return this;
-    }
+    private List<OperationDto> operationDtos;
 }
