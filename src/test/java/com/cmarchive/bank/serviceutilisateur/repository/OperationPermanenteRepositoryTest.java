@@ -6,12 +6,17 @@ import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,42 +24,44 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DataJpaTest
+@DataMongoTest
 public class OperationPermanenteRepositoryTest {
 
     @Autowired
-    private TestEntityManager testEntityManager;
+    private MongoTemplate mongoTemplate;
 
     @Autowired
     private OperationPermanenteRepository operationPermanenteRepository;
-
-    @MockBean
-    private ResourceServerConfiguration resourceServerConfiguration;
 
     @Test
     public void sauvegarderOperationPermanenteAvecUtilisateur() {
         Utilisateur cyril = creerUtilisateur();
         OperationPermanente operationPermanente = creerOperationPermanente(cyril);
-        testEntityManager.persist(cyril);
-        testEntityManager.flush();
+        mongoTemplate.save(cyril);
 
-        OperationPermanente resultat = operationPermanenteRepository.save(operationPermanente);
+        Mono<OperationPermanente> resultat = operationPermanenteRepository.save(operationPermanente);
 
-        assertThat(resultat).isEqualToComparingFieldByField(operationPermanente);
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectNext(operationPermanente)
+                .verifyComplete();
     }
 
     @Test
     public void supprimerOperationPermanente() {
         Utilisateur cyril = creerUtilisateur();
         OperationPermanente operationPermanente = creerOperationPermanente(cyril);
-        testEntityManager.persist(cyril);
-        testEntityManager.persist(operationPermanente);
-        testEntityManager.flush();
+        mongoTemplate.save(cyril);
+        mongoTemplate.save(operationPermanente);
 
-        operationPermanenteRepository.delete(operationPermanente);
+        Mono<Void> resultat = operationPermanenteRepository.delete(operationPermanente);
 
-        OperationPermanente resultat = testEntityManager.find(OperationPermanente.class, operationPermanente.getId());
-        assertThat(resultat).isNull();
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .verifyComplete();
+        OperationPermanente resultatOperationPermanente = mongoTemplate.findById(operationPermanente.getId(),
+                OperationPermanente.class);
+        assertThat(resultatOperationPermanente).isNull();
     }
 
     @Test
@@ -64,15 +71,17 @@ public class OperationPermanenteRepositoryTest {
         OperationPermanente operationPermanente1 = creerOperationPermanente(cyril);
         OperationPermanente operationPermanente2 = creerOperationPermanente(cyril);
         operationPermanente2.setJour(2);
-        testEntityManager.persist(cyril);
-        testEntityManager.persist(operationPermanente1);
-        testEntityManager.persist(operationPermanente2);
-        testEntityManager.flush();
+        mongoTemplate.save(cyril);
+        mongoTemplate.save(operationPermanente1);
+        mongoTemplate.save(operationPermanente2);
 
-        List<OperationPermanente> resultat = operationPermanenteRepository.findAllByUtilisateur_Id(cyril.getId());
+        Flux<OperationPermanente> resultat = operationPermanenteRepository.findAllByUtilisateur_Id(cyril.getId());
 
-        assertThat(resultat).hasSize(2);
-        assertThat(resultat.get(1).getJour()).isEqualTo(2);
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectNextMatches(operationPermanente -> operationPermanente.getJour() == 12)
+                .expectNextMatches(operationPermanente -> operationPermanente.getJour() == 2)
+                .verifyComplete();
     }
 
     private OperationPermanente creerOperationPermanente(Utilisateur cyril) {

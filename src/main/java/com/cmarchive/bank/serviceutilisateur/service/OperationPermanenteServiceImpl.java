@@ -36,6 +36,26 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
 
     @Override
     public OperationPermanentesDto listerOperationPermanentesParUtilisateur(String utilisateurId) {
+        return null;
+    }
+
+    @Override
+    public OperationPermanenteDto ajouterOperationPermanenteAUtilisateur(String utilisateurId, OperationPermanenteDto operationPermanenteDto) {
+        return null;
+    }
+
+    @Override
+    public OperationPermanenteDto modifierOperationPermanenteUtilisateur(OperationPermanenteDto operationPermanenteDto) {
+        return null;
+    }
+
+    @Override
+    public void supprimerOperationPermanente(OperationPermanenteDto operationPermanenteDto) {
+
+    }
+
+    /*@Override
+    public OperationPermanentesDto listerOperationPermanentesParUtilisateur(String utilisateurId) {
         OperationPermanentes operationPermanentes = new OperationPermanentes()
                 .setOperationPermanentes(operationPermanenteRepository
                         .findAllByUtilisateur_Id(utilisateurId));
@@ -83,5 +103,5 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
     private OperationPermanente recupererOperationPermanenteDansBdd(OperationPermanenteDto operationPermanenteDto) {
         return operationPermanenteRepository.findById(operationPermanenteDto.getId())
                 .orElseThrow(() -> new OperationNonTrouveException("Operation permanente non trouvee"));
-    }
+    }*/
 }

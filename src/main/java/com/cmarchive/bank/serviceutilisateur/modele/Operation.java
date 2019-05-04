@@ -1,5 +1,7 @@
 package com.cmarchive.bank.serviceutilisateur.modele;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -7,7 +9,7 @@ import java.time.LocalDate;
 /**
  * Operation bancaire. Peut etre soit un credit(salaire, ...) ou un debit(factures, ...).
  */
-@Entity
+@Document
 public class Operation {
 
     @Id

@@ -42,7 +42,7 @@ public class UtilisateurServiceImplTest {
     @Mock
     private UtilisateurMapper utilisateurMapper;
 
-    @Test
+    /*@Test
     public void listerUtilisateurs() {
         Utilisateur cyril = new Utilisateur();
         Utilisateur melanie = new Utilisateur();
@@ -153,5 +153,5 @@ public class UtilisateurServiceImplTest {
         utilisateurService.supprimerUtilisateur(cyrilDto);
 
         then(utilisateurRepository).should().delete(cyril);
-    }
+    }*/
 }

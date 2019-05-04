@@ -1,5 +1,7 @@
 package com.cmarchive.bank.serviceutilisateur.modele;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -7,7 +9,7 @@ import java.math.BigDecimal;
  * Opération permanentes liées a un utilisateur. Ces opérations se repetent chaque mois en general
  * au meme prix et a la meme date. Il s'agit principalement de factures ou les salaires.
  */
-@Entity
+@Document
 public class OperationPermanente {
 
     @Id

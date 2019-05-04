@@ -1,11 +1,14 @@
 package com.cmarchive.bank.serviceutilisateur.modele;
 
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import javax.persistence.*;
 
 /**
  * Utilisateur de l'application bank;
  */
-@Entity
+@Document
 public class Utilisateur {
 
     @Id
@@ -13,8 +16,6 @@ public class Utilisateur {
     private String id;
     private String nom;
     private String prenom;
-
-    @Column(unique = true)
     private String email;
     private String motDePasse;
 
