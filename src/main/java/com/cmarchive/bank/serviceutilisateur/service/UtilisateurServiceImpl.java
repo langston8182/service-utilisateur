@@ -31,6 +31,31 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Override
     public UtilisateursDto listerUtilisateurs() {
+        return null;
+    }
+
+    @Override
+    public UtilisateurDto recupererUtilisateur(String id) {
+        return null;
+    }
+
+    @Override
+    public UtilisateurDto creerUtilisateur(UtilisateurDto utilisateurDto) {
+        return null;
+    }
+
+    @Override
+    public UtilisateurDto modifierUtilisateur(UtilisateurDto utilisateurDto) {
+        return null;
+    }
+
+    @Override
+    public void supprimerUtilisateur(UtilisateurDto utilisateur) {
+
+    }
+
+    /*@Override
+    public UtilisateursDto listerUtilisateurs() {
         Utilisateurs utilisateurs = new Utilisateurs()
                 .setUtilisateurs(utilisateurRepository.findAll());
 
@@ -73,5 +98,5 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     public void supprimerUtilisateur(UtilisateurDto utilisateurDto) {
         Utilisateur utilisateur = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
         utilisateurRepository.delete(utilisateur);
-    }
+    }*/
 }

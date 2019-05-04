@@ -36,6 +36,26 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public OperationsDto listerOperationsParUtilisateur(String utilisateurId) {
+        return null;
+    }
+
+    @Override
+    public OperationDto ajouterOperationAUtilisateur(String utilisateurId, OperationDto operationDto) {
+        return null;
+    }
+
+    @Override
+    public OperationDto modifierOperationUtilisateur(OperationDto operationDto) {
+        return null;
+    }
+
+    @Override
+    public void supprimerOperation(OperationDto operationDto) {
+
+    }
+
+    /*@Override
+    public OperationsDto listerOperationsParUtilisateur(String utilisateurId) {
         Operations operations = new Operations()
                 .setOperations(operationRepository
                         .findAllByUtilisateur_IdOrderByDateOperationDesc(utilisateurId));
@@ -80,5 +100,5 @@ public class OperationServiceImpl implements OperationService {
     private Utilisateur recupererUtilisateurParId(String utilisateurId) {
         UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateur(utilisateurId);
         return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
-    }
+    }*/
 }

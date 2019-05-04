@@ -5,13 +5,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,16 +25,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DataJpaTest
+@DataMongoTest
 public class UtilisateurRepositoryTest {
 
     @Autowired
-    private TestEntityManager testEntityManager;
+    private MongoTemplate mongoTemplate;
 
     @Autowired
     private UtilisateurRepository utilisateurRepository;
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void listerUtilisateur() {
         Utilisateur cyril = new Utilisateur()
                 .setEmail("cyril.marchive@gmail.com")
@@ -39,40 +45,29 @@ public class UtilisateurRepositoryTest {
                 .setEmail("melanie.boussat@gmail.com")
                 .setNom("Boussat")
                 .setPrenom("Melanie");
-        testEntityManager.persist(cyril);
-        testEntityManager.persist(melanie);
-        testEntityManager.flush();
+        mongoTemplate.save(cyril);
+        mongoTemplate.save(melanie);
 
-        List<Utilisateur> resultats = utilisateurRepository.findAll();
+        Flux<Utilisateur> resultats = utilisateurRepository.findAll();
 
-        assertThat(resultats).isNotEmpty()
-                .containsExactly(cyril, melanie);
+        StepVerifier.create(resultats.log())
+                .expectSubscription()
+                .expectNextMatches(utilisateur -> utilisateur.getEmail().equals("cyril.marchive@gmail.com"))
+                .expectNextMatches(utilisateur -> utilisateur.getEmail().equals("melanie.boussat@gmail.com"))
+                .verifyComplete();
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void sauvegarderUtilisateur() {
         Utilisateur cyril = creerUtilisateur();
 
-        Utilisateur resultat = utilisateurRepository.save(cyril);
+        Mono<Utilisateur> resultat = utilisateurRepository.save(cyril);
 
-        assertThat(resultat).isNotNull()
-                .isEqualTo(cyril);
-    }
-
-    @Test
-    public void sauvegarderUtilisateur_EmailDejaPresent() {
-        Utilisateur test = new Utilisateur()
-                .setEmail("cyril.marchive@gmail.com")
-                .setNom("Test")
-                .setPrenom("Test");
-        Utilisateur cyril = creerUtilisateur();
-        testEntityManager.persist(test);
-        testEntityManager.flush();
-
-        Throwable thrown = catchThrowable(() -> utilisateurRepository.save(cyril));
-
-        assertThat(thrown).isNotNull();
-        assertThat(thrown).isExactlyInstanceOf(DataIntegrityViolationException.class);
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectNext(cyril)
+                .verifyComplete();
     }
 
     @Test
@@ -82,40 +77,42 @@ public class UtilisateurRepositoryTest {
                 .setEmail("cyril.marchive@gmail.com")
                 .setNom("Test")
                 .setPrenom("Test");
-        testEntityManager.persist(test);
-        testEntityManager.flush();
+        mongoTemplate.save(test);
         Utilisateur cyril = creerUtilisateur()
                 .setId(test.getId());
 
-        Utilisateur resultat = utilisateurRepository.save(cyril);
+        Mono<Utilisateur> resultat = utilisateurRepository.save(cyril);
 
-        assertThat(resultat).isNotNull()
-                .isEqualToComparingFieldByField(cyril);
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectNext(cyril)
+                .verifyComplete();
     }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void recupererUtilisateur() {
-        Utilisateur cyril  = creerUtilisateur();
-        testEntityManager.persist(cyril);
-        testEntityManager.flush();
+        Utilisateur cyril = creerUtilisateur();
+        mongoTemplate.save(cyril);
 
-        Optional<Utilisateur> resultat = utilisateurRepository.findById(cyril.getId());
+        Mono<Utilisateur> resultat = utilisateurRepository.findById(cyril.getId());
 
-        assertThat(resultat.get()).isNotNull()
-                .isEqualTo(cyril);
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectNextMatches(utilisateur -> utilisateur.getEmail().equals("cyril.marchive@gmail.com"))
+                .verifyComplete();
     }
 
     @Test
     public void supprimerUtilisateur() {
         Utilisateur cyril = creerUtilisateur();
-        testEntityManager.persist(cyril);
-        testEntityManager.flush();
+        mongoTemplate.save(cyril);
 
-        utilisateurRepository.delete(cyril);
+        Mono<Void> resultat = utilisateurRepository.delete(cyril);
 
-        Utilisateur resultat = testEntityManager.find(Utilisateur.class, cyril.getId());
-        assertThat(resultat).isNull();
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .verifyComplete();
     }
 
     private Utilisateur creerUtilisateur() {
