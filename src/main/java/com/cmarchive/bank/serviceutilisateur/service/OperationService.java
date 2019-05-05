@@ -2,15 +2,17 @@ package com.cmarchive.bank.serviceutilisateur.service;
 
 import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationDto;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationsDto;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * Service pour les operations utilisateurs.
  */
 public interface OperationService {
 
-    OperationsDto listerOperationsParUtilisateur(String utilisateurId);
-    OperationDto ajouterOperationAUtilisateur(String utilisateurId, OperationDto operationDto);
-    OperationDto modifierOperationUtilisateur(OperationDto operationDto);
-    void supprimerOperation(OperationDto operationDto);
+    Flux<OperationDto> listerOperationsParUtilisateur(String utilisateurId);
+    Mono<OperationDto> ajouterOperationAUtilisateur(String utilisateurId, OperationDto operationDto);
+    Mono<OperationDto> modifierOperationUtilisateur(OperationDto operationDto);
+    Mono<Void> supprimerOperation(OperationDto operationDto);
 
 }

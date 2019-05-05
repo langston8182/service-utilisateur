@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/")
 public class OperationPermanenteControleur {
 
-    private OperationPermanenteService operationPermanenteService;
+    /*private OperationPermanenteService operationPermanenteService;
 
     public OperationPermanenteControleur(OperationPermanenteService operationPermanenteService) {
         this.operationPermanenteService = operationPermanenteService;
@@ -42,5 +42,5 @@ public class OperationPermanenteControleur {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void supprimerOperationPermanenteUtilisateur(@RequestBody OperationPermanenteDto operationPermanenteDto) {
         operationPermanenteService.supprimerOperationPermanente(operationPermanenteDto);
-    }
+    }*/
 }

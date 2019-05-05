@@ -13,7 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/")
 public class UtilisateurControleur {
 
-    private UtilisateurService utilisateurService;
+    /*private UtilisateurService utilisateurService;
 
     public UtilisateurControleur(UtilisateurService utilisateurService) {
         this.utilisateurService = utilisateurService;
@@ -49,5 +49,5 @@ public class UtilisateurControleur {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void supprimerUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
         utilisateurService.supprimerUtilisateur(utilisateurDto);
-    }
+    }*/
 }

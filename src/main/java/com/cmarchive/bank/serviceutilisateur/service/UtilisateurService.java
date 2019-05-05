@@ -2,15 +2,17 @@ package com.cmarchive.bank.serviceutilisateur.service;
 
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateursDto;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * Service CRUD utilisateur.
  */
 public interface UtilisateurService {
 
-    UtilisateursDto listerUtilisateurs();
-    UtilisateurDto recupererUtilisateur(String id);
-    UtilisateurDto creerUtilisateur(UtilisateurDto utilisateurDto);
-    UtilisateurDto modifierUtilisateur(UtilisateurDto utilisateurDto);
-    void supprimerUtilisateur(UtilisateurDto utilisateur);
+    Flux<UtilisateurDto> listerUtilisateurs();
+    Mono<UtilisateurDto> recupererUtilisateur(String id);
+    Mono<UtilisateurDto> creerUtilisateur(UtilisateurDto utilisateurDto);
+    Mono<UtilisateurDto> modifierUtilisateur(UtilisateurDto utilisateurDto);
+    Mono<Void> supprimerUtilisateur(UtilisateurDto utilisateur);
 }
