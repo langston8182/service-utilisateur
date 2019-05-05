@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/")
 public class OperationControleur {
 
-    private OperationService operationService;
+    /*private OperationService operationService;
 
     public OperationControleur(OperationService operationService) {
         this.operationService = operationService;
@@ -41,5 +41,5 @@ public class OperationControleur {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void supprimerOperationUtilisateur(@RequestBody OperationDto operationDto) {
         operationService.supprimerOperation(operationDto);
-    }
+    }*/
 }

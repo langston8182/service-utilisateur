@@ -1,102 +1,66 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
-import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurDejaPresentException;
-import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateursMapper;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
-import com.cmarchive.bank.serviceutilisateur.modele.Utilisateurs;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateursDto;
 import com.cmarchive.bank.serviceutilisateur.repository.UtilisateurRepository;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
-import javax.validation.ConstraintViolationException;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class UtilisateurServiceImpl implements UtilisateurService {
 
     private UtilisateurRepository utilisateurRepository;
-    private UtilisateursMapper utilisateursMapper;
     private UtilisateurMapper utilisateurMapper;
 
     public UtilisateurServiceImpl(UtilisateurRepository utilisateurRepository,
-                                  UtilisateursMapper utilisateursMapper,
                                   UtilisateurMapper utilisateurMapper) {
         this.utilisateurRepository = utilisateurRepository;
-        this.utilisateursMapper = utilisateursMapper;
         this.utilisateurMapper = utilisateurMapper;
     }
 
     @Override
-    public UtilisateursDto listerUtilisateurs() {
-        return null;
+    public Flux<UtilisateurDto> listerUtilisateurs() {
+        return utilisateurRepository.findAll()
+                .map(utilisateur -> utilisateurMapper.mapVersUtilisateurDto(utilisateur));
     }
 
     @Override
-    public UtilisateurDto recupererUtilisateur(String id) {
-        return null;
+    public Mono<UtilisateurDto> recupererUtilisateur(String id) {
+        /*Utilisateur utilisateur = utilisateurRepository.findById(id)
+                .orElseThrow(() -> new UtilisateurNonTrouveException("L'utilisateur n'a pas ete trouve"));*/
+        return utilisateurRepository.findById(id)
+                .map(utilisateur -> utilisateurMapper.mapVersUtilisateurDto(utilisateur));
     }
 
     @Override
-    public UtilisateurDto creerUtilisateur(UtilisateurDto utilisateurDto) {
-        return null;
-    }
-
-    @Override
-    public UtilisateurDto modifierUtilisateur(UtilisateurDto utilisateurDto) {
-        return null;
-    }
-
-    @Override
-    public void supprimerUtilisateur(UtilisateurDto utilisateur) {
-
-    }
-
-    /*@Override
-    public UtilisateursDto listerUtilisateurs() {
-        Utilisateurs utilisateurs = new Utilisateurs()
-                .setUtilisateurs(utilisateurRepository.findAll());
-
-        return utilisateursMapper.mapVersUtilisateursDto(utilisateurs);
-    }
-
-    @Override
-    public UtilisateurDto recupererUtilisateur(String id) {
-        Utilisateur utilisateur = utilisateurRepository.findById(id)
-                .orElseThrow(() -> new UtilisateurNonTrouveException("L'utilisateur n'a pas ete trouve"));
-        return utilisateurMapper.mapVersUtilisateurDto(utilisateur);
-    }
-
-    @Override
-    public UtilisateurDto creerUtilisateur(UtilisateurDto utilisateurDto) {
+    public Mono<UtilisateurDto> creerUtilisateur(UtilisateurDto utilisateurDto) {
         Utilisateur utilisateur = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
 
-        Utilisateur reponse;
+        /*Utilisateur reponse;
         try {
             reponse = utilisateurRepository.save(utilisateur);
         } catch (DataIntegrityViolationException dive) {
             throw new UtilisateurDejaPresentException("L'utilisateur est deja présent");
-        }
-        return utilisateurMapper.mapVersUtilisateurDto(reponse);
+        }*/
+        return utilisateurRepository.save(utilisateur)
+                .map(u -> utilisateurMapper.mapVersUtilisateurDto(u));
     }
 
     @Override
-    public UtilisateurDto modifierUtilisateur(UtilisateurDto utilisateurDto) {
-        UtilisateurDto utilisateurDeBdd = recupererUtilisateur(utilisateurDto.getId());
-
-        Utilisateur utilisateur = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
-        utilisateur.setMotDePasse(utilisateurDeBdd.getMotDePasse());
-
-        Utilisateur reponse = utilisateurRepository.save(utilisateur);
-
-        return utilisateurMapper.mapVersUtilisateurDto(reponse);
+    public Mono<UtilisateurDto> modifierUtilisateur(UtilisateurDto utilisateurDto) {
+        return recupererUtilisateur(utilisateurDto.getId())
+                .map(uDto -> utilisateurMapper
+                        .mapVersUtilisateur(utilisateurDto).setMotDePasse(uDto.getMotDePasse()))
+                .flatMap(utilisateur -> utilisateurRepository.save(utilisateur))
+                .map(utilisateur -> utilisateurMapper.mapVersUtilisateurDto(utilisateur));
     }
 
     @Override
-    public void supprimerUtilisateur(UtilisateurDto utilisateurDto) {
+    public Mono<Void> supprimerUtilisateur(UtilisateurDto utilisateurDto) {
         Utilisateur utilisateur = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
-        utilisateurRepository.delete(utilisateur);
-    }*/
+        return utilisateurRepository.delete(utilisateur);
+    }
 }

@@ -1,6 +1,5 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
-import com.cmarchive.bank.serviceutilisateur.exception.OperationNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationsMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
@@ -16,23 +15,21 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OperationServiceImplTest {
 
-    /*@InjectMocks
+    @InjectMocks
     private OperationServiceImpl operationService;
 
     @Mock
@@ -56,19 +53,20 @@ public class OperationServiceImplTest {
         Operation operation2 = new Operation();
         OperationDto operationDto1 = new OperationDto();
         OperationDto operationDto2 = new OperationDto();
-        OperationsDto operationsDto = new OperationsDto();
-        operationsDto.setOperationDtos(Stream.of(operationDto1, operationDto2).collect(Collectors.toList()));
         String id = "1";
         given(operationRepository
                 .findAllByUtilisateur_IdOrderByDateOperationDesc(id))
-                .willReturn(Stream.of(operation1, operation2).collect(Collectors.toList()));
-        given(operationsMapper.mapVersOperationsDto(any(Operations.class))).willReturn(operationsDto);
+                .willReturn(Flux.just(operation1, operation2));
+        given(operationMapper.mapVersOperationDto(operation1)).willReturn(operationDto1);
+        given(operationMapper.mapVersOperationDto(operation2)).willReturn(operationDto2);
 
-        OperationsDto resultat = operationService.listerOperationsParUtilisateur(id);
+        Flux<OperationDto> resultat = operationService.listerOperationsParUtilisateur(id);
 
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectNext(operationDto1, operationDto2)
+                .verifyComplete();
         then(operationRepository).should().findAllByUtilisateur_IdOrderByDateOperationDesc(id);
-        assertThat(resultat.getOperationDtos()).isNotEmpty()
-                .containsExactly(operationDto1, operationDto2);
     }
 
     @Test
@@ -79,17 +77,19 @@ public class OperationServiceImplTest {
         OperationDto operationDto = new OperationDto();
         Operation reponse = new Operation()
                 .setUtilisateur(utilisateur);
-        given(utilisateurService.recupererUtilisateur("1")).willReturn(utilisateurDto);
+        given(utilisateurService.recupererUtilisateur("1")).willReturn(Mono.just(utilisateurDto));
         given(utilisateurMapper.mapVersUtilisateur(utilisateurDto)).willReturn(utilisateur);
-        given(operationRepository.save(operation)).willReturn(reponse);
+        given(operationRepository.save(operation)).willReturn(Mono.just(reponse));
         given(operationMapper.mapVersOperationDto(reponse)).willReturn(operationDto);
         given(operationMapper.mapVersOperation(operationDto)).willReturn(operation);
 
-        OperationDto resultat = operationService.ajouterOperationAUtilisateur("1", operationDto);
+        Mono<OperationDto> resultat = operationService.ajouterOperationAUtilisateur("1", operationDto);
 
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectNext(operationDto)
+                .verifyComplete();
         then(operationRepository).should().save(operation);
-        assertThat(resultat).isNotNull()
-                .isEqualTo(operationDto);
     }
 
     @Test
@@ -104,20 +104,22 @@ public class OperationServiceImplTest {
                 .setUtilisateur(new Utilisateur().setEmail(email));
         OperationDto operationDtoReponse = new OperationDto()
                 .setUtilisateurDto(new UtilisateurDto().setEmail(email));
-        given(operationRepository.findById(id)).willReturn(Optional.of(operationBdd));
+        given(operationRepository.findById(id)).willReturn(Mono.just(operationBdd));
         given(operationMapper.mapVersOperation(operationDto)).willReturn(operation);
-        given(operationRepository.save(operation)).willReturn(operationReponse);
+        given(operationRepository.save(operation)).willReturn(Mono.just(operationReponse));
         given(operationMapper.mapVersOperationDto(operationReponse)).willReturn(operationDtoReponse);
 
-        OperationDto resultat = operationService.modifierOperationUtilisateur(operationDto);
+        Mono<OperationDto> resultat = operationService.modifierOperationUtilisateur(operationDto);
 
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectNextMatches(oDto -> oDto.getUtilisateurDto().getEmail().equals(email))
+                .verifyComplete();
         then(operationRepository).should().findById(id);
         then(operationRepository).should().save(operation);
-        assertThat(resultat).isNotNull();
-        assertThat(resultat.getUtilisateurDto().getEmail()).isEqualTo(email);
     }
 
-    @Test
+    /*@Test
     public void modifierOperationUtilisateur_OperationNonTrouvee() {
         String id = "1";
         OperationDto operationDto = new OperationDto().setId(id);
@@ -130,16 +132,20 @@ public class OperationServiceImplTest {
         verifyZeroInteractions(operationMapper);
         then(operationRepository).should().findById(id);
         verifyNoMoreInteractions(operationRepository);
-    }
+    }*/
 
     @Test
     public void supprimerOperation() {
         Operation operation = new Operation();
         OperationDto operationDto = new OperationDto();
         given(operationMapper.mapVersOperation(operationDto)).willReturn(operation);
+        given(operationRepository.delete(operation)).willReturn(Mono.empty());
 
-        operationService.supprimerOperation(operationDto);
+        Mono<Void> resultat = operationService.supprimerOperation(operationDto);
 
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .verifyComplete();
         then(operationRepository).should().delete(operation);
-    }*/
+    }
 }

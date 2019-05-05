@@ -12,6 +12,8 @@ import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationsDto;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.repository.OperationRepository;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class OperationServiceImpl implements OperationService {
@@ -20,85 +22,53 @@ public class OperationServiceImpl implements OperationService {
     private OperationRepository operationRepository;
     private UtilisateurMapper utilisateurMapper;
     private OperationMapper operationMapper;
-    private OperationsMapper operationsMapper;
 
     public OperationServiceImpl(UtilisateurService utilisateurService,
                                 OperationRepository operationRepository,
                                 UtilisateurMapper utilisateurMapper,
-                                OperationMapper operationMapper,
-                                OperationsMapper operationsMapper) {
+                                OperationMapper operationMapper) {
         this.utilisateurService = utilisateurService;
         this.operationRepository = operationRepository;
         this.utilisateurMapper = utilisateurMapper;
         this.operationMapper = operationMapper;
-        this.operationsMapper = operationsMapper;
     }
 
     @Override
-    public OperationsDto listerOperationsParUtilisateur(String utilisateurId) {
-        return null;
+    public Flux<OperationDto> listerOperationsParUtilisateur(String utilisateurId) {
+        return operationRepository.findAllByUtilisateur_IdOrderByDateOperationDesc(utilisateurId)
+                .map(operation -> operationMapper.mapVersOperationDto(operation));
     }
 
     @Override
-    public OperationDto ajouterOperationAUtilisateur(String utilisateurId, OperationDto operationDto) {
-        return null;
+    public Mono<OperationDto> ajouterOperationAUtilisateur(String utilisateurId, OperationDto operationDto) {
+        return recupererUtilisateurParId(utilisateurId)
+                .map(utilisateur -> operationMapper.mapVersOperation(operationDto).setUtilisateur(utilisateur))
+                .flatMap(operation -> operationRepository.save(operation))
+                .map(operation -> operationMapper.mapVersOperationDto(operation));
     }
 
     @Override
-    public OperationDto modifierOperationUtilisateur(OperationDto operationDto) {
-        return null;
+    public Mono<OperationDto> modifierOperationUtilisateur(OperationDto operationDto) {
+        return recupererOperationDansBdd(operationDto)
+                .map(operation -> operationMapper
+                        .mapVersOperation(operationDto).setUtilisateur(operation.getUtilisateur()))
+                .flatMap(operation -> operationRepository.save(operation))
+                .map(operation -> operationMapper.mapVersOperationDto(operation));
+    }
+
+    private Mono<Operation> recupererOperationDansBdd(OperationDto operationDto) {
+        return operationRepository.findById(operationDto.getId());
+        /*return operationRepository.findById(operationDto.getId())
+                    .orElseThrow(() -> new OperationNonTrouveException("Operation non trouvee"));*/
     }
 
     @Override
-    public void supprimerOperation(OperationDto operationDto) {
-
+    public Mono<Void> supprimerOperation(OperationDto operationDto) {
+        return operationRepository.delete(operationMapper.mapVersOperation(operationDto));
     }
 
-    /*@Override
-    public OperationsDto listerOperationsParUtilisateur(String utilisateurId) {
-        Operations operations = new Operations()
-                .setOperations(operationRepository
-                        .findAllByUtilisateur_IdOrderByDateOperationDesc(utilisateurId));
-
-        return operationsMapper.mapVersOperationsDto(operations);
+    private Mono<Utilisateur> recupererUtilisateurParId(String utilisateurId) {
+        return utilisateurService.recupererUtilisateur(utilisateurId)
+                .map(utilisateurDto -> utilisateurMapper.mapVersUtilisateur(utilisateurDto));
     }
-
-    @Override
-    public OperationDto ajouterOperationAUtilisateur(String utilisateurId, OperationDto operationDto) {
-        Utilisateur utilisateur = recupererUtilisateurParId(utilisateurId);
-        Operation operation = operationMapper.mapVersOperation(operationDto);
-        operation.setUtilisateur(utilisateur);
-
-        Operation reponse = operationRepository.save(operation);
-        return operationMapper.mapVersOperationDto(reponse);
-    }
-
-    @Override
-    public OperationDto modifierOperationUtilisateur(OperationDto operationDto) {
-        Operation operationBdd = recupererOperationDansBdd(operationDto);
-
-        Operation operation = operationMapper.mapVersOperation(operationDto);
-        operation.setUtilisateur(operationBdd.getUtilisateur());
-
-        Operation reponse = operationRepository.save(operation);
-
-        return operationMapper.mapVersOperationDto(reponse);
-    }
-
-    private Operation recupererOperationDansBdd(OperationDto operationDto) {
-        return operationRepository.findById(operationDto.getId())
-                    .orElseThrow(() -> new OperationNonTrouveException("Operation non trouvee"));
-    }
-
-    @Override
-    public void supprimerOperation(OperationDto operationDto) {
-        Operation operation = operationMapper.mapVersOperation(operationDto);
-
-        operationRepository.delete(operation);
-    }
-
-    private Utilisateur recupererUtilisateurParId(String utilisateurId) {
-        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateur(utilisateurId);
-        return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
-    }*/
 }

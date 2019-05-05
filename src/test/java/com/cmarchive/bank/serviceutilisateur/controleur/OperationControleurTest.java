@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(secure=false)
 public class OperationControleurTest {
 
-    @Autowired
+    /*@Autowired
     private MockMvc mockMvc;
 
     @Autowired
@@ -136,5 +136,5 @@ public class OperationControleurTest {
                 .setEmail("cyril.marchive@gmail.com")
                 .setNom("Marchive")
                 .setPrenom("Cyril");
-    }
+    }*/
 }

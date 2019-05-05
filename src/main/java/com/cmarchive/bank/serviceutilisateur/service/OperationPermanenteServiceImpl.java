@@ -1,17 +1,14 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
-import com.cmarchive.bank.serviceutilisateur.exception.OperationNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationPermanenteMapper;
-import com.cmarchive.bank.serviceutilisateur.mapper.OperationPermanentesMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
-import com.cmarchive.bank.serviceutilisateur.modele.*;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationDto;
+import com.cmarchive.bank.serviceutilisateur.modele.OperationPermanente;
+import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanenteDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanentesDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.repository.OperationPermanenteRepository;
-import com.cmarchive.bank.serviceutilisateur.repository.OperationRepository;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class OperationPermanenteServiceImpl implements OperationPermanenteService {
@@ -19,89 +16,58 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
     private UtilisateurService utilisateurService;
     private OperationPermanenteRepository operationPermanenteRepository;
     private OperationPermanenteMapper operationPermanenteMapper;
-    private OperationPermanentesMapper operationPermanentesMapper;
     private UtilisateurMapper utilisateurMapper;
 
     public OperationPermanenteServiceImpl(UtilisateurService utilisateurService,
                                           OperationPermanenteRepository operationPermanenteRepository,
                                           OperationPermanenteMapper operationPermanenteMapper,
-                                          OperationPermanentesMapper operationPermanentesMapper,
                                           UtilisateurMapper utilisateurMapper) {
         this.utilisateurService = utilisateurService;
         this.operationPermanenteRepository = operationPermanenteRepository;
         this.operationPermanenteMapper = operationPermanenteMapper;
-        this.operationPermanentesMapper = operationPermanentesMapper;
         this.utilisateurMapper = utilisateurMapper;
     }
 
     @Override
-    public OperationPermanentesDto listerOperationPermanentesParUtilisateur(String utilisateurId) {
-        return null;
+    public Flux<OperationPermanenteDto> listerOperationPermanentesParUtilisateur(String utilisateurId) {
+        return operationPermanenteRepository.findAllByUtilisateur_Id(utilisateurId)
+                .map(operationPermanente -> operationPermanenteMapper
+                        .mapVersOperationPermanenteDto(operationPermanente));
     }
 
     @Override
-    public OperationPermanenteDto ajouterOperationPermanenteAUtilisateur(String utilisateurId, OperationPermanenteDto operationPermanenteDto) {
-        return null;
+    public Mono<OperationPermanenteDto> ajouterOperationPermanenteAUtilisateur(String utilisateurId, OperationPermanenteDto operationPermanenteDto) {
+        return recupererUtilisateurParId(utilisateurId)
+                .map(utilisateur -> operationPermanenteMapper
+                        .mapVersOperationPermanente(operationPermanenteDto).setUtilisateur(utilisateur))
+                .flatMap(operationPermanente -> operationPermanenteRepository.save(operationPermanente))
+                .map(operationPermanente -> operationPermanenteMapper.mapVersOperationPermanenteDto(operationPermanente));
     }
 
     @Override
-    public OperationPermanenteDto modifierOperationPermanenteUtilisateur(OperationPermanenteDto operationPermanenteDto) {
-        return null;
+    public Mono<OperationPermanenteDto> modifierOperationPermanenteUtilisateur(OperationPermanenteDto operationPermanenteDto) {
+        return recupererOperationPermanenteDansBdd(operationPermanenteDto)
+                .map(op -> operationPermanenteMapper.mapVersOperationPermanente(operationPermanenteDto)
+                        .setUtilisateur(op.getUtilisateur()))
+                .flatMap(op -> operationPermanenteRepository.save(op))
+                .map(op -> operationPermanenteMapper.mapVersOperationPermanenteDto(op));
     }
 
     @Override
-    public void supprimerOperationPermanente(OperationPermanenteDto operationPermanenteDto) {
-
+    public Mono<Void> supprimerOperationPermanente(OperationPermanenteDto operationPermanenteDto) {
+        return operationPermanenteRepository
+                .delete(operationPermanenteMapper.mapVersOperationPermanente(operationPermanenteDto));
     }
 
-    /*@Override
-    public OperationPermanentesDto listerOperationPermanentesParUtilisateur(String utilisateurId) {
-        OperationPermanentes operationPermanentes = new OperationPermanentes()
-                .setOperationPermanentes(operationPermanenteRepository
-                        .findAllByUtilisateur_Id(utilisateurId));
-
-        return operationPermanentesMapper.mapVersOperationPermanentesDto(operationPermanentes);
+    private Mono<Utilisateur> recupererUtilisateurParId(String utilisateurId) {
+        return utilisateurService.recupererUtilisateur(utilisateurId)
+                .map(utilisateurDto -> utilisateurMapper.mapVersUtilisateur(utilisateurDto));
     }
 
-    @Override
-    public OperationPermanenteDto ajouterOperationPermanenteAUtilisateur(String utilisateurId, OperationPermanenteDto operationPermanenteDto) {
-        Utilisateur utilisateur = recupererUtilisateurParId(utilisateurId);
-        OperationPermanente operationPermanente = operationPermanenteMapper
-                .mapVersOperationPermanente(operationPermanenteDto);
-        operationPermanente.setUtilisateur(utilisateur);
+    private Mono<OperationPermanente> recupererOperationPermanenteDansBdd(OperationPermanenteDto operationPermanenteDto) {
+        return operationPermanenteRepository.findById(operationPermanenteDto.getId());
 
-        OperationPermanente reponse = operationPermanenteRepository.save(operationPermanente);
-        return operationPermanenteMapper.mapVersOperationPermanenteDto(reponse);
+        /*return operationPermanenteRepository.findById(operationPermanenteDto.getId())
+                .orElseThrow(() -> new OperationNonTrouveException("Operation permanente non trouvee"));*/
     }
-
-    @Override
-    public OperationPermanenteDto modifierOperationPermanenteUtilisateur(OperationPermanenteDto operationPermanenteDto) {
-        OperationPermanente operationPermanenteBdd = recupererOperationPermanenteDansBdd(operationPermanenteDto);
-
-        OperationPermanente operationPermanente =
-                operationPermanenteMapper.mapVersOperationPermanente(operationPermanenteDto);
-        operationPermanente.setUtilisateur(operationPermanenteBdd.getUtilisateur());
-
-        OperationPermanente reponse = operationPermanenteRepository.save(operationPermanente);
-
-        return operationPermanenteMapper.mapVersOperationPermanenteDto(reponse);
-    }
-
-    @Override
-    public void supprimerOperationPermanente(OperationPermanenteDto operationPermanenteDto) {
-        OperationPermanente operationPermanente =
-                operationPermanenteMapper.mapVersOperationPermanente(operationPermanenteDto);
-
-        operationPermanenteRepository.delete(operationPermanente);
-    }
-
-    private Utilisateur recupererUtilisateurParId(String utilisateurId) {
-        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateur(utilisateurId);
-        return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
-    }
-
-    private OperationPermanente recupererOperationPermanenteDansBdd(OperationPermanenteDto operationPermanenteDto) {
-        return operationPermanenteRepository.findById(operationPermanenteDto.getId())
-                .orElseThrow(() -> new OperationNonTrouveException("Operation permanente non trouvee"));
-    }*/
 }
