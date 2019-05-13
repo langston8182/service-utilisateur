@@ -4,13 +4,9 @@ spring:
   application:
     name: utilisateur
 security:
-  basic:
-    enabled: false
   oauth2:
+    client:
+      client-id: 0oakz6w946XN0GAcj356
+      client-secret: -SmoZw_w10UAZZQESfoZH_2N1oYCzShpLzQXkqWG
     resource:
-      # authorization-service si le service tourne dans un container ou k8s,  localhost sinon
-      userInfoUri: http://authorization-service:8090/auth/user/me
-configuration:
-  checkTokenEndpointUrl: http://authorization-service:8090/auth/oauth/check_token
-  client-id: client
-  client-secret: password
+      token-info-uri: https://dev-847930.okta.com/oauth2/default/v1/introspect

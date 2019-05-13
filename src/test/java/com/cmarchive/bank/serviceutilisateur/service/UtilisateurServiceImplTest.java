@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
@@ -61,6 +60,19 @@ public class UtilisateurServiceImplTest {
     }
 
     @Test
+    public void recupererUtilisateurParEmail_nominal() {
+        Utilisateur cyril = new Utilisateur();
+        UtilisateurDto cyrilDto = new UtilisateurDto();
+        given(utilisateurRepository.findByEmail(anyString())).willReturn(Optional.of(cyril));
+        given(utilisateurMapper.mapVersUtilisateurDto(cyril)).willReturn(cyrilDto);
+
+        UtilisateurDto resultat = utilisateurService.recupererUtilisateurParEmail(anyString());
+
+        then(utilisateurRepository).should().findByEmail(anyString());
+        assertThat(resultat).isEqualTo(cyrilDto);
+    }
+
+    @Test
     public void recupererUtilisateur_nominal() {
         Utilisateur cyril = new Utilisateur();
         UtilisateurDto cyrilDto = new UtilisateurDto();
@@ -75,11 +87,11 @@ public class UtilisateurServiceImplTest {
 
     @Test
     public void recupererUtilisateurInexistant() {
-        given(utilisateurRepository.findById(anyString())).willThrow(UtilisateurNonTrouveException.class);
+        given(utilisateurRepository.findByEmail(anyString())).willThrow(UtilisateurNonTrouveException.class);
 
-        Throwable thrown = catchThrowable(() -> utilisateurService.recupererUtilisateur(anyString()));
+        Throwable thrown = catchThrowable(() -> utilisateurService.recupererUtilisateurParEmail(anyString()));
 
-        then(utilisateurRepository).should().findById(anyString());
+        then(utilisateurRepository).should().findByEmail(anyString());
         assertThat(thrown).isNotNull();
         assertThat(thrown).isExactlyInstanceOf(UtilisateurNonTrouveException.class);
     }
@@ -118,18 +130,23 @@ public class UtilisateurServiceImplTest {
     @Test
     public void modifierUtilisateur() {
         String id = "1";
+        String email = "cyril.marchive@gmail.com";
         Utilisateur cyrilRecuperedeBdd = new Utilisateur()
                 .setId(id)
+                .setEmail(email)
                 .setMotDePasse("motDePasse");
         UtilisateurDto cyrilDtoRecupereDeBdd = new UtilisateurDto()
                 .setId(id)
+                .setEmail(email)
                 .setMotDePasse("motDePasse");
         Utilisateur cyril = spy(Utilisateur.class);
         cyril.setId(id);
+        cyril.setEmail(email);
         UtilisateurDto cyrilDto = new UtilisateurDto()
                 .setId(id)
+                .setEmail(email)
                 .setMotDePasse("motDePasseModifie");
-        given(utilisateurRepository.findById(id)).willReturn(Optional.of(cyrilRecuperedeBdd));
+        given(utilisateurRepository.findByEmail(email)).willReturn(Optional.of(cyrilRecuperedeBdd));
         given(utilisateurMapper.mapVersUtilisateurDto(cyrilRecuperedeBdd)).willReturn(cyrilDtoRecupereDeBdd);
         given(utilisateurMapper.mapVersUtilisateur(cyrilDto)).willReturn(cyril);
         given(utilisateurRepository.save(cyril)).willReturn(cyril);
@@ -138,7 +155,7 @@ public class UtilisateurServiceImplTest {
         UtilisateurDto resultat = utilisateurService.modifierUtilisateur(cyrilDto);
 
         then(utilisateurRepository).should().save(cyril);
-        then(utilisateurRepository).should().findById(id);
+        then(utilisateurRepository).should().findByEmail(email);
         then(cyril).should().setMotDePasse("motDePasse");
         assertThat(resultat).isNotNull()
                 .isEqualTo(cyrilDto);

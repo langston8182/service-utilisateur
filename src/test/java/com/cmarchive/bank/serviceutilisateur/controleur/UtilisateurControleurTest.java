@@ -67,7 +67,7 @@ public class UtilisateurControleurTest {
                 .setUtilisateursDtos(Stream.of(cyril, melanie).collect(Collectors.toList()));
         given(utilisateurService.listerUtilisateurs()).willReturn(utilisateursDto);
 
-        mockMvc.perform(get("/utilisateurs")
+        mockMvc.perform(get("/utilisateurs/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -80,6 +80,20 @@ public class UtilisateurControleurTest {
         given(utilisateurService.recupererUtilisateur("1")).willReturn(utilisateur);
 
         mockMvc.perform(get("/utilisateurs/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nom", equalTo("Marchive")))
+                .andExpect(jsonPath("$.prenom", equalTo("Cyril")))
+                .andExpect(jsonPath("$.email", equalTo("cyril.marchive@gmail.com")));
+    }
+
+    @Test
+    public void recupererUtilisateurParEmail() throws Exception {
+        UtilisateurDto utilisateur = creerUtilisateurDto();
+        given(utilisateurService.recupererUtilisateurParEmail("cyril.marchive@gmail.com")).willReturn(utilisateur);
+
+        mockMvc.perform(get("/utilisateurs?email=cyril.marchive@gmail.com")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
