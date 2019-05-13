@@ -12,8 +12,6 @@ import com.cmarchive.bank.serviceutilisateur.repository.UtilisateurRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ConstraintViolationException;
-
 @Service
 public class UtilisateurServiceImpl implements UtilisateurService {
 
@@ -38,6 +36,13 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
+    public UtilisateurDto recupererUtilisateurParEmail(String email) {
+        Utilisateur utilisateur = utilisateurRepository.findByEmail(email)
+                .orElseThrow(() -> new UtilisateurNonTrouveException("L'utilisateur n'a pas ete trouve"));
+        return utilisateurMapper.mapVersUtilisateurDto(utilisateur);
+    }
+
+    @Override
     public UtilisateurDto recupererUtilisateur(String id) {
         Utilisateur utilisateur = utilisateurRepository.findById(id)
                 .orElseThrow(() -> new UtilisateurNonTrouveException("L'utilisateur n'a pas ete trouve"));
@@ -59,7 +64,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Override
     public UtilisateurDto modifierUtilisateur(UtilisateurDto utilisateurDto) {
-        UtilisateurDto utilisateurDeBdd = recupererUtilisateur(utilisateurDto.getId());
+        UtilisateurDto utilisateurDeBdd = recupererUtilisateurParEmail(utilisateurDto.getEmail());
 
         Utilisateur utilisateur = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
         utilisateur.setMotDePasse(utilisateurDeBdd.getMotDePasse());

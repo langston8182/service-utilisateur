@@ -79,7 +79,7 @@ public class OperationServiceImplTest {
         OperationDto operationDto = new OperationDto();
         Operation reponse = new Operation()
                 .setUtilisateur(utilisateur);
-        given(utilisateurService.recupererUtilisateur("1")).willReturn(utilisateurDto);
+        given(utilisateurService.recupererUtilisateurParEmail("1")).willReturn(utilisateurDto);
         given(utilisateurMapper.mapVersUtilisateur(utilisateurDto)).willReturn(utilisateur);
         given(operationRepository.save(operation)).willReturn(reponse);
         given(operationMapper.mapVersOperationDto(reponse)).willReturn(operationDto);

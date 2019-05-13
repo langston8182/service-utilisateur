@@ -5,12 +5,10 @@ import com.cmarchive.bank.serviceutilisateur.mapper.OperationPermanenteMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationPermanentesMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
 import com.cmarchive.bank.serviceutilisateur.modele.*;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationDto;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanenteDto;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanentesDto;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.repository.OperationPermanenteRepository;
-import com.cmarchive.bank.serviceutilisateur.repository.OperationRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -76,7 +74,7 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
     }
 
     private Utilisateur recupererUtilisateurParId(String utilisateurId) {
-        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateur(utilisateurId);
+        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateurParEmail(utilisateurId);
         return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
     }
 

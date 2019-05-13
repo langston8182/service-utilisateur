@@ -98,12 +98,25 @@ public class UtilisateurRepositoryTest {
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
-    public void recupererUtilisateur() {
+    public void recupererUtilisateurParEmail() {
         Utilisateur cyril  = creerUtilisateur();
         testEntityManager.persist(cyril);
         testEntityManager.flush();
 
-        Optional<Utilisateur> resultat = utilisateurRepository.findById(cyril.getId());
+        Optional<Utilisateur> resultat = utilisateurRepository.findByEmail("cyril.marchive@gmail.com");
+
+        assertThat(resultat.get()).isNotNull()
+                .isEqualTo(cyril);
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void recupererUtilisateurParId() {
+        Utilisateur cyril  = creerUtilisateur();
+        testEntityManager.persist(cyril);
+        testEntityManager.flush();
+
+        Optional<Utilisateur> resultat = utilisateurRepository.findById("1");
 
         assertThat(resultat.get()).isNotNull()
                 .isEqualTo(cyril);

@@ -9,6 +9,7 @@ import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateursDto;
 public interface UtilisateurService {
 
     UtilisateursDto listerUtilisateurs();
+    UtilisateurDto recupererUtilisateurParEmail(String email);
     UtilisateurDto recupererUtilisateur(String id);
     UtilisateurDto creerUtilisateur(UtilisateurDto utilisateurDto);
     UtilisateurDto modifierUtilisateur(UtilisateurDto utilisateurDto);
