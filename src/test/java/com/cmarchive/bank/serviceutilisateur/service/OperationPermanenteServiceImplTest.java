@@ -82,7 +82,7 @@ public class OperationPermanenteServiceImplTest {
         OperationPermanenteDto operationPermanenteDto = new OperationPermanenteDto();
         OperationPermanente reponse = new OperationPermanente()
                 .setUtilisateur(utilisateur);
-        given(utilisateurService.recupererUtilisateurParEmail("1")).willReturn(utilisateurDto);
+        given(utilisateurService.recupererUtilisateur("1")).willReturn(utilisateurDto);
         given(utilisateurMapper.mapVersUtilisateur(utilisateurDto)).willReturn(utilisateur);
         given(operationPermanenteRepository.save(operationPermanente)).willReturn(reponse);
         given(operationPermanenteMapper.mapVersOperationPermanenteDto(reponse)).willReturn(operationPermanenteDto);

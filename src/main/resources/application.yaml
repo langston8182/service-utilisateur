@@ -3,6 +3,27 @@ server:
 spring:
   application:
     name: utilisateur
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  datasource:
+
+    # db-service si le service tourne dans un container ou k8s,  localhost sinon
+    host: localhost
+    port: 3306
+    url: jdbc:mariadb://${spring.datasource.host}:${spring.datasource.port}/bank
+    username: spring
+    password: spring
+    driver-class-name: org.mariadb.jdbc.Driver
+    initialization-mode: always
+    validationQuery:
+      SELECT 1
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
 security:
   oauth2:
     client:
