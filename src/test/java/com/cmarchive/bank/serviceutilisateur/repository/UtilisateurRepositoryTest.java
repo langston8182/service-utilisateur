@@ -113,10 +113,9 @@ public class UtilisateurRepositoryTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void recupererUtilisateurParId() {
         Utilisateur cyril  = creerUtilisateur();
-        testEntityManager.persist(cyril);
-        testEntityManager.flush();
+        testEntityManager.persistAndFlush(cyril);
 
-        Optional<Utilisateur> resultat = utilisateurRepository.findById("1");
+        Optional<Utilisateur> resultat = utilisateurRepository.findById(cyril.getId());
 
         assertThat(resultat.get()).isNotNull()
                 .isEqualTo(cyril);

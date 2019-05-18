@@ -74,7 +74,7 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
     }
 
     private Utilisateur recupererUtilisateurParId(String utilisateurId) {
-        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateurParEmail(utilisateurId);
+        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateur(utilisateurId);
         return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
     }
 

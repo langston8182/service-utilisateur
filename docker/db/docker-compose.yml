@@ -1,0 +1,10 @@
+db-service:
+  image: mariadb
+  container_name: mariadb
+  environment:
+    MYSQL_ROOT_PASSWORD: admin
+    MYSQL_DATABASE: bank
+    MYSQL_USER: spring
+    MYSQL_PASSWORD: spring
+  ports:
+    - 3306:3306
