@@ -1,9 +1,10 @@
 package com.cmarchive.bank.serviceutilisateur.modele;
 
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * Utilisateur de l'application bank;
