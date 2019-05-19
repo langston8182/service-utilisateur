@@ -47,9 +47,9 @@ public class UtilisateurControleur {
         return utilisateurService.modifierUtilisateur(utilisateurDto);
     }
 
-    @DeleteMapping("/utilisateurs")
+    @DeleteMapping("/utilisateurs/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> supprimerUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
-        return utilisateurService.supprimerUtilisateur(utilisateurDto);
+    public Mono<Void> supprimerUtilisateur(@PathVariable String id) {
+        return utilisateurService.supprimerUtilisateur(id);
     }
 }

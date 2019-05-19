@@ -59,8 +59,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
-    public Mono<Void> supprimerUtilisateur(UtilisateurDto utilisateurDto) {
-        Utilisateur utilisateur = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
-        return utilisateurRepository.delete(utilisateur);
+    public Mono<Void> supprimerUtilisateur(String id) {
+        return utilisateurRepository.deleteById(id);
     }
 }

@@ -64,8 +64,7 @@ public class UtilisateurControleurTest {
 
     @Test
     public void supprimerUtilisateur() {
-        UtilisateurDto cyril = creerUtilisateurDto();
-        given(utilisateurService.supprimerUtilisateur(cyril)).willReturn(Mono.empty());
+        given(utilisateurService.supprimerUtilisateur("1")).willReturn(Mono.empty());
 
         webTestClient
                 .mutateWith(csrf())
