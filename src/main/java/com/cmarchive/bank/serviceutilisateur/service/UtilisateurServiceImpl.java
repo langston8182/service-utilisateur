@@ -1,7 +1,8 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurDejaPresentException;
+import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
-import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateursMapper;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.repository.UtilisateurRepository;
@@ -29,9 +30,8 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Override
     public Mono<UtilisateurDto> recupererUtilisateur(String id) {
-        /*Utilisateur utilisateur = utilisateurRepository.findById(id)
-                .orElseThrow(() -> new UtilisateurNonTrouveException("L'utilisateur n'a pas ete trouve"));*/
         return utilisateurRepository.findById(id)
+                .switchIfEmpty(Mono.error(new UtilisateurNonTrouveException("L'utilisateur n'a pas ete trouve")))
                 .map(utilisateur -> utilisateurMapper.mapVersUtilisateurDto(utilisateur));
     }
 
@@ -39,13 +39,8 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     public Mono<UtilisateurDto> creerUtilisateur(UtilisateurDto utilisateurDto) {
         Utilisateur utilisateur = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
 
-        /*Utilisateur reponse;
-        try {
-            reponse = utilisateurRepository.save(utilisateur);
-        } catch (DataIntegrityViolationException dive) {
-            throw new UtilisateurDejaPresentException("L'utilisateur est deja présent");
-        }*/
         return utilisateurRepository.save(utilisateur)
+                .onErrorResume(throwable -> Mono.error(new UtilisateurDejaPresentException("L'utilisateur est deja présent")))
                 .map(u -> utilisateurMapper.mapVersUtilisateurDto(u));
     }
 
@@ -60,6 +55,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Override
     public Mono<Void> supprimerUtilisateur(String id) {
-        return utilisateurRepository.deleteById(id);
+        return recupererUtilisateur(id)
+                .flatMap(utilisateurDto -> utilisateurRepository.deleteById(id));
     }
 }

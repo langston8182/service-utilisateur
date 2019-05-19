@@ -1,13 +1,13 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.serviceutilisateur.exception.OperationNonTrouveException;
+import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationsMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
 import com.cmarchive.bank.serviceutilisateur.modele.Operation;
-import com.cmarchive.bank.serviceutilisateur.modele.Operations;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationsDto;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.repository.OperationRepository;
 import org.junit.Test;
@@ -19,10 +19,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -42,13 +38,11 @@ public class OperationServiceImplTest {
     private OperationMapper operationMapper;
 
     @Mock
-    private OperationsMapper operationsMapper;
-
-    @Mock
     private UtilisateurMapper utilisateurMapper;
 
     @Test
     public void listerOperationsParUtilisateur() {
+        UtilisateurDto utilisateurDto = new UtilisateurDto();
         Operation operation1 = new Operation();
         Operation operation2 = new Operation();
         OperationDto operationDto1 = new OperationDto();
@@ -59,6 +53,7 @@ public class OperationServiceImplTest {
                 .willReturn(Flux.just(operation1, operation2));
         given(operationMapper.mapVersOperationDto(operation1)).willReturn(operationDto1);
         given(operationMapper.mapVersOperationDto(operation2)).willReturn(operationDto2);
+        given(utilisateurService.recupererUtilisateur(id)).willReturn(Mono.just(utilisateurDto));
 
         Flux<OperationDto> resultat = operationService.listerOperationsParUtilisateur(id);
 
@@ -67,6 +62,20 @@ public class OperationServiceImplTest {
                 .expectNext(operationDto1, operationDto2)
                 .verifyComplete();
         then(operationRepository).should().findAllByUtilisateur_IdOrderByDateOperationDesc(id);
+        then(utilisateurService).should().recupererUtilisateur(id);
+    }
+
+    @Test
+    public void listerOperationsParUtilisateur_UtilisateurNonExistant() {
+        String id = "1";
+        given(utilisateurService.recupererUtilisateur(id)).willReturn(Mono.error(new UtilisateurNonTrouveException("")));
+
+        Flux<OperationDto> resultat = operationService.listerOperationsParUtilisateur(id);
+
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectError(UtilisateurNonTrouveException.class)
+                .verify();
     }
 
     @Test
@@ -90,6 +99,19 @@ public class OperationServiceImplTest {
                 .expectNext(operationDto)
                 .verifyComplete();
         then(operationRepository).should().save(operation);
+    }
+
+    @Test
+    public void ajouterOperationAUtilisateur_UtilisateurNonExistant() {
+        OperationDto operationDto = new OperationDto();
+        given(utilisateurService.recupererUtilisateur("1")).willReturn(Mono.error(new UtilisateurNonTrouveException("")));
+
+        Mono<OperationDto> resultat = operationService.ajouterOperationAUtilisateur("1", operationDto);
+
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectError(UtilisateurNonTrouveException.class)
+                .verify();
     }
 
     @Test
@@ -117,6 +139,20 @@ public class OperationServiceImplTest {
                 .verifyComplete();
         then(operationRepository).should().findById(id);
         then(operationRepository).should().save(operation);
+    }
+
+    @Test
+    public void modifierOperationUtilisateur_OperationNonTrouvee() {
+        String id = "1";
+        OperationDto operationDto = new OperationDto().setId(id);
+        given(operationRepository.findById(id)).willReturn(Mono.error(new OperationNonTrouveException("")));
+
+        Mono<OperationDto> resultat = operationService.modifierOperationUtilisateur(operationDto);
+
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectError(OperationNonTrouveException.class)
+                .verify();
     }
 
     /*@Test

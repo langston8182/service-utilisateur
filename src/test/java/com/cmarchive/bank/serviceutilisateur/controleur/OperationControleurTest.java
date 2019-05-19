@@ -1,9 +1,9 @@
 package com.cmarchive.bank.serviceutilisateur.controleur;
 
+import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationDto;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.service.OperationService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +50,15 @@ public class OperationControleurTest {
     }
 
     @Test
+    public void listerOperationUtilisateur_UtilisateurNonExistant() {
+        given(operationService.listerOperationsParUtilisateur("1")).willReturn(Flux.error(new UtilisateurNonTrouveException("")));
+
+        webTestClient.get().uri("/operations/1")
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
     public void ajouterOperationAUtilisateur() {
         UtilisateurDto utilisateurDto = creerUtilisateurDto();
         OperationDto operationDto = creerOperationDto(utilisateurDto);
@@ -71,6 +80,21 @@ public class OperationControleurTest {
     }
 
     @Test
+    public void ajouterOperationAUtilisateur_UtilisateurNonExistant() {
+        UtilisateurDto utilisateurDto = creerUtilisateurDto();
+        OperationDto operationDto = creerOperationDto(utilisateurDto);
+        given(operationService.ajouterOperationAUtilisateur(anyString(), any(OperationDto.class)))
+                .willReturn(Mono.error(new UtilisateurNonTrouveException("")));
+
+        webTestClient.mutateWith(csrf())
+                .post().uri("/operations/1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(operationDto), OperationDto.class)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
     public void modifierOperationUtilisateur() {
         UtilisateurDto utilisateurDto = creerUtilisateurDto();
         OperationDto operationDto = creerOperationDto(utilisateurDto);
@@ -89,6 +113,21 @@ public class OperationControleurTest {
                 .expectBody()
                 .jsonPath("$.intitule").isEqualTo("test")
                 .jsonPath("$.utilisateurDto.prenom").isEqualTo("Cyril");
+    }
+
+    @Test
+    public void modifierOperationUtilisateur_OperationNonTrouvee() {
+        UtilisateurDto utilisateurDto = creerUtilisateurDto();
+        OperationDto operationDto = creerOperationDto(utilisateurDto);
+        given(operationService.modifierOperationUtilisateur(any(OperationDto.class)))
+                .willReturn(Mono.error(new UtilisateurNonTrouveException("")));
+
+        webTestClient.mutateWith(csrf())
+                .put().uri("/operations")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(operationDto), OperationDto.class)
+                .exchange()
+                .expectStatus().isNotFound();
     }
 
     @Test

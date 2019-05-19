@@ -1,5 +1,7 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.serviceutilisateur.exception.OperationPermanenteNonTrouveeException;
+import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationPermanenteMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
 import com.cmarchive.bank.serviceutilisateur.modele.OperationPermanente;
@@ -39,11 +41,13 @@ public class OperationPermanenteServiceImplTest {
 
     @Test
     public void listerOperationPermanentesParUtilisateur() {
+        UtilisateurDto utilisateurDto = new UtilisateurDto();
         OperationPermanente operationPermanente1 = new OperationPermanente();
         OperationPermanente operationPermanente2 = new OperationPermanente();
         OperationPermanenteDto operationPermanenteDto1 = new OperationPermanenteDto();
         OperationPermanenteDto operationPermanenteDto2 = new OperationPermanenteDto();
         String id = "1";
+        given(utilisateurService.recupererUtilisateur(id)).willReturn(Mono.just(utilisateurDto));
         given(operationPermanenteRepository
                 .findAllByUtilisateur_Id(id))
                 .willReturn(Flux.just(operationPermanente1, operationPermanente2));
@@ -57,6 +61,20 @@ public class OperationPermanenteServiceImplTest {
                 .expectNext(operationPermanenteDto1, operationPermanenteDto2)
                 .verifyComplete();
         then(operationPermanenteRepository).should().findAllByUtilisateur_Id(id);
+        then(utilisateurService).should().recupererUtilisateur(id);
+    }
+
+    @Test
+    public void listerOperationPermanentesParUtilisateur_UtilisateurNonExistant() {
+        String id = "1";
+        given(utilisateurService.recupererUtilisateur(id)).willReturn(Mono.error(new UtilisateurNonTrouveException("")));
+
+        Flux<OperationPermanenteDto> resultat = operationPermanenteService.listerOperationPermanentesParUtilisateur(id);
+
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectError(UtilisateurNonTrouveException.class)
+                .verify();
     }
 
     @Test
@@ -82,6 +100,20 @@ public class OperationPermanenteServiceImplTest {
                 .expectNext(operationPermanenteDto)
                 .verifyComplete();
         then(operationPermanenteRepository).should().save(operationPermanente);
+    }
+
+    @Test
+    public void ajouterOperationPermanenteAUtilisateur_UtilisateurNonExistant() {
+        OperationPermanenteDto operationPermanenteDto = new OperationPermanenteDto();
+        given(utilisateurService.recupererUtilisateur("1")).willReturn(Mono.error(new UtilisateurNonTrouveException("")));
+
+        Mono<OperationPermanenteDto> resultat = operationPermanenteService.ajouterOperationPermanenteAUtilisateur(
+                "1", operationPermanenteDto);
+
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectError(UtilisateurNonTrouveException.class)
+                .verify();
     }
 
     @Test
@@ -114,21 +146,20 @@ public class OperationPermanenteServiceImplTest {
         then(operationPermanenteRepository).should().save(operationPermanente);
     }
 
-    /*@Test
+    @Test
     public void modifierOperationPermanenteUtilisateur_OperationPermanenteNonTrouvee() {
         String id = "1";
         OperationPermanenteDto operationPermanenteDto = new OperationPermanenteDto().setId(id);
-        given(operationPermanenteRepository.findById(id)).willThrow(OperationNonTrouveException.class);
+        given(operationPermanenteRepository.findById(id)).willReturn(Mono.error(new OperationPermanenteNonTrouveeException("")));
 
-        Throwable thrown = catchThrowable(() -> operationPermanenteService
-                .modifierOperationPermanenteUtilisateur(operationPermanenteDto));
+        Mono<OperationPermanenteDto> resultat = operationPermanenteService.modifierOperationPermanenteUtilisateur(
+                operationPermanenteDto);
 
-        assertThat(thrown).isNotNull();
-        assertThat(thrown).isExactlyInstanceOf(OperationNonTrouveException.class);
-        verifyZeroInteractions(operationPermanenteMapper);
-        then(operationPermanenteRepository).should().findById(id);
-        verifyNoMoreInteractions(operationPermanenteRepository);
-    }*/
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectError(OperationPermanenteNonTrouveeException.class)
+                .verify();
+    }
 
     @Test
     public void supprimerOperationPermanente() {

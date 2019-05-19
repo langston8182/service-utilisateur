@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Configuration
 public class ServiceUtilisateurConfiguration extends ResourceServerConfigurerAdapter {

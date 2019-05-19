@@ -1,10 +1,8 @@
 package com.cmarchive.bank.serviceutilisateur.modele;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 /**
  * Utilisateur de l'application bank;
@@ -13,11 +11,13 @@ import javax.persistence.Id;
 public class Utilisateur {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private String nom;
     private String prenom;
+
+    @Indexed(unique = true)
     private String email;
+
     private String motDePasse;
 
     public Utilisateur() {

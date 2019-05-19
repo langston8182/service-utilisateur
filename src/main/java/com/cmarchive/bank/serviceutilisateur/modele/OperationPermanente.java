@@ -1,8 +1,8 @@
 package com.cmarchive.bank.serviceutilisateur.modele;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**
@@ -13,13 +13,10 @@ import java.math.BigDecimal;
 public class OperationPermanente {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private String intitule;
     private Integer jour;
     private BigDecimal prix;
-
-    @ManyToOne
     private Utilisateur utilisateur;
 
     public Utilisateur getUtilisateur() {
