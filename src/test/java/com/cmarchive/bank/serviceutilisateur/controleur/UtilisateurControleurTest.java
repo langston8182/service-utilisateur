@@ -1,5 +1,7 @@
 package com.cmarchive.bank.serviceutilisateur.controleur;
 
+import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurDejaPresentException;
+import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.service.UtilisateurService;
 import org.junit.Test;
@@ -7,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -63,6 +66,15 @@ public class UtilisateurControleurTest {
     }
 
     @Test
+    public void recupererUtilisateur_UtilisateurNonTrouve() {
+        given(utilisateurService.recupererUtilisateur("1")).willReturn(Mono.error(new UtilisateurNonTrouveException("")));
+
+        webTestClient.get().uri("/utilisateurs/1")
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
     public void supprimerUtilisateur() {
         given(utilisateurService.supprimerUtilisateur("1")).willReturn(Mono.empty());
 
@@ -72,6 +84,17 @@ public class UtilisateurControleurTest {
                 .exchange()
                 .expectStatus().isNoContent()
                 .expectBody(Void.class);
+    }
+
+    @Test
+    public void supprimerUtilisateur_UtilisateurNonExistant() {
+        given(utilisateurService.supprimerUtilisateur("1")).willReturn(Mono.error(new UtilisateurNonTrouveException("")));
+
+        webTestClient
+                .mutateWith(csrf())
+                .delete().uri("/utilisateurs/1")
+                .exchange()
+                .expectStatus().isNotFound();
     }
 
     @Test
@@ -92,18 +115,20 @@ public class UtilisateurControleurTest {
                 .jsonPath("$.id").isNotEmpty();
     }
 
-    /*@Test
-    public void sauvegarderUtilisateur_UtilisateurDejaExistant() throws Exception {
+    @Test
+    public void sauvegarderUtilisateur_UtilisateurDejaPresent() {
         UtilisateurDto cyril = creerUtilisateurDto();
         given(utilisateurService.creerUtilisateur(any(UtilisateurDto.class)))
-                .willThrow(UtilisateurDejaPresentException.class);
+                .willReturn(Mono.error(new UtilisateurDejaPresentException("")));
 
-        mockMvc.perform(post("/utilisateurs")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(cyril)))
-                .andExpect(status().isConflict());
-    }*/
+        webTestClient
+                .mutateWith(csrf())
+                .post().uri("/utilisateurs")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(cyril), UtilisateurDto.class)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.CONFLICT);
+    }
 
     @Test
     public void modifierUtilisateur() {
@@ -121,6 +146,20 @@ public class UtilisateurControleurTest {
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.nom").isEqualTo("Boussat");
+    }
+
+    @Test
+    public void modifierUtilisateur_UtilisateurNonExistant() {
+        UtilisateurDto cyril = new UtilisateurDto();
+        given(utilisateurService.modifierUtilisateur(any(UtilisateurDto.class))).willReturn(Mono.error(new UtilisateurNonTrouveException("")));
+
+        webTestClient
+                .mutateWith(csrf())
+                .put().uri("/utilisateurs")
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(cyril), UtilisateurDto.class)
+                .exchange()
+                .expectStatus().isNotFound();
     }
 
     private UtilisateurDto creerUtilisateurDto() {

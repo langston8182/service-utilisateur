@@ -2,14 +2,10 @@ package com.cmarchive.bank.serviceutilisateur.service;
 
 import com.cmarchive.bank.serviceutilisateur.exception.OperationNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationMapper;
-import com.cmarchive.bank.serviceutilisateur.mapper.OperationsMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
 import com.cmarchive.bank.serviceutilisateur.modele.Operation;
-import com.cmarchive.bank.serviceutilisateur.modele.Operations;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationsDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.repository.OperationRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -35,7 +31,8 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public Flux<OperationDto> listerOperationsParUtilisateur(String utilisateurId) {
-        return operationRepository.findAllByUtilisateur_IdOrderByDateOperationDesc(utilisateurId)
+        return utilisateurService.recupererUtilisateur(utilisateurId)
+                .thenMany(operationRepository.findAllByUtilisateur_IdOrderByDateOperationDesc(utilisateurId))
                 .map(operation -> operationMapper.mapVersOperationDto(operation));
     }
 
@@ -57,9 +54,8 @@ public class OperationServiceImpl implements OperationService {
     }
 
     private Mono<Operation> recupererOperationDansBdd(OperationDto operationDto) {
-        return operationRepository.findById(operationDto.getId());
-        /*return operationRepository.findById(operationDto.getId())
-                    .orElseThrow(() -> new OperationNonTrouveException("Operation non trouvee"));*/
+        return operationRepository.findById(operationDto.getId())
+                .switchIfEmpty(Mono.error(new OperationNonTrouveException("Operation non trouvee")));
     }
 
     @Override

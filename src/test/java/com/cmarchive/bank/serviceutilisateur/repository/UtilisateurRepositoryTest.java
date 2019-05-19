@@ -3,26 +3,15 @@ package com.cmarchive.bank.serviceutilisateur.repository;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataMongoTest
@@ -72,6 +61,21 @@ public class UtilisateurRepositoryTest {
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void sauvegarderUtilisateur_UtilisateurDejaPresent() {
+        Utilisateur cyril = creerUtilisateur();
+        Utilisateur melanie = creerUtilisateur();
+        mongoTemplate.save(cyril);
+
+        Mono<Utilisateur> resultat = utilisateurRepository.save(melanie);
+
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectError(DuplicateKeyException.class)
+                .verify();
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void modifierUtilisateur() {
         Utilisateur test = new Utilisateur()
                 .setEmail("cyril.marchive@gmail.com")
@@ -104,6 +108,7 @@ public class UtilisateurRepositoryTest {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void supprimerUtilisateur() {
         Utilisateur cyril = creerUtilisateur();
         mongoTemplate.save(cyril);

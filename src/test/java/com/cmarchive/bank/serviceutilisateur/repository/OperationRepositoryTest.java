@@ -6,11 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import reactor.core.publisher.Flux;
@@ -19,7 +15,6 @@ import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -68,20 +63,15 @@ public class OperationRepositoryTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void listerOperationsParUtilisateur() {
         Utilisateur cyril = creerUtilisateur();
-        Operation operation1 = creerOperation(cyril);
-        Operation operation2 = creerOperation(cyril);
-        operation2.setIntitule("operation2");
-        operation2.setDateOperation(LocalDate.now().plusDays(1));
-        mongoTemplate.save(cyril);
-        mongoTemplate.save(operation1);
-        mongoTemplate.save(operation2);
+        Utilisateur utilisateurSauvegarde = mongoTemplate.save(cyril);
+        Operation operation = creerOperation(utilisateurSauvegarde);
+        mongoTemplate.insert(operation);
 
         Flux<Operation> resultat = operationRepository.findAllByUtilisateur_IdOrderByDateOperationDesc(cyril.getId());
 
         StepVerifier.create(resultat.log())
                 .expectSubscription()
-                .expectNextMatches(operation -> operation.getIntitule().equals("operation2"))
-                .expectNextMatches(operation -> operation.getIntitule().equals("operation"))
+                .expectNextMatches(o -> o.getIntitule().equals("operation"))
                 .verifyComplete();
     }
 

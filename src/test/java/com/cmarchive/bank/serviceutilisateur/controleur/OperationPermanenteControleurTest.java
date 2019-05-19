@@ -1,5 +1,7 @@
 package com.cmarchive.bank.serviceutilisateur.controleur;
 
+import com.cmarchive.bank.serviceutilisateur.exception.OperationPermanenteNonTrouveeException;
+import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanenteDto;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.service.OperationPermanenteService;
@@ -49,6 +51,16 @@ public class OperationPermanenteControleurTest {
     }
 
     @Test
+    public void listerOperationPermanenteUtilisateur_UtilisateurNonExistant() {
+        given(operationPermanenteService.listerOperationPermanentesParUtilisateur("1"))
+                .willReturn(Flux.error(new UtilisateurNonTrouveException("")));
+
+        webTestClient.get().uri("/operations-permanentes/1")
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
     public void ajouterOperationPermanenteAUtilisateur() {
         UtilisateurDto utilisateurDto = creerUtilisateurDto();
         OperationPermanenteDto operationPermanenteDto = creerOperationPermanenteDto(utilisateurDto);
@@ -71,6 +83,22 @@ public class OperationPermanenteControleurTest {
     }
 
     @Test
+    public void ajouterOperationPermanenteAUtilisateur_UtilisateurNonExistant() {
+        UtilisateurDto utilisateurDto = creerUtilisateurDto();
+        OperationPermanenteDto operationPermanenteDto = creerOperationPermanenteDto(utilisateurDto);
+        given(operationPermanenteService.ajouterOperationPermanenteAUtilisateur(
+                anyString(), any(OperationPermanenteDto.class)))
+                .willReturn(Mono.error(new UtilisateurNonTrouveException("")));
+
+        webTestClient.mutateWith(csrf())
+                .post().uri("/operations-permanentes/1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(operationPermanenteDto), OperationPermanenteDto.class)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
     public void modifierOperationPermanenteUtilisateur() {
         UtilisateurDto utilisateurDto = creerUtilisateurDto();
         OperationPermanenteDto operationPermanenteDto = creerOperationPermanenteDto(utilisateurDto);
@@ -89,6 +117,21 @@ public class OperationPermanenteControleurTest {
                 .expectBody()
                 .jsonPath("$.intitule").isEqualTo("test")
                 .jsonPath("$.utilisateurDto.prenom").isEqualTo("Cyril");
+    }
+
+    @Test
+    public void modifierOperationPermanenteUtilisateur_OperationPermanenteNonTrouvee() {
+        UtilisateurDto utilisateurDto = creerUtilisateurDto();
+        OperationPermanenteDto operationPermanenteDto = creerOperationPermanenteDto(utilisateurDto);
+        given(operationPermanenteService.modifierOperationPermanenteUtilisateur(any(OperationPermanenteDto.class)))
+                .willReturn(Mono.error(new OperationPermanenteNonTrouveeException("")));
+
+        webTestClient.mutateWith(csrf())
+                .put().uri("/operations-permanentes")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(Mono.just(operationPermanenteDto), OperationPermanenteDto.class)
+                .exchange()
+                .expectStatus().isNotFound();
     }
 
     @Test

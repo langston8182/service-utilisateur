@@ -7,11 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import reactor.core.publisher.Flux;
@@ -19,7 +15,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,6 +29,7 @@ public class OperationPermanenteRepositoryTest {
     private OperationPermanenteRepository operationPermanenteRepository;
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void sauvegarderOperationPermanenteAvecUtilisateur() {
         Utilisateur cyril = creerUtilisateur();
         OperationPermanente operationPermanente = creerOperationPermanente(cyril);
@@ -48,6 +44,7 @@ public class OperationPermanenteRepositoryTest {
     }
 
     @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void supprimerOperationPermanente() {
         Utilisateur cyril = creerUtilisateur();
         OperationPermanente operationPermanente = creerOperationPermanente(cyril);
@@ -69,18 +66,14 @@ public class OperationPermanenteRepositoryTest {
     public void listerOperationPermanenteParUtilisateur() {
         Utilisateur cyril = creerUtilisateur();
         OperationPermanente operationPermanente1 = creerOperationPermanente(cyril);
-        OperationPermanente operationPermanente2 = creerOperationPermanente(cyril);
-        operationPermanente2.setJour(2);
         mongoTemplate.save(cyril);
         mongoTemplate.save(operationPermanente1);
-        mongoTemplate.save(operationPermanente2);
 
         Flux<OperationPermanente> resultat = operationPermanenteRepository.findAllByUtilisateur_Id(cyril.getId());
 
         StepVerifier.create(resultat)
                 .expectSubscription()
                 .expectNextMatches(operationPermanente -> operationPermanente.getJour() == 12)
-                .expectNextMatches(operationPermanente -> operationPermanente.getJour() == 2)
                 .verifyComplete();
     }
 

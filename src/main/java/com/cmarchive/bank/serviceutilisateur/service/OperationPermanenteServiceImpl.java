@@ -1,5 +1,6 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.serviceutilisateur.exception.OperationNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationPermanenteMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
 import com.cmarchive.bank.serviceutilisateur.modele.OperationPermanente;
@@ -30,9 +31,9 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
 
     @Override
     public Flux<OperationPermanenteDto> listerOperationPermanentesParUtilisateur(String utilisateurId) {
-        return operationPermanenteRepository.findAllByUtilisateur_Id(utilisateurId)
-                .map(operationPermanente -> operationPermanenteMapper
-                        .mapVersOperationPermanenteDto(operationPermanente));
+        return utilisateurService.recupererUtilisateur(utilisateurId)
+                .thenMany(operationPermanenteRepository.findAllByUtilisateur_Id(utilisateurId))
+                .map(operationPermanente -> operationPermanenteMapper.mapVersOperationPermanenteDto(operationPermanente));
     }
 
     @Override
@@ -65,9 +66,7 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
     }
 
     private Mono<OperationPermanente> recupererOperationPermanenteDansBdd(OperationPermanenteDto operationPermanenteDto) {
-        return operationPermanenteRepository.findById(operationPermanenteDto.getId());
-
-        /*return operationPermanenteRepository.findById(operationPermanenteDto.getId())
-                .orElseThrow(() -> new OperationNonTrouveException("Operation permanente non trouvee"));*/
+        return operationPermanenteRepository.findById(operationPermanenteDto.getId())
+                .switchIfEmpty(Mono.error(new OperationNonTrouveException("Operation permanente non trouvee")));
     }
 }

@@ -1,5 +1,7 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurDejaPresentException;
+import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
@@ -9,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.dao.DuplicateKeyException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -63,16 +66,18 @@ public class UtilisateurServiceImplTest {
                 .verifyComplete();
     }
 
-    /*@Test
+    @Test
     public void recupererUtilisateurInexistant() {
-        given(utilisateurRepository.findById(anyString())).willThrow(UtilisateurNonTrouveException.class);
+        given(utilisateurRepository.findById(anyString())).willReturn(Mono.empty());
 
-        Throwable thrown = catchThrowable(() -> utilisateurService.recupererUtilisateur(anyString()));
+        Mono<UtilisateurDto> resultat = utilisateurService.recupererUtilisateur(anyString());
 
         then(utilisateurRepository).should().findById(anyString());
-        assertThat(thrown).isNotNull();
-        assertThat(thrown).isExactlyInstanceOf(UtilisateurNonTrouveException.class);
-    }*/
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectError(UtilisateurNonTrouveException.class)
+                .verify();
+    }
 
     @Test
     public void sauvegarderUtilisateur() {
@@ -93,19 +98,21 @@ public class UtilisateurServiceImplTest {
                 .verifyComplete();
     }
 
-    /*@Test
+    @Test
     public void sauvegarderUtilisateur_DejaExistant() {
         Utilisateur cyril = new Utilisateur();
         UtilisateurDto cyrilDto = new UtilisateurDto();
-        given(utilisateurRepository.save(cyril)).willThrow(DataIntegrityViolationException.class);
         given(utilisateurMapper.mapVersUtilisateur(cyrilDto)).willReturn(cyril);
+        given(utilisateurRepository.save(cyril)).willReturn(Mono.error(new DuplicateKeyException("")));
 
-        Throwable thrown = catchThrowable(() -> utilisateurService.creerUtilisateur(cyrilDto));
+        Mono<UtilisateurDto> resultat = utilisateurService.creerUtilisateur(cyrilDto);
 
         then(utilisateurMapper).should(never()).mapVersUtilisateurDto(any(Utilisateur.class));
-        assertThat(thrown).isNotNull();
-        assertThat(thrown).isExactlyInstanceOf(UtilisateurDejaPresentException.class);
-    }*/
+        StepVerifier.create(resultat.log())
+                .expectSubscription()
+                .expectError(UtilisateurDejaPresentException.class)
+                .verify();
+    }
 
     @Test
     public void modifierUtilisateur() {
@@ -139,8 +146,26 @@ public class UtilisateurServiceImplTest {
     }
 
     @Test
+    public void modifierUtilisateur_UtilisateurInexistant() {
+        UtilisateurDto cyrilDto = new UtilisateurDto();
+        cyrilDto.setId("Id inexistant");
+        given(utilisateurRepository.findById(anyString())).willReturn(Mono.empty());
+
+        Mono<UtilisateurDto> resultat = utilisateurService.modifierUtilisateur(cyrilDto);
+
+        StepVerifier.create(resultat)
+                .expectSubscription()
+                .expectError(UtilisateurNonTrouveException.class)
+                .verify();
+    }
+
+    @Test
     public void supprimerUtilisateur() {
         String id = "1";
+        Utilisateur cyril = new Utilisateur();
+        UtilisateurDto cyrilDto = new UtilisateurDto();
+        given(utilisateurRepository.findById("1")).willReturn(Mono.just(cyril));
+        given(utilisateurMapper.mapVersUtilisateurDto(cyril)).willReturn(cyrilDto);
         given(utilisateurRepository.deleteById(id)).willReturn(Mono.empty());
 
         Mono<Void> resultat = utilisateurService.supprimerUtilisateur(id);
@@ -149,5 +174,18 @@ public class UtilisateurServiceImplTest {
                 .expectSubscription()
                 .verifyComplete();
         then(utilisateurRepository).should().deleteById(id);
+    }
+
+    @Test
+    public void supprimerUtilisateur_UtilisateurInexistant() {
+        String id = "1";
+        given(utilisateurRepository.findById(anyString())).willReturn(Mono.empty());
+
+        Mono<Void> resultat = utilisateurService.supprimerUtilisateur(id);
+
+        StepVerifier.create(resultat.log())
+                .expectSubscription()
+                .expectError(UtilisateurNonTrouveException.class)
+                .verify();
     }
 }

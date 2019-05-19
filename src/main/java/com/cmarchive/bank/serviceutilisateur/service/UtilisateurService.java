@@ -1,7 +1,6 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateursDto;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
