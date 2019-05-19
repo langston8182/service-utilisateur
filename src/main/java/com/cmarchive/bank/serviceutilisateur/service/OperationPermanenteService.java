@@ -13,6 +13,6 @@ public interface OperationPermanenteService {
     Mono<OperationPermanenteDto> ajouterOperationPermanenteAUtilisateur(
             String utilisateurId, OperationPermanenteDto operationPermanenteDto);
     Mono<OperationPermanenteDto> modifierOperationPermanenteUtilisateur(OperationPermanenteDto operationPermanenteDto);
-    Mono<Void> supprimerOperationPermanente(OperationPermanenteDto operationPermanenteDto);
+    Mono<Void> supprimerOperationPermanente(String id);
 
 }

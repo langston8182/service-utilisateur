@@ -93,8 +93,6 @@ public class OperationControleurTest {
 
     @Test
     public void supprimerOperationUtilisateur() {
-        UtilisateurDto utilisateurDto = creerUtilisateurDto();
-        OperationDto operationDto = creerOperationDto(utilisateurDto);
         given(operationService.supprimerOperation("1")).willReturn(Mono.empty());
 
         webTestClient.mutateWith(csrf())

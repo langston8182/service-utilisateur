@@ -54,9 +54,9 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
     }
 
     @Override
-    public Mono<Void> supprimerOperationPermanente(OperationPermanenteDto operationPermanenteDto) {
+    public Mono<Void> supprimerOperationPermanente(String id) {
         return operationPermanenteRepository
-                .delete(operationPermanenteMapper.mapVersOperationPermanente(operationPermanenteDto));
+                .deleteById(id);
     }
 
     private Mono<Utilisateur> recupererUtilisateurParId(String utilisateurId) {
