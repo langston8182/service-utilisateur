@@ -13,6 +13,6 @@ public interface OperationService {
     Flux<OperationDto> listerOperationsParUtilisateur(String utilisateurId);
     Mono<OperationDto> ajouterOperationAUtilisateur(String utilisateurId, OperationDto operationDto);
     Mono<OperationDto> modifierOperationUtilisateur(OperationDto operationDto);
-    Mono<Void> supprimerOperation(OperationDto operationDto);
+    Mono<Void> supprimerOperation(String id);
 
 }

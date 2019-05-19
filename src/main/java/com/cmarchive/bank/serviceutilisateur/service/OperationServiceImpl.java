@@ -63,8 +63,8 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public Mono<Void> supprimerOperation(OperationDto operationDto) {
-        return operationRepository.delete(operationMapper.mapVersOperation(operationDto));
+    public Mono<Void> supprimerOperation(String id) {
+        return operationRepository.deleteById(id);
     }
 
     private Mono<Utilisateur> recupererUtilisateurParId(String utilisateurId) {
