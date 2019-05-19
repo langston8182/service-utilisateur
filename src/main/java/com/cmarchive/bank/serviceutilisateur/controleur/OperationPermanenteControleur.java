@@ -6,12 +6,14 @@ import com.cmarchive.bank.serviceutilisateur.service.OperationPermanenteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/")
 public class OperationPermanenteControleur {
 
-    /*private OperationPermanenteService operationPermanenteService;
+    private OperationPermanenteService operationPermanenteService;
 
     public OperationPermanenteControleur(OperationPermanenteService operationPermanenteService) {
         this.operationPermanenteService = operationPermanenteService;
@@ -19,28 +21,29 @@ public class OperationPermanenteControleur {
 
     @GetMapping("/operations-permanentes/{utilisateurId}")
     @PreAuthorize("#oauth2.hasScope('USER')")
-    public OperationPermanentesDto listerOperationPermanenteUtilisateur(@PathVariable String utilisateurId) {
+    public Flux<OperationPermanenteDto> listerOperationPermanenteUtilisateur(@PathVariable String utilisateurId) {
         return operationPermanenteService.listerOperationPermanentesParUtilisateur(utilisateurId);
     }
 
     @PostMapping("/operations-permanentes/{utilisateurId}")
     @PreAuthorize("#oauth2.hasScope('USER')")
     @ResponseStatus(HttpStatus.CREATED)
-    public OperationPermanenteDto ajouterOperationPermanenteAUtilisateur(@PathVariable String utilisateurId,
-                                                               @RequestBody OperationPermanenteDto operationPermanenteDto) {
+    public Mono<OperationPermanenteDto> ajouterOperationPermanenteAUtilisateur(@PathVariable String utilisateurId,
+                                                                               @RequestBody OperationPermanenteDto operationPermanenteDto) {
         return operationPermanenteService.ajouterOperationPermanenteAUtilisateur(utilisateurId,
                 operationPermanenteDto);
     }
 
     @PutMapping("/operations-permanentes")
     @PreAuthorize("#oauth2.hasScope('USER')")
-    public OperationPermanenteDto modifierOperationPermanenteUtilisateur(@RequestBody OperationPermanenteDto operationPermanenteDto) {
+    public Mono<OperationPermanenteDto> modifierOperationPermanenteUtilisateur(@RequestBody OperationPermanenteDto operationPermanenteDto) {
         return operationPermanenteService.modifierOperationPermanenteUtilisateur(operationPermanenteDto);
     }
 
-    @DeleteMapping("/operations-permanentes")
+    @DeleteMapping("/operations-permanentes/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void supprimerOperationPermanenteUtilisateur(@RequestBody OperationPermanenteDto operationPermanenteDto) {
-        operationPermanenteService.supprimerOperationPermanente(operationPermanenteDto);
-    }*/
+    @PreAuthorize("#oauth2.hasScope('USER')")
+    public Mono<Void> supprimerOperationPermanenteUtilisateur(@PathVariable String id) {
+        return operationPermanenteService.supprimerOperationPermanente(id);
+    }
 }

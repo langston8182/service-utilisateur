@@ -132,17 +132,14 @@ public class OperationPermanenteServiceImplTest {
 
     @Test
     public void supprimerOperationPermanente() {
-        OperationPermanente operationPermanente = new OperationPermanente();
-        OperationPermanenteDto operationPermanenteDto = new OperationPermanenteDto();
-        given(operationPermanenteMapper.mapVersOperationPermanente(operationPermanenteDto))
-                .willReturn(operationPermanente);
-        given(operationPermanenteRepository.delete(operationPermanente)).willReturn(Mono.empty());
+        String id = "1";
+        given(operationPermanenteRepository.deleteById(id)).willReturn(Mono.empty());
 
-        Mono<Void> resultat = operationPermanenteService.supprimerOperationPermanente(operationPermanenteDto);
+        Mono<Void> resultat = operationPermanenteService.supprimerOperationPermanente(id);
 
         StepVerifier.create(resultat)
                 .expectSubscription()
                 .verifyComplete();
-        then(operationPermanenteRepository).should().delete(operationPermanente);
+        then(operationPermanenteRepository).should().deleteById(id);
     }
 }

@@ -54,7 +54,7 @@ public class OperationPermanenteRepositoryTest {
         mongoTemplate.save(cyril);
         mongoTemplate.save(operationPermanente);
 
-        Mono<Void> resultat = operationPermanenteRepository.delete(operationPermanente);
+        Mono<Void> resultat = operationPermanenteRepository.deleteById(operationPermanente.getId());
 
         StepVerifier.create(resultat)
                 .expectSubscription()
