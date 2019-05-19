@@ -14,5 +14,5 @@ public interface UtilisateurService {
     Mono<UtilisateurDto> recupererUtilisateur(String id);
     Mono<UtilisateurDto> creerUtilisateur(UtilisateurDto utilisateurDto);
     Mono<UtilisateurDto> modifierUtilisateur(UtilisateurDto utilisateurDto);
-    Mono<Void> supprimerUtilisateur(UtilisateurDto utilisateur);
+    Mono<Void> supprimerUtilisateur(String id);
 }

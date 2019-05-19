@@ -1,7 +1,6 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
-import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateursMapper;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.repository.UtilisateurRepository;
@@ -141,16 +140,14 @@ public class UtilisateurServiceImplTest {
 
     @Test
     public void supprimerUtilisateur() {
-        Utilisateur cyril = new Utilisateur();
-        UtilisateurDto cyrilDto = new UtilisateurDto();
-        given(utilisateurMapper.mapVersUtilisateur(cyrilDto)).willReturn(cyril);
-        given(utilisateurRepository.delete(cyril)).willReturn(Mono.empty());
+        String id = "1";
+        given(utilisateurRepository.deleteById(id)).willReturn(Mono.empty());
 
-        Mono<Void> resultat = utilisateurService.supprimerUtilisateur(cyrilDto);
+        Mono<Void> resultat = utilisateurService.supprimerUtilisateur(id);
 
         StepVerifier.create(resultat.log())
                 .expectSubscription()
                 .verifyComplete();
-        then(utilisateurRepository).should().delete(cyril);
+        then(utilisateurRepository).should().deleteById(id);
     }
 }

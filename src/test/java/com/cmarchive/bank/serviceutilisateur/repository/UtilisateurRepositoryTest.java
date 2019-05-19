@@ -108,7 +108,7 @@ public class UtilisateurRepositoryTest {
         Utilisateur cyril = creerUtilisateur();
         mongoTemplate.save(cyril);
 
-        Mono<Void> resultat = utilisateurRepository.delete(cyril);
+        Mono<Void> resultat = utilisateurRepository.deleteById(cyril.getId());
 
         StepVerifier.create(resultat)
                 .expectSubscription()
