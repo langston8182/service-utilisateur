@@ -136,16 +136,14 @@ public class OperationServiceImplTest {
 
     @Test
     public void supprimerOperation() {
-        Operation operation = new Operation();
-        OperationDto operationDto = new OperationDto();
-        given(operationMapper.mapVersOperation(operationDto)).willReturn(operation);
-        given(operationRepository.delete(operation)).willReturn(Mono.empty());
+        String id = "1";
+        given(operationRepository.deleteById(id)).willReturn(Mono.empty());
 
-        Mono<Void> resultat = operationService.supprimerOperation(operationDto);
+        Mono<Void> resultat = operationService.supprimerOperation(id);
 
         StepVerifier.create(resultat)
                 .expectSubscription()
                 .verifyComplete();
-        then(operationRepository).should().delete(operation);
+        then(operationRepository).should().deleteById(id);
     }
 }

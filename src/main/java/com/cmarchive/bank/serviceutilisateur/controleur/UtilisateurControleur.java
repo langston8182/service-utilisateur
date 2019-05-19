@@ -28,11 +28,13 @@ public class UtilisateurControleur {
     }
 
     @GetMapping("/utilisateurs/{id}")
+    @PreAuthorize("#oauth2.hasScope('ADMIN')")
     public Mono<UtilisateurDto> recupererUtilisateur(@PathVariable String id) {
         return utilisateurService.recupererUtilisateur(id);
     }
 
     @PostMapping("/utilisateurs")
+    @PreAuthorize("#oauth2.hasScope('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<UtilisateurDto> sauvegarderUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
         try {
@@ -43,11 +45,13 @@ public class UtilisateurControleur {
     }
 
     @PutMapping("/utilisateurs")
+    @PreAuthorize("#oauth2.hasScope('ADMIN')")
     public Mono<UtilisateurDto> modifierUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
         return utilisateurService.modifierUtilisateur(utilisateurDto);
     }
 
     @DeleteMapping("/utilisateurs/{id}")
+    @PreAuthorize("#oauth2.hasScope('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> supprimerUtilisateur(@PathVariable String id) {
         return utilisateurService.supprimerUtilisateur(id);
