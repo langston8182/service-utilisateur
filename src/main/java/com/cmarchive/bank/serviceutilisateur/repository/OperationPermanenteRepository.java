@@ -13,5 +13,6 @@ import java.util.List;
 public interface OperationPermanenteRepository extends JpaRepository<OperationPermanente, String> {
 
     List<OperationPermanente> findAllByUtilisateur_Id(String utilisateurId);
+    List<OperationPermanente> findAllByUtilisateur_IdOkta(String idOkta);
 
 }

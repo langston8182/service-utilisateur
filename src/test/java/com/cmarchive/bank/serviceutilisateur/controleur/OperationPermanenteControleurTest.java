@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(secure=false)
 public class OperationPermanenteControleurTest {
 
+    private static final String ID_OKTA = "idOkta";
     @Autowired
     private MockMvc mockMvc;
 
@@ -63,10 +65,11 @@ public class OperationPermanenteControleurTest {
         OperationPermanentesDto operationPermanentesDto = new OperationPermanentesDto()
                 .setOperationPermanenteDtos(Stream.of(operationPermanenteDto1
                         , operationPermanenteDto2).collect(Collectors.toList()));
-        given(operationPermanenteService.listerOperationPermanentesParUtilisateur("1"))
+        given(operationPermanenteService.listerOperationPermanentesParUtilisateur(ID_OKTA))
                 .willReturn(operationPermanentesDto);
 
-        mockMvc.perform(get("/operations-permanentes/1")
+        mockMvc.perform(get("/operations-permanentes")
+                .principal(getPincipal())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -84,7 +87,8 @@ public class OperationPermanenteControleurTest {
                 anyString(), any(OperationPermanenteDto.class)))
                 .willReturn(reponse);
 
-        mockMvc.perform(post("/operations-permanentes/1")
+        mockMvc.perform(post("/operations-permanentes")
+                .principal(getPincipal())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(operationPermanenteDto)))
@@ -139,5 +143,9 @@ public class OperationPermanenteControleurTest {
                 .setEmail("cyril.marchive@gmail.com")
                 .setNom("Marchive")
                 .setPrenom("Cyril");
+    }
+
+    private Principal getPincipal() {
+        return () -> ID_OKTA;
     }
 }
