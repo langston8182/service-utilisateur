@@ -10,6 +10,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/")
 public class UtilisateurControleur {
@@ -21,13 +23,14 @@ public class UtilisateurControleur {
     }
 
     @GetMapping("/utilisateurs/")
-    @PreAuthorize("#oauth2.hasScope('custom_mod')")
+    @PreAuthorize("#oauth2.hasScope('admin')")
     public UtilisateursDto listerUtilisateur() {
+        System.out.println();
         return utilisateurService.listerUtilisateurs();
     }
 
     @GetMapping("/utilisateurs/{id}")
-    @PreAuthorize("#oauth2.hasScope('custom_mod')")
+    @PreAuthorize("#oauth2.hasScope('admin')")
     public UtilisateurDto recupererUtilisateur(@PathVariable String id) {
         try {
             return utilisateurService.recupererUtilisateur(id);
@@ -37,7 +40,7 @@ public class UtilisateurControleur {
     }
 
     @GetMapping("/utilisateurs")
-    @PreAuthorize("#oauth2.hasScope('custom_mod')")
+    @PreAuthorize("#oauth2.hasScope('admin')")
     public UtilisateurDto recupererUtilisateurParEmail(@RequestParam String email) {
         try {
             return utilisateurService.recupererUtilisateurParEmail(email);
@@ -47,7 +50,7 @@ public class UtilisateurControleur {
     }
 
     @PostMapping("/utilisateurs")
-    @PreAuthorize("#oauth2.hasScope('custom_mod')")
+    @PreAuthorize("#oauth2.hasScope('admin')")
     @ResponseStatus(HttpStatus.CREATED)
     public UtilisateurDto sauvegarderUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
         try {
@@ -58,7 +61,7 @@ public class UtilisateurControleur {
     }
 
     @PutMapping("/utilisateurs")
-    @PreAuthorize("#oauth2.hasScope('custom_mod')")
+    @PreAuthorize("#oauth2.hasScope('admin')")
     public UtilisateurDto modifierUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
         try {
             return utilisateurService.modifierUtilisateur(utilisateurDto);
@@ -68,7 +71,7 @@ public class UtilisateurControleur {
     }
 
     @DeleteMapping("/utilisateurs")
-    @PreAuthorize("#oauth2.hasScope('custom_mod')")
+    @PreAuthorize("#oauth2.hasScope('admin')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void supprimerUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
         utilisateurService.supprimerUtilisateur(utilisateurDto);
