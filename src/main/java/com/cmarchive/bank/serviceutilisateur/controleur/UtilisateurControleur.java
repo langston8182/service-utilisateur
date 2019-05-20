@@ -10,8 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Principal;
-
 @RestController
 @RequestMapping("/")
 public class UtilisateurControleur {
@@ -44,6 +42,16 @@ public class UtilisateurControleur {
     public UtilisateurDto recupererUtilisateurParEmail(@RequestParam String email) {
         try {
             return utilisateurService.recupererUtilisateurParEmail(email);
+        } catch (UtilisateurNonTrouveException unte) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, unte.getMessage(), unte);
+        }
+    }
+
+    @GetMapping("/utilisateurs/okta/{id}")
+    @PreAuthorize("#oauth2.hasScope('admin')")
+    public UtilisateurDto recupererUtilisateurParIdOkta(@PathVariable String id) {
+        try {
+            return utilisateurService.recupererUtilisateurParIdOkta(id);
         } catch (UtilisateurNonTrouveException unte) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, unte.getMessage(), unte);
         }
