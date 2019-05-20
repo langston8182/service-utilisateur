@@ -27,7 +27,7 @@ spring:
 security:
   oauth2:
     client:
-      client-id: 0oakz6w946XN0GAcj356
-      client-secret: -SmoZw_w10UAZZQESfoZH_2N1oYCzShpLzQXkqWG
+      client-id: 0oal0e47smT7xdxPP356
+      client-secret: KJch4eJt_ZWlweDyEVZma4L2oFkE1i0MXU9IhzNu
     resource:
       token-info-uri: https://dev-847930.okta.com/oauth2/default/v1/introspect
