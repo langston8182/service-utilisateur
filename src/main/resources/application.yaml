@@ -24,10 +24,9 @@ spring:
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
-security:
+
+okta:
   oauth2:
-    client:
-      client-id: 0oal0e47smT7xdxPP356
-      client-secret: KJch4eJt_ZWlweDyEVZma4L2oFkE1i0MXU9IhzNu
-    resource:
-      token-info-uri: https://dev-847930.okta.com/oauth2/default/v1/introspect
+    issuer: https://dev-847930.okta.com/oauth2/default
+    clientId: 0oalbqv5tDtNvYWwY356
+    clientSecret: kKdzYKFoS9GBhiY7G3ryS2XCzHCuUs8TJX6HACOr

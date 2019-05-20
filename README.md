@@ -104,26 +104,70 @@ Il faut commencer par creer un serveur d'autorisation
 #### Applications
 Creer une application pour le serveur de resource en choisissant **Service Machine to machine**
 
+Le serveur de resources est en charge de verifier que les token JWT sont corrects.
+
 ![okta application selection](images/Sélection_003.png)
+
 ![okta application selection](images/Sélection_004.png)
 
-Creer une application pour le serveur d'authentification en choisissant **Single Page Application** afin que le client s'authentifie (Application React)
+Le serveur de resources n'est pas capable de fournir un token JWT. Pour cela, un serveur d'authentification est necessaire.
+
+Creer une application pour le serveur d'authentification en choisissant **Single Page Application** afin que le client s'authentifie pour une application React (Grant type implicit)
 ![okta application selection](images/Sélection_005.png)
+
 ![okta application selection](images/Sélection_006.png)
+
 ![okta application selection](images/Sélection_007.png)
 
 #### Serveur de resource
-Ajouter le Jwk (Json Web Key) dans les parametres du serveur pour permettre l'autorisation au serveur Okta
+Ajouter les configurations okta dans le fichier **application.yml**
+
+Recuperer le *clientId* et *clientSecret* du serveur de resources cree precedement.
 ```
-spring:
-  application:
-    name: utilisateur
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: https://dev-847930.okta.com/oauth2/default
-          jwk-set-uri: https://dev-847930.okta.com/oauth2/default/v1/keys
+okta:
+  oauth2:
+    issuer: https://dev-847930.okta.com/oauth2/default
+    clientId: 0oalbqv5tDtNvYWwY356
+    clientSecret: kKdzYKFoS9GBhiY7G3ryS2XCzHCuUs8TJX6HACOr
+```
+
+#### Postman
+Pour recuperer le token JWT, il faut creer une applicatin Okta de type Web (Grant type AuthorizationCode)
+
+![okta application selection](images/Sélection_008.png)
+
+Pour recuperer un nouveau token Postman, aller dans l'onclet Authorization choisir le type Oatuh2 puis cliquer sur **Get new access token**
+
+![okta postman](images/Sélection_009.png)
+
+![okta postman](images/Sélection_010.png)
+
+#### Maven
+Ajouter dans le *pom.xml*
+```xml
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+<dependency>
+	<groupId>org.springframework.cloud</groupId>
+	<artifactId>spring-cloud-starter-oauth2</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.security.oauth.boot</groupId>
+    <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+    <version>2.1.4.RELEASE</version>
+</dependency>
+<dependency>
+	<groupId>org.springframework.security</groupId>
+	<artifactId>spring-security-oauth2-resource-server</artifactId>
+	<version>5.1.5.RELEASE</version>
+</dependency>
+<dependency>
+	<groupId>com.okta.spring</groupId>
+	<artifactId>okta-spring-boot-starter</artifactId>
+	<version>0.6.1</version>
+</dependency>
 ```
 
 # Contributeur
