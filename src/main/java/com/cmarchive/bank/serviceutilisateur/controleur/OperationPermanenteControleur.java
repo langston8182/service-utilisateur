@@ -18,13 +18,13 @@ public class OperationPermanenteControleur {
     }
 
     @GetMapping("/operations-permanentes/{utilisateurId}")
-    @PreAuthorize("#oauth2.hasScope('USER')")
+    @PreAuthorize("#oauth2.hasScope('openid')")
     public OperationPermanentesDto listerOperationPermanenteUtilisateur(@PathVariable String utilisateurId) {
         return operationPermanenteService.listerOperationPermanentesParUtilisateur(utilisateurId);
     }
 
     @PostMapping("/operations-permanentes/{utilisateurId}")
-    @PreAuthorize("#oauth2.hasScope('USER')")
+    @PreAuthorize("#oauth2.hasScope('openid')")
     @ResponseStatus(HttpStatus.CREATED)
     public OperationPermanenteDto ajouterOperationPermanenteAUtilisateur(@PathVariable String utilisateurId,
                                                                @RequestBody OperationPermanenteDto operationPermanenteDto) {
@@ -33,12 +33,13 @@ public class OperationPermanenteControleur {
     }
 
     @PutMapping("/operations-permanentes")
-    @PreAuthorize("#oauth2.hasScope('USER')")
+    @PreAuthorize("#oauth2.hasScope('openid')")
     public OperationPermanenteDto modifierOperationPermanenteUtilisateur(@RequestBody OperationPermanenteDto operationPermanenteDto) {
         return operationPermanenteService.modifierOperationPermanenteUtilisateur(operationPermanenteDto);
     }
 
     @DeleteMapping("/operations-permanentes")
+    @PreAuthorize("#oauth2.hasScope('openid')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void supprimerOperationPermanenteUtilisateur(@RequestBody OperationPermanenteDto operationPermanenteDto) {
         operationPermanenteService.supprimerOperationPermanente(operationPermanenteDto);
