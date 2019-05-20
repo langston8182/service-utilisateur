@@ -4,7 +4,9 @@ import com.cmarchive.bank.serviceutilisateur.exception.OperationNonTrouveExcepti
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationPermanenteMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationPermanentesMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
-import com.cmarchive.bank.serviceutilisateur.modele.*;
+import com.cmarchive.bank.serviceutilisateur.modele.OperationPermanente;
+import com.cmarchive.bank.serviceutilisateur.modele.OperationPermanentes;
+import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanenteDto;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanentesDto;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
