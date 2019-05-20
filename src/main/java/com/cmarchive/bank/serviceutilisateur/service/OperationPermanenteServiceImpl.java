@@ -38,14 +38,14 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
     public OperationPermanentesDto listerOperationPermanentesParUtilisateur(String utilisateurId) {
         OperationPermanentes operationPermanentes = new OperationPermanentes()
                 .setOperationPermanentes(operationPermanenteRepository
-                        .findAllByUtilisateur_Id(utilisateurId));
+                        .findAllByUtilisateur_IdOkta(utilisateurId));
 
         return operationPermanentesMapper.mapVersOperationPermanentesDto(operationPermanentes);
     }
 
     @Override
     public OperationPermanenteDto ajouterOperationPermanenteAUtilisateur(String utilisateurId, OperationPermanenteDto operationPermanenteDto) {
-        Utilisateur utilisateur = recupererUtilisateurParId(utilisateurId);
+        Utilisateur utilisateur = recupererUtilisateurParIdOkta(utilisateurId);
         OperationPermanente operationPermanente = operationPermanenteMapper
                 .mapVersOperationPermanente(operationPermanenteDto);
         operationPermanente.setUtilisateur(utilisateur);
@@ -75,8 +75,8 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
         operationPermanenteRepository.delete(operationPermanente);
     }
 
-    private Utilisateur recupererUtilisateurParId(String utilisateurId) {
-        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateur(utilisateurId);
+    private Utilisateur recupererUtilisateurParIdOkta(String utilisateurId) {
+        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateurParIdOkta(utilisateurId);
         return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
     }
 

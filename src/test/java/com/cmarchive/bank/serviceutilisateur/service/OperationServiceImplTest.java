@@ -60,13 +60,13 @@ public class OperationServiceImplTest {
         operationsDto.setOperationDtos(Stream.of(operationDto1, operationDto2).collect(Collectors.toList()));
         String id = "1";
         given(operationRepository
-                .findAllByUtilisateur_IdOrderByDateOperationDesc(id))
+                .findAllByUtilisateur_IdOktaOrderByDateOperationDesc(id))
                 .willReturn(Stream.of(operation1, operation2).collect(Collectors.toList()));
         given(operationsMapper.mapVersOperationsDto(any(Operations.class))).willReturn(operationsDto);
 
         OperationsDto resultat = operationService.listerOperationsParUtilisateur(id);
 
-        then(operationRepository).should().findAllByUtilisateur_IdOrderByDateOperationDesc(id);
+        then(operationRepository).should().findAllByUtilisateur_IdOktaOrderByDateOperationDesc(id);
         assertThat(resultat.getOperationDtos()).isNotEmpty()
                 .containsExactly(operationDto1, operationDto2);
     }
@@ -79,7 +79,7 @@ public class OperationServiceImplTest {
         OperationDto operationDto = new OperationDto();
         Operation reponse = new Operation()
                 .setUtilisateur(utilisateur);
-        given(utilisateurService.recupererUtilisateur("1")).willReturn(utilisateurDto);
+        given(utilisateurService.recupererUtilisateurParIdOkta("1")).willReturn(utilisateurDto);
         given(utilisateurMapper.mapVersUtilisateur(utilisateurDto)).willReturn(utilisateur);
         given(operationRepository.save(operation)).willReturn(reponse);
         given(operationMapper.mapVersOperationDto(reponse)).willReturn(operationDto);

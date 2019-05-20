@@ -13,5 +13,6 @@ import java.util.List;
 public interface OperationRepository extends JpaRepository<Operation, String> {
 
     List<Operation> findAllByUtilisateur_IdOrderByDateOperationDesc(String id);
+    List<Operation> findAllByUtilisateur_IdOktaOrderByDateOperationDesc(String idOkta);
 
 }
