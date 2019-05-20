@@ -87,7 +87,18 @@ public class UtilisateurServiceImplTest {
 
     @Test
     public void recupererUtilisateurInexistant() {
-        given(utilisateurRepository.findByEmail(anyString())).willThrow(UtilisateurNonTrouveException.class);
+        given(utilisateurRepository.findById(anyString())).willReturn(Optional.empty());
+
+        Throwable thrown = catchThrowable(() -> utilisateurService.recupererUtilisateur(anyString()));
+
+        then(utilisateurRepository).should().findById(anyString());
+        assertThat(thrown).isNotNull();
+        assertThat(thrown).isExactlyInstanceOf(UtilisateurNonTrouveException.class);
+    }
+
+    @Test
+    public void recupererUtilisateurParEmail_UtilisateurInexistant() {
+        given(utilisateurRepository.findByEmail(anyString())).willReturn(Optional.empty());
 
         Throwable thrown = catchThrowable(() -> utilisateurService.recupererUtilisateurParEmail(anyString()));
 
@@ -159,6 +170,20 @@ public class UtilisateurServiceImplTest {
         then(cyril).should().setMotDePasse("motDePasse");
         assertThat(resultat).isNotNull()
                 .isEqualTo(cyrilDto);
+    }
+
+    @Test
+    public void modifierUtilisateur_UtilisateurInexistant() {
+        String email = "cyril.marchive@gmail.com";
+        UtilisateurDto cyril = new UtilisateurDto()
+                .setEmail(email);
+        given(utilisateurRepository.findByEmail(email)).willReturn(Optional.empty());
+
+        Throwable thrown = catchThrowable(() -> utilisateurService.modifierUtilisateur(cyril));
+
+        then(utilisateurRepository).should().findByEmail(email);
+        assertThat(thrown).isNotNull();
+        assertThat(thrown).isExactlyInstanceOf(UtilisateurNonTrouveException.class);
     }
 
     @Test

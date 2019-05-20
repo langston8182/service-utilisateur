@@ -1,6 +1,7 @@
 package com.cmarchive.bank.serviceutilisateur.controleur;
 
 import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurDejaPresentException;
+import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateursDto;
 import com.cmarchive.bank.serviceutilisateur.service.UtilisateurService;
@@ -89,6 +90,16 @@ public class UtilisateurControleurTest {
     }
 
     @Test
+    public void recupererUtilisateur_UtilisateurInexistant() throws Exception {
+        given(utilisateurService.recupererUtilisateur("1")).willThrow(UtilisateurNonTrouveException.class);
+
+        mockMvc.perform(get("/utilisateurs/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void recupererUtilisateurParEmail() throws Exception {
         UtilisateurDto utilisateur = creerUtilisateurDto();
         given(utilisateurService.recupererUtilisateurParEmail("cyril.marchive@gmail.com")).willReturn(utilisateur);
@@ -100,6 +111,16 @@ public class UtilisateurControleurTest {
                 .andExpect(jsonPath("$.nom", equalTo("Marchive")))
                 .andExpect(jsonPath("$.prenom", equalTo("Cyril")))
                 .andExpect(jsonPath("$.email", equalTo("cyril.marchive@gmail.com")));
+    }
+
+    @Test
+    public void recupererUtilisateurParEmail_UtilisateurInexistant() throws Exception {
+        given(utilisateurService.recupererUtilisateurParEmail("cyril.marchive@gmail.com")).willThrow(UtilisateurNonTrouveException.class);
+
+        mockMvc.perform(get("/utilisateurs?email=cyril.marchive@gmail.com")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -156,6 +177,18 @@ public class UtilisateurControleurTest {
                 .content(objectMapper.writeValueAsString(cyril)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.nom", equalTo("Boussat")));
+    }
+
+    @Test
+    public void modifierUtilisateur_UtilisateurInexistant() throws Exception {
+        UtilisateurDto cyril = creerUtilisateurDto();
+        given(utilisateurService.modifierUtilisateur(any(UtilisateurDto.class))).willThrow(UtilisateurNonTrouveException.class);
+
+        mockMvc.perform(put("/utilisateurs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(cyril)))
+                .andExpect(status().isNotFound());
     }
 
     private UtilisateurDto creerUtilisateurDto() {
