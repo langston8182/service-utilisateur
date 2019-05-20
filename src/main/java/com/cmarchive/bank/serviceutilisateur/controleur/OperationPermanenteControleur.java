@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/")
 public class OperationPermanenteControleur {
@@ -17,18 +19,18 @@ public class OperationPermanenteControleur {
         this.operationPermanenteService = operationPermanenteService;
     }
 
-    @GetMapping("/operations-permanentes/{utilisateurId}")
+    @GetMapping("/operations-permanentes")
     @PreAuthorize("#oauth2.hasScope('openid')")
-    public OperationPermanentesDto listerOperationPermanenteUtilisateur(@PathVariable String utilisateurId) {
-        return operationPermanenteService.listerOperationPermanentesParUtilisateur(utilisateurId);
+    public OperationPermanentesDto listerOperationPermanenteUtilisateur(Principal principal) {
+        return operationPermanenteService.listerOperationPermanentesParUtilisateur(principal.getName());
     }
 
-    @PostMapping("/operations-permanentes/{utilisateurId}")
+    @PostMapping("/operations-permanentes")
     @PreAuthorize("#oauth2.hasScope('openid')")
     @ResponseStatus(HttpStatus.CREATED)
-    public OperationPermanenteDto ajouterOperationPermanenteAUtilisateur(@PathVariable String utilisateurId,
+    public OperationPermanenteDto ajouterOperationPermanenteAUtilisateur(Principal principal,
                                                                @RequestBody OperationPermanenteDto operationPermanenteDto) {
-        return operationPermanenteService.ajouterOperationPermanenteAUtilisateur(utilisateurId,
+        return operationPermanenteService.ajouterOperationPermanenteAUtilisateur(principal.getName(),
                 operationPermanenteDto);
     }
 

@@ -61,7 +61,7 @@ public class OperationPermanenteServiceImplTest {
                 Stream.of(operationPermanenteDto1, operationPermanenteDto2).collect(Collectors.toList()));
         String id = "1";
         given(operationPermanenteRepository
-                .findAllByUtilisateur_Id(id))
+                .findAllByUtilisateur_IdOkta(id))
                 .willReturn(Stream.of(operationPermanente1, operationPermanente2).collect(Collectors.toList()));
         given(operationPermanentesMapper
                 .mapVersOperationPermanentesDto(any(OperationPermanentes.class)))
@@ -69,7 +69,7 @@ public class OperationPermanenteServiceImplTest {
 
         OperationPermanentesDto resultat = operationPermanenteService.listerOperationPermanentesParUtilisateur(id);
 
-        then(operationPermanenteRepository).should().findAllByUtilisateur_Id(id);
+        then(operationPermanenteRepository).should().findAllByUtilisateur_IdOkta(id);
         assertThat(resultat.getOperationPermanenteDtos()).isNotEmpty()
                 .containsExactly(operationPermanenteDto1, operationPermanenteDto2);
     }
@@ -82,7 +82,7 @@ public class OperationPermanenteServiceImplTest {
         OperationPermanenteDto operationPermanenteDto = new OperationPermanenteDto();
         OperationPermanente reponse = new OperationPermanente()
                 .setUtilisateur(utilisateur);
-        given(utilisateurService.recupererUtilisateur("1")).willReturn(utilisateurDto);
+        given(utilisateurService.recupererUtilisateurParIdOkta("1")).willReturn(utilisateurDto);
         given(utilisateurMapper.mapVersUtilisateur(utilisateurDto)).willReturn(utilisateur);
         given(operationPermanenteRepository.save(operationPermanente)).willReturn(reponse);
         given(operationPermanenteMapper.mapVersOperationPermanenteDto(reponse)).willReturn(operationPermanenteDto);

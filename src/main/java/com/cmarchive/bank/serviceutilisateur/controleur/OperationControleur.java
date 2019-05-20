@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/")
 public class OperationControleur {
@@ -17,18 +19,18 @@ public class OperationControleur {
         this.operationService = operationService;
     }
 
-    @GetMapping("/operations/{utilisateurId}")
+    @GetMapping("/operations")
     @PreAuthorize("#oauth2.hasScope('openid')")
-    public OperationsDto listerOperationUtilisateur(@PathVariable String utilisateurId) {
-        return operationService.listerOperationsParUtilisateur(utilisateurId);
+    public OperationsDto listerOperationUtilisateur(Principal principal) {
+        return operationService.listerOperationsParUtilisateur(principal.getName());
     }
 
-    @PostMapping("/operations/{utilisateurId}")
+    @PostMapping("/operations")
     @PreAuthorize("#oauth2.hasScope('openid')")
     @ResponseStatus(HttpStatus.CREATED)
-    public OperationDto ajouterOperationAUtilisateur(@PathVariable String utilisateurId,
+    public OperationDto ajouterOperationAUtilisateur(Principal principal,
                                                      @RequestBody OperationDto operationDto) {
-        return operationService.ajouterOperationAUtilisateur(utilisateurId, operationDto);
+        return operationService.ajouterOperationAUtilisateur(principal.getName(), operationDto);
     }
 
     @PutMapping("/operations")

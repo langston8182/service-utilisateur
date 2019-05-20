@@ -73,18 +73,36 @@ public class OperationRepositoryTest {
         assertThat(resultat.get(0).getDateOperation()).isAfter(resultat.get(1).getDateOperation());
     }
 
+    @Test
+    public void listerOperationsParIdOkta() {
+        Utilisateur cyril = creerUtilisateur();
+        Operation operation1 = creerOperation(cyril);
+        Operation operation2 = creerOperation(cyril);
+        operation2.setDateOperation(LocalDate.now().plusDays(1));
+        testEntityManager.persist(cyril);
+        testEntityManager.persist(operation1);
+        testEntityManager.persist(operation2);
+        testEntityManager.flush();
+
+        List<Operation> resultat = operationRepository.findAllByUtilisateur_IdOktaOrderByDateOperationDesc(cyril.getIdOkta());
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(0).getDateOperation()).isAfter(resultat.get(1).getDateOperation());
+    }
+
     private Operation creerOperation(Utilisateur cyril) {
         return new Operation()
-                    .setDateOperation(LocalDate.now())
-                    .setIntitule("operation")
-                    .setPrix(BigDecimal.TEN)
-                    .setUtilisateur(cyril);
+                .setDateOperation(LocalDate.now())
+                .setIntitule("operation")
+                .setPrix(BigDecimal.TEN)
+                .setUtilisateur(cyril);
     }
 
     private Utilisateur creerUtilisateur() {
         return new Utilisateur()
-                    .setEmail("cyril.marchive@gmail.com")
-                    .setNom("Marchive")
-                    .setPrenom("Cyril");
+                .setIdOkta("1")
+                .setEmail("cyril.marchive@gmail.com")
+                .setNom("Marchive")
+                .setPrenom("Cyril");
     }
 }
