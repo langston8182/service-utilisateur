@@ -27,6 +27,7 @@ public class Utilisateur {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
+    private String idOkta;
     private String nom;
     private String prenom;
 
