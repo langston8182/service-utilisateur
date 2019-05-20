@@ -1,6 +1,7 @@
 package com.cmarchive.bank.serviceutilisateur.controleur;
 
 import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurDejaPresentException;
+import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateursDto;
 import com.cmarchive.bank.serviceutilisateur.service.UtilisateurService;
@@ -28,13 +29,21 @@ public class UtilisateurControleur {
     @GetMapping("/utilisateurs/{id}")
     @PreAuthorize("#oauth2.hasScope('custom_mod')")
     public UtilisateurDto recupererUtilisateur(@PathVariable String id) {
-        return utilisateurService.recupererUtilisateur(id);
+        try {
+            return utilisateurService.recupererUtilisateur(id);
+        } catch (UtilisateurNonTrouveException unte) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, unte.getMessage(), unte);
+        }
     }
 
     @GetMapping("/utilisateurs")
     @PreAuthorize("#oauth2.hasScope('custom_mod')")
     public UtilisateurDto recupererUtilisateurParEmail(@RequestParam String email) {
-        return utilisateurService.recupererUtilisateurParEmail(email);
+        try {
+            return utilisateurService.recupererUtilisateurParEmail(email);
+        } catch (UtilisateurNonTrouveException unte) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, unte.getMessage(), unte);
+        }
     }
 
     @PostMapping("/utilisateurs")
@@ -51,7 +60,11 @@ public class UtilisateurControleur {
     @PutMapping("/utilisateurs")
     @PreAuthorize("#oauth2.hasScope('custom_mod')")
     public UtilisateurDto modifierUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
-        return utilisateurService.modifierUtilisateur(utilisateurDto);
+        try {
+            return utilisateurService.modifierUtilisateur(utilisateurDto);
+        } catch (UtilisateurNonTrouveException unte) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, unte.getMessage(), unte);
+        }
     }
 
     @DeleteMapping("/utilisateurs")
