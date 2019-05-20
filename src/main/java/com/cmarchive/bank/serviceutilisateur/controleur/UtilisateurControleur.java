@@ -21,14 +21,14 @@ public class UtilisateurControleur {
     }
 
     @GetMapping("/utilisateurs/")
-    @PreAuthorize("#oauth2.hasScope('admin')")
+    @PreAuthorize("#oauth2.hasScope('openid')")
     public UtilisateursDto listerUtilisateur() {
         System.out.println();
         return utilisateurService.listerUtilisateurs();
     }
 
     @GetMapping("/utilisateurs/{id}")
-    @PreAuthorize("#oauth2.hasScope('admin')")
+    @PreAuthorize("#oauth2.hasScope('openid')")
     public UtilisateurDto recupererUtilisateur(@PathVariable String id) {
         try {
             return utilisateurService.recupererUtilisateur(id);
@@ -38,7 +38,7 @@ public class UtilisateurControleur {
     }
 
     @GetMapping("/utilisateurs")
-    @PreAuthorize("#oauth2.hasScope('admin')")
+    @PreAuthorize("#oauth2.hasScope('openid')")
     public UtilisateurDto recupererUtilisateurParEmail(@RequestParam String email) {
         try {
             return utilisateurService.recupererUtilisateurParEmail(email);
@@ -48,7 +48,7 @@ public class UtilisateurControleur {
     }
 
     @GetMapping("/utilisateurs/okta/{id}")
-    @PreAuthorize("#oauth2.hasScope('admin')")
+    @PreAuthorize("#oauth2.hasScope('openid')")
     public UtilisateurDto recupererUtilisateurParIdOkta(@PathVariable String id) {
         try {
             return utilisateurService.recupererUtilisateurParIdOkta(id);
@@ -58,7 +58,7 @@ public class UtilisateurControleur {
     }
 
     @PostMapping("/utilisateurs")
-    @PreAuthorize("#oauth2.hasScope('admin')")
+    @PreAuthorize("#oauth2.hasScope('openid')")
     @ResponseStatus(HttpStatus.CREATED)
     public UtilisateurDto sauvegarderUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
         try {
@@ -69,7 +69,7 @@ public class UtilisateurControleur {
     }
 
     @PutMapping("/utilisateurs")
-    @PreAuthorize("#oauth2.hasScope('admin')")
+    @PreAuthorize("#oauth2.hasScope('openid')")
     public UtilisateurDto modifierUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
         try {
             return utilisateurService.modifierUtilisateur(utilisateurDto);
@@ -79,7 +79,7 @@ public class UtilisateurControleur {
     }
 
     @DeleteMapping("/utilisateurs")
-    @PreAuthorize("#oauth2.hasScope('admin')")
+    @PreAuthorize("#oauth2.hasScope('openid')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void supprimerUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
         utilisateurService.supprimerUtilisateur(utilisateurDto);

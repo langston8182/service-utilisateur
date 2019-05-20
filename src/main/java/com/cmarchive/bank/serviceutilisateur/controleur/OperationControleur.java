@@ -18,13 +18,13 @@ public class OperationControleur {
     }
 
     @GetMapping("/operations/{utilisateurId}")
-    @PreAuthorize("#oauth2.hasScope('USER')")
+    @PreAuthorize("#oauth2.hasScope('openid')")
     public OperationsDto listerOperationUtilisateur(@PathVariable String utilisateurId) {
         return operationService.listerOperationsParUtilisateur(utilisateurId);
     }
 
     @PostMapping("/operations/{utilisateurId}")
-    @PreAuthorize("#oauth2.hasScope('USER')")
+    @PreAuthorize("#oauth2.hasScope('openid')")
     @ResponseStatus(HttpStatus.CREATED)
     public OperationDto ajouterOperationAUtilisateur(@PathVariable String utilisateurId,
                                                      @RequestBody OperationDto operationDto) {
@@ -32,12 +32,13 @@ public class OperationControleur {
     }
 
     @PutMapping("/operations")
-    @PreAuthorize("#oauth2.hasScope('USER')")
+    @PreAuthorize("#oauth2.hasScope('openid')")
     public OperationDto modifierOperationUtilisateur(@RequestBody OperationDto operationDto) {
         return operationService.modifierOperationUtilisateur(operationDto);
     }
 
     @DeleteMapping("/operations")
+    @PreAuthorize("#oauth2.hasScope('openid')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void supprimerOperationUtilisateur(@RequestBody OperationDto operationDto) {
         operationService.supprimerOperation(operationDto);
