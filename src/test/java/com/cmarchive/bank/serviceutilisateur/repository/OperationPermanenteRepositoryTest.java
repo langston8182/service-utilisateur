@@ -77,7 +77,7 @@ public class OperationPermanenteRepositoryTest {
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
-    public void listerOperationPermanenteParIdOkta() {
+    public void listerOperationPermanenteParEmailUtilisateur() {
         Utilisateur cyril = creerUtilisateur();
         OperationPermanente operationPermanente1 = creerOperationPermanente(cyril);
         OperationPermanente operationPermanente2 = creerOperationPermanente(cyril);
@@ -87,7 +87,7 @@ public class OperationPermanenteRepositoryTest {
         testEntityManager.persist(operationPermanente2);
         testEntityManager.flush();
 
-        List<OperationPermanente> resultat = operationPermanenteRepository.findAllByUtilisateur_IdOkta(cyril.getIdOkta());
+        List<OperationPermanente> resultat = operationPermanenteRepository.findAllByUtilisateur_Email(cyril.getEmail());
 
         assertThat(resultat).hasSize(2);
         assertThat(resultat.get(1).getJour()).isEqualTo(2);
@@ -105,7 +105,6 @@ public class OperationPermanenteRepositoryTest {
 
     private Utilisateur creerUtilisateur() {
         return new Utilisateur()
-                .setIdOkta("1")
                 .setEmail("cyril.marchive@gmail.com")
                 .setNom("Marchive")
                 .setPrenom("Cyril");

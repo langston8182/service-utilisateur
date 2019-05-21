@@ -35,17 +35,17 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
     }
 
     @Override
-    public OperationPermanentesDto listerOperationPermanentesParUtilisateur(String utilisateurId) {
+    public OperationPermanentesDto listerOperationPermanentesParUtilisateur(String email) {
         OperationPermanentes operationPermanentes = new OperationPermanentes()
                 .setOperationPermanentes(operationPermanenteRepository
-                        .findAllByUtilisateur_IdOkta(utilisateurId));
+                        .findAllByUtilisateur_Email(email));
 
         return operationPermanentesMapper.mapVersOperationPermanentesDto(operationPermanentes);
     }
 
     @Override
-    public OperationPermanenteDto ajouterOperationPermanenteAUtilisateur(String utilisateurId, OperationPermanenteDto operationPermanenteDto) {
-        Utilisateur utilisateur = recupererUtilisateurParIdOkta(utilisateurId);
+    public OperationPermanenteDto ajouterOperationPermanenteAUtilisateur(String email, OperationPermanenteDto operationPermanenteDto) {
+        Utilisateur utilisateur = recupererUtilisateurParEmail(email);
         OperationPermanente operationPermanente = operationPermanenteMapper
                 .mapVersOperationPermanente(operationPermanenteDto);
         operationPermanente.setUtilisateur(utilisateur);
@@ -75,8 +75,8 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
         operationPermanenteRepository.delete(operationPermanente);
     }
 
-    private Utilisateur recupererUtilisateurParIdOkta(String utilisateurId) {
-        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateurParIdOkta(utilisateurId);
+    private Utilisateur recupererUtilisateurParEmail(String email) {
+        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateurParEmail(email);
         return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
     }
 
