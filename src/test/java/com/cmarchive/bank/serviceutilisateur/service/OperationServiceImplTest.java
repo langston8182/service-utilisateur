@@ -58,15 +58,15 @@ public class OperationServiceImplTest {
         OperationDto operationDto2 = new OperationDto();
         OperationsDto operationsDto = new OperationsDto();
         operationsDto.setOperationDtos(Stream.of(operationDto1, operationDto2).collect(Collectors.toList()));
-        String id = "1";
+        String email = "cyril.marchive@gmail.com";
         given(operationRepository
-                .findAllByUtilisateur_IdOktaOrderByDateOperationDesc(id))
+                .findAllByUtilisateur_EmailOrderByDateOperationDesc(email))
                 .willReturn(Stream.of(operation1, operation2).collect(Collectors.toList()));
         given(operationsMapper.mapVersOperationsDto(any(Operations.class))).willReturn(operationsDto);
 
-        OperationsDto resultat = operationService.listerOperationsParUtilisateur(id);
+        OperationsDto resultat = operationService.listerOperationsParUtilisateur(email);
 
-        then(operationRepository).should().findAllByUtilisateur_IdOktaOrderByDateOperationDesc(id);
+        then(operationRepository).should().findAllByUtilisateur_EmailOrderByDateOperationDesc(email);
         assertThat(resultat.getOperationDtos()).isNotEmpty()
                 .containsExactly(operationDto1, operationDto2);
     }
@@ -79,13 +79,13 @@ public class OperationServiceImplTest {
         OperationDto operationDto = new OperationDto();
         Operation reponse = new Operation()
                 .setUtilisateur(utilisateur);
-        given(utilisateurService.recupererUtilisateurParIdOkta("1")).willReturn(utilisateurDto);
+        given(utilisateurService.recupererUtilisateurParEmail("cyril.marchive@gmail.com")).willReturn(utilisateurDto);
         given(utilisateurMapper.mapVersUtilisateur(utilisateurDto)).willReturn(utilisateur);
         given(operationRepository.save(operation)).willReturn(reponse);
         given(operationMapper.mapVersOperationDto(reponse)).willReturn(operationDto);
         given(operationMapper.mapVersOperation(operationDto)).willReturn(operation);
 
-        OperationDto resultat = operationService.ajouterOperationAUtilisateur("1", operationDto);
+        OperationDto resultat = operationService.ajouterOperationAUtilisateur("cyril.marchive@gmail.com", operationDto);
 
         then(operationRepository).should().save(operation);
         assertThat(resultat).isNotNull()

@@ -73,19 +73,6 @@ public class UtilisateurServiceImplTest {
     }
 
     @Test
-    public void recupererUtilisateurParIdOkta_nominal() {
-        Utilisateur cyril = new Utilisateur();
-        UtilisateurDto cyrilDto = new UtilisateurDto();
-        given(utilisateurRepository.findByIdOkta(anyString())).willReturn(Optional.of(cyril));
-        given(utilisateurMapper.mapVersUtilisateurDto(cyril)).willReturn(cyrilDto);
-
-        UtilisateurDto resultat = utilisateurService.recupererUtilisateurParIdOkta(anyString());
-
-        then(utilisateurRepository).should().findByIdOkta(anyString());
-        assertThat(resultat).isEqualTo(cyrilDto);
-    }
-
-    @Test
     public void recupererUtilisateur_nominal() {
         Utilisateur cyril = new Utilisateur();
         UtilisateurDto cyrilDto = new UtilisateurDto();
@@ -116,17 +103,6 @@ public class UtilisateurServiceImplTest {
         Throwable thrown = catchThrowable(() -> utilisateurService.recupererUtilisateurParEmail(anyString()));
 
         then(utilisateurRepository).should().findByEmail(anyString());
-        assertThat(thrown).isNotNull();
-        assertThat(thrown).isExactlyInstanceOf(UtilisateurNonTrouveException.class);
-    }
-
-    @Test
-    public void recupererUtilisateurParIdOkta_UtilisateurInexistant() {
-        given(utilisateurRepository.findByIdOkta(anyString())).willReturn(Optional.empty());
-
-        Throwable thrown = catchThrowable(() -> utilisateurService.recupererUtilisateurParIdOkta(anyString()));
-
-        then(utilisateurRepository).should().findByIdOkta(anyString());
         assertThat(thrown).isNotNull();
         assertThat(thrown).isExactlyInstanceOf(UtilisateurNonTrouveException.class);
     }
