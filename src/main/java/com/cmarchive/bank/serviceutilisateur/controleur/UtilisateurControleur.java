@@ -47,16 +47,6 @@ public class UtilisateurControleur {
         }
     }
 
-    @GetMapping("/utilisateurs/okta/{id}")
-    @PreAuthorize("#oauth2.hasScope('openid')")
-    public UtilisateurDto recupererUtilisateurParIdOkta(@PathVariable String id) {
-        try {
-            return utilisateurService.recupererUtilisateurParIdOkta(id);
-        } catch (UtilisateurNonTrouveException unte) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, unte.getMessage(), unte);
-        }
-    }
-
     @PostMapping("/utilisateurs")
     @PreAuthorize("#oauth2.hasScope('openid')")
     @ResponseStatus(HttpStatus.CREATED)

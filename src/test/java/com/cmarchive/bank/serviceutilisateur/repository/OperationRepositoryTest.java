@@ -74,7 +74,7 @@ public class OperationRepositoryTest {
     }
 
     @Test
-    public void listerOperationsParIdOkta() {
+    public void listerOperationsParEmailUtilisateur() {
         Utilisateur cyril = creerUtilisateur();
         Operation operation1 = creerOperation(cyril);
         Operation operation2 = creerOperation(cyril);
@@ -84,7 +84,7 @@ public class OperationRepositoryTest {
         testEntityManager.persist(operation2);
         testEntityManager.flush();
 
-        List<Operation> resultat = operationRepository.findAllByUtilisateur_IdOktaOrderByDateOperationDesc(cyril.getIdOkta());
+        List<Operation> resultat = operationRepository.findAllByUtilisateur_EmailOrderByDateOperationDesc(cyril.getEmail());
 
         assertThat(resultat).hasSize(2);
         assertThat(resultat.get(0).getDateOperation()).isAfter(resultat.get(1).getDateOperation());
@@ -100,7 +100,6 @@ public class OperationRepositoryTest {
 
     private Utilisateur creerUtilisateur() {
         return new Utilisateur()
-                .setIdOkta("1")
                 .setEmail("cyril.marchive@gmail.com")
                 .setNom("Marchive")
                 .setPrenom("Cyril");

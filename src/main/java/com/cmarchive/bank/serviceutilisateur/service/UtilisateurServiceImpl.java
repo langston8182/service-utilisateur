@@ -43,13 +43,6 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
-    public UtilisateurDto recupererUtilisateurParIdOkta(String idOkta) {
-        Utilisateur utilisateur = utilisateurRepository.findByIdOkta(idOkta)
-                .orElseThrow(() -> new UtilisateurNonTrouveException("L'utilisateur n'a pas ete trouve"));
-        return utilisateurMapper.mapVersUtilisateurDto(utilisateur);
-    }
-
-    @Override
     public UtilisateurDto recupererUtilisateur(String id) {
         Utilisateur utilisateur = utilisateurRepository.findById(id)
                 .orElseThrow(() -> new UtilisateurNonTrouveException("L'utilisateur n'a pas ete trouve"));

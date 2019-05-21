@@ -8,9 +8,9 @@ import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanentesDto;
  */
 public interface OperationPermanenteService {
 
-    OperationPermanentesDto listerOperationPermanentesParUtilisateur(String utilisateurId);
+    OperationPermanentesDto listerOperationPermanentesParUtilisateur(String email);
     OperationPermanenteDto ajouterOperationPermanenteAUtilisateur(
-            String utilisateurId, OperationPermanenteDto operationPermanenteDto);
+            String email, OperationPermanenteDto operationPermanenteDto);
     OperationPermanenteDto modifierOperationPermanenteUtilisateur(OperationPermanenteDto operationPermanenteDto);
     void supprimerOperationPermanente(OperationPermanenteDto operationPermanenteDto);
 

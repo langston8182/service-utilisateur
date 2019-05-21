@@ -35,17 +35,17 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public OperationsDto listerOperationsParUtilisateur(String utilisateurId) {
+    public OperationsDto listerOperationsParUtilisateur(String email) {
         Operations operations = new Operations()
                 .setOperations(operationRepository
-                        .findAllByUtilisateur_IdOktaOrderByDateOperationDesc(utilisateurId));
+                        .findAllByUtilisateur_EmailOrderByDateOperationDesc(email));
 
         return operationsMapper.mapVersOperationsDto(operations);
     }
 
     @Override
-    public OperationDto ajouterOperationAUtilisateur(String utilisateurId, OperationDto operationDto) {
-        Utilisateur utilisateur = recupererUtilisateurParIdOkta(utilisateurId);
+    public OperationDto ajouterOperationAUtilisateur(String email, OperationDto operationDto) {
+        Utilisateur utilisateur = recupererUtilisateurParEmail(email);
         Operation operation = operationMapper.mapVersOperation(operationDto);
         operation.setUtilisateur(utilisateur);
 
@@ -77,8 +77,8 @@ public class OperationServiceImpl implements OperationService {
         operationRepository.delete(operation);
     }
 
-    private Utilisateur recupererUtilisateurParIdOkta(String utilisateurId) {
-        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateurParIdOkta(utilisateurId);
+    private Utilisateur recupererUtilisateurParEmail(String email) {
+        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateurParEmail(email);
         return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
     }
 }

@@ -124,30 +124,6 @@ public class UtilisateurControleurTest {
     }
 
     @Test
-    public void recupererUtilisateurParIdOkta() throws Exception {
-        UtilisateurDto utilisateur = creerUtilisateurDto();
-        given(utilisateurService.recupererUtilisateurParIdOkta("1")).willReturn(utilisateur);
-
-        mockMvc.perform(get("/utilisateurs/okta/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.nom", equalTo("Marchive")))
-                .andExpect(jsonPath("$.prenom", equalTo("Cyril")))
-                .andExpect(jsonPath("$.email", equalTo("cyril.marchive@gmail.com")));
-    }
-
-    @Test
-    public void recupererUtilisateurParIdOkta_UtilisateurInexistant() throws Exception {
-        given(utilisateurService.recupererUtilisateurParIdOkta("1")).willThrow(UtilisateurNonTrouveException.class);
-
-        mockMvc.perform(get("/utilisateurs/okta/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     public void supprimerUtilisateur() throws Exception {
         UtilisateurDto cyril = creerUtilisateurDto();
         willDoNothing().given(utilisateurService).supprimerUtilisateur(cyril);
@@ -217,7 +193,6 @@ public class UtilisateurControleurTest {
 
     private UtilisateurDto creerUtilisateurDto() {
         return new UtilisateurDto()
-                .setIdOkta("1")
                 .setEmail("cyril.marchive@gmail.com")
                 .setNom("Marchive")
                 .setPrenom("Cyril");

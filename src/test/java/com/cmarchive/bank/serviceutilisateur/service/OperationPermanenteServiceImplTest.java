@@ -59,17 +59,17 @@ public class OperationPermanenteServiceImplTest {
         OperationPermanentesDto operationPermanentesDto = new OperationPermanentesDto();
         operationPermanentesDto.setOperationPermanenteDtos(
                 Stream.of(operationPermanenteDto1, operationPermanenteDto2).collect(Collectors.toList()));
-        String id = "1";
+        String email = "cyril.marchive@gmail.com";
         given(operationPermanenteRepository
-                .findAllByUtilisateur_IdOkta(id))
+                .findAllByUtilisateur_Email(email))
                 .willReturn(Stream.of(operationPermanente1, operationPermanente2).collect(Collectors.toList()));
         given(operationPermanentesMapper
                 .mapVersOperationPermanentesDto(any(OperationPermanentes.class)))
                 .willReturn(operationPermanentesDto);
 
-        OperationPermanentesDto resultat = operationPermanenteService.listerOperationPermanentesParUtilisateur(id);
+        OperationPermanentesDto resultat = operationPermanenteService.listerOperationPermanentesParUtilisateur(email);
 
-        then(operationPermanenteRepository).should().findAllByUtilisateur_IdOkta(id);
+        then(operationPermanenteRepository).should().findAllByUtilisateur_Email(email);
         assertThat(resultat.getOperationPermanenteDtos()).isNotEmpty()
                 .containsExactly(operationPermanenteDto1, operationPermanenteDto2);
     }
@@ -82,7 +82,7 @@ public class OperationPermanenteServiceImplTest {
         OperationPermanenteDto operationPermanenteDto = new OperationPermanenteDto();
         OperationPermanente reponse = new OperationPermanente()
                 .setUtilisateur(utilisateur);
-        given(utilisateurService.recupererUtilisateurParIdOkta("1")).willReturn(utilisateurDto);
+        given(utilisateurService.recupererUtilisateurParEmail("cyril.marchive@gmail.com")).willReturn(utilisateurDto);
         given(utilisateurMapper.mapVersUtilisateur(utilisateurDto)).willReturn(utilisateur);
         given(operationPermanenteRepository.save(operationPermanente)).willReturn(reponse);
         given(operationPermanenteMapper.mapVersOperationPermanenteDto(reponse)).willReturn(operationPermanenteDto);
@@ -90,7 +90,7 @@ public class OperationPermanenteServiceImplTest {
                 .willReturn(operationPermanente);
 
         OperationPermanenteDto resultat = operationPermanenteService.ajouterOperationPermanenteAUtilisateur(
-                "1", operationPermanenteDto);
+                "cyril.marchive@gmail.com", operationPermanenteDto);
 
         then(operationPermanenteRepository).should().save(operationPermanente);
         assertThat(resultat).isNotNull()

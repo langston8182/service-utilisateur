@@ -12,7 +12,6 @@ import lombok.experimental.Accessors;
 public class UtilisateurDto {
 
     private String id;
-    private String idOkta;
     private String nom;
     private String prenom;
     private String email;

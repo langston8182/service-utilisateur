@@ -10,7 +10,6 @@ public interface UtilisateurService {
 
     UtilisateursDto listerUtilisateurs();
     UtilisateurDto recupererUtilisateurParEmail(String email);
-    UtilisateurDto recupererUtilisateurParIdOkta(String idOkta);
     UtilisateurDto recupererUtilisateur(String id);
     UtilisateurDto creerUtilisateur(UtilisateurDto utilisateurDto);
     UtilisateurDto modifierUtilisateur(UtilisateurDto utilisateurDto);

@@ -92,19 +92,6 @@ public class UtilisateurRepositoryTest {
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
-    public void recupererUtilisateurParIdOkta() {
-        Utilisateur cyril  = creerUtilisateur();
-        testEntityManager.persist(cyril);
-        testEntityManager.flush();
-
-        Optional<Utilisateur> resultat = utilisateurRepository.findByIdOkta("1");
-
-        assertThat(resultat.get()).isNotNull()
-                .isEqualTo(cyril);
-    }
-
-    @Test
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void recupererUtilisateurParId() {
         Utilisateur cyril  = creerUtilisateur();
         testEntityManager.persistAndFlush(cyril);
@@ -129,7 +116,6 @@ public class UtilisateurRepositoryTest {
 
     private Utilisateur creerUtilisateur() {
         return new Utilisateur()
-                .setIdOkta("1")
                 .setEmail("cyril.marchive@gmail.com")
                 .setNom("Marchive")
                 .setPrenom("Cyril");
