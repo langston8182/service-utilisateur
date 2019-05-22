@@ -1,0 +1,599 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Api service utilisateur
+  description: Api de gestion des utilisateurs et operations bancaires
+  contact:
+    name: Cyril Marchive
+    url: https://github.com/langston8182
+    email: cyril.marchive@gmail.com
+
+host: localhost:8100
+basePath: /
+tags:
+  - name: utilisateurs
+    description: Gestion des utilisateurs
+  - name: operations
+    description: Gestion des operations
+  - name: operationsPermanentes
+    description: Gestion des operations permanentes
+
+schemes:
+  - http
+  - https
+
+paths:
+  /utilisateurs/:
+    get:
+      tags:
+        - utilisateurs
+      summary: Liste les utilisateurs
+      description: ""
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/utilisateursDtos'
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+      security:
+        - auth:
+            - "admin"
+            - "openid"
+    post:
+      tags:
+        - utilisateurs
+      summary: Creer un utilisateur
+      description: ""
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          description: Utilisateur a ajouter
+          required: true
+          schema:
+            $ref: '#/definitions/utilisateurDtoSansId'
+      responses:
+        409:
+          description: Utilisateur deja present
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        405:
+          description: Elements en entree invalides
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/utilisateurDto'
+      security:
+        - auth:
+            - "admin"
+            - "openid"
+    put:
+      tags:
+        - utilisateurs
+      summary: Modifier un utilisateur
+      description: ""
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          description: Utilisateur a modifier
+          required: true
+          schema:
+            $ref: '#/definitions/utilisateurDto'
+      responses:
+        404:
+          description: Utilisateur non trouve
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        405:
+          description: Elements en entree invalides
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/utilisateurDto'
+      security:
+        - auth:
+            - "admin"
+            - "openid"
+    delete:
+      tags:
+        - utilisateurs
+      summary: Supprimer un utilisateur
+      description: ""
+      consumes:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          description: Utilisateur a supprimer
+          required: true
+          schema:
+            $ref: '#/definitions/utilisateurDto'
+      responses:
+        204:
+          description: OK aucun contenu
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        405:
+          description: Elements en entree invalides
+      security:
+        - auth:
+            - "admin"
+            - "openid"
+
+  /utilisateurs:
+    get:
+      tags:
+        - utilisateurs
+      summary: Recuperer un utilisateur par son email
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - in: query
+          name: email
+          type: string
+          description: Email utilisateur
+      responses:
+        404:
+          description: Utilisateur non trouve
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/utilisateurDto'
+      security:
+        - auth:
+            - "admin"
+            - "openid"
+
+  /utilisateurs/{id}:
+    get:
+      tags:
+        - utilisateurs
+      summary: Recupere un utilisateur par son identifiant
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - name: id
+          in: path
+          description: Identifiant de l"utilisateur
+          type: string
+          required: true
+      responses:
+        404:
+          description: Utilisateur non trouve
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/utilisateurDto'
+      security:
+        - auth:
+            - "admin"
+            - "openid"
+
+  /operations/:
+    get:
+      tags:
+        - operations
+      summary: "Liste les operation d'un utilisateur"
+      description: "Utilise le jeton JWT pour connaitre l'utilisateur a travers `Principal`"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/operationDtos'
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+      security:
+        - auth:
+            - "admin"
+            - "openid"
+    post:
+      tags:
+        - operations
+      summary: Ajoute une operation a un utilisateur
+      description: "Utilise le jeton JWT pour connaitre l'utilisateur a travers `Principal`"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          description: Operation a ajouter
+          required: true
+          schema:
+            $ref: '#/definitions/operationDtoSansIdEtUtilisateur'
+      responses:
+        404:
+          description: Utilisateur non trouve
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        405:
+          description: Elements en entree invalides
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/operationDto'
+      security:
+        - auth:
+            - "admin"
+            - "openid"
+    put:
+      tags:
+        - operations
+      summary: Modifier une operation
+      description: ""
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          description: Operation a modifier
+          required: true
+          schema:
+            $ref: '#/definitions/operationDto'
+      responses:
+        404:
+          description: Utilisateur non trouve
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        405:
+          description: Elements en entree invalides
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/operationDto'
+      security:
+        - auth:
+            - "admin"
+            - "openid"
+    delete:
+      tags:
+        - operations
+      summary: Supprimer une operation
+      description: ""
+      consumes:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          description: Operation a supprimer
+          required: true
+          schema:
+            $ref: '#/definitions/operationDto'
+      responses:
+        204:
+          description: OK aucun contenu
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        405:
+          description: Elements en entree invalides
+      security:
+        - auth:
+            - "admin"
+            - "openid"
+
+  /operations-permanentes/:
+    get:
+      tags:
+        - operationsPermanentes
+      summary: "Liste les operation permanente d'un utilisateur"
+      description: "Utilise le jeton JWT pour connaitre l'utilisateur a travers `Principal`"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/operationPermanenteDtos'
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+      security:
+        - auth:
+            - "admin"
+            - "openid"
+    post:
+      tags:
+        - operationsPermanentes
+      summary: Ajoute une operation permanente a un utilisateur
+      description: "Utilise le jeton JWT pour connaitre l'utilisateur a travers `Principal`"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          description: Operation permanente a ajouter
+          required: true
+          schema:
+            $ref: '#/definitions/operationPermanenteDtoSansIdEtUtilisateur'
+      responses:
+        404:
+          description: Utilisateur non trouve
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        405:
+          description: Elements en entree invalides
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/operationPermanenteDto'
+      security:
+        - auth:
+            - "admin"
+            - "openid"
+    put:
+      tags:
+        - operationsPermanentes
+      summary: Modifier une operation permanente
+      description: ""
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          description: Operation permanente a modifier
+          required: true
+          schema:
+            $ref: '#/definitions/operationPermanenteDto'
+      responses:
+        404:
+          description: Utilisateur non trouve
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        405:
+          description: Elements en entree invalides
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/operationPermanenteDto'
+      security:
+        - auth:
+            - "admin"
+            - "openid"
+    delete:
+      tags:
+        - operationsPermanentes
+      summary: Supprimer une operation permanente
+      description: ""
+      consumes:
+        - "application/json"
+      parameters:
+        - in: body
+          name: body
+          description: Operation permanente a supprimer
+          required: true
+          schema:
+            $ref: '#/definitions/operationPermanenteDto'
+      responses:
+        204:
+          description: OK aucun contenu
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden
+        405:
+          description: Elements en entree invalides
+      security:
+        - auth:
+            - "admin"
+            - "openid"
+
+
+
+securityDefinitions:
+  auth:
+    type: oauth2
+    authorizationUrl: "https://dev-847930.okta.com/oauth2/default/v1/authorize"
+    tokenUrl: "https://dev-847930.okta.com/oauth2/default/v1/token"
+    flow: accessCode
+    scopes:
+      admin: "pour les operation d'administration"
+      openid: "pour les operation liee a Okta"
+
+definitions:
+  utilisateurDto:
+    type: object
+    required:
+      - email
+      - nom
+      - prenom
+    properties:
+      id:
+        type: string
+        description: Identifiant de l'utilisateur
+        example: "1"
+      nom:
+        type: string
+        description: Nom de l'utilisateur
+        example: "Marchive"
+      prenom:
+        type: string
+        description: Prenom de l'utilisateur
+        example: "Cyril"
+      email:
+        type: string
+        description: Email de l'utilisateur
+        example: "cyril.marchive@gmail.com"
+
+  utilisateurDtoSansId:
+    type: object
+    required:
+      - email
+      - nom
+      - prenom
+    properties:
+      nom:
+        type: string
+        description: Nom de l'utilisateur
+        example: "Marchive"
+      prenom:
+        type: string
+        description: Prenom de l'utilisateur
+        example: "Cyril"
+      email:
+        type: string
+        format: email
+        description: Email de l'utilisateur
+        example: "cyril.marchive@gmail.com"
+
+  utilisateursDtos:
+    type: array
+    items:
+      $ref: "#/definitions/utilisateurDto"
+
+  operationPermanenteDto:
+    type: object
+    required:
+      - intitule
+      - jour
+      - prix
+      - utilisateurDto
+    properties:
+      id:
+        type: string
+        description: Identifiant de l'operation permanente
+        example: 1
+      intitule:
+        type: string
+        description: Intitule de l'operation permanente
+        example: Videotron
+      prix:
+        type: number
+        description: Prix de l'operation permanente
+        example: 60.0
+      jour:
+        type: string
+        format: date
+        description: Jour du mois de l'operation permanente
+        example: "12"
+      utilisateurDto:
+        $ref: '#/definitions/utilisateurDto'
+
+  operationPermanenteDtoSansIdEtUtilisateur:
+    type: object
+    required:
+      - intitule
+      - jour
+      - prix
+    properties:
+      intitule:
+        type: string
+        description: Intitule de l'operation permanente
+        example: Videotron
+      prix:
+        type: number
+        description: Prix de l'operation permanente
+        example: 60.0
+      jour:
+        type: string
+        format: date
+        description: Jour du mois de l'operation permanente
+        example: "12"
+
+  operationPermanenteDtos:
+    type: array
+    items:
+      $ref: '#/definitions/operationPermanenteDto'
+
+  operationDto:
+    type: object
+    required:
+      - dateOperation
+      - intitule
+      - prix
+      - utilisateurDto
+    properties:
+      id:
+        type: string
+        description: Identifiant de l'operation
+        example: 1
+      intitule:
+        type: string
+        description: Intitule de l'operation
+        example: Hydro Quebec
+      prix:
+        type: number
+        description: Prix de l'operation
+        example: 100.0
+      dateOperation:
+        type: string
+        format: date
+        description: Date de l'operation au format *yyyy-dd-MM*
+        example: "2017-07-21"
+      utilisateurDto:
+        $ref: '#/definitions/utilisateurDto'
+
+  operationDtoSansIdEtUtilisateur:
+    type: object
+    required:
+      - dateOperation
+      - intitule
+      - prix
+    properties:
+      intitule:
+        type: string
+        description: Intitule de l'operation
+        example: Hydro Quebec
+      prix:
+        type: number
+        description: Prix de l'operation
+        example: 100.0
+      dateOperation:
+        type: string
+        format: date
+        description: Date de l'operation au format *yyyy-dd-MM*
+        example: "2017-07-21"
+
+  operationDtos:
+    type: array
+    items:
+      $ref: '#/definitions/operationDto'
