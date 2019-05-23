@@ -1,7 +1,6 @@
 package com.cmarchive.bank.serviceutilisateur.configuration;
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +32,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.cmarchive.bank.serviceutilisateur.api"))
                 .paths(PathSelectors.any())
                 .build()
                 .securitySchemes(asList(securityScheme()))
@@ -46,7 +45,7 @@ public class SwaggerConfig {
                 "Api de gestion des utilisateurs et operations bancaires",
                 "1.0.0",
                 null,
-                new Contact("Cyril Marchive", "", "cyril.marchive@gmail.com"),
+                new Contact("Cyril Marchive", "https://github.com/langston8182", "cyril.marchive@gmail.com"),
                 "",
                 "",
                 emptyList());
