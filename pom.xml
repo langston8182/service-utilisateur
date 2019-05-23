@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.4.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
-	</parent>
-	<groupId>com.cmarchive.bank</groupId>
-	<artifactId>service-utilisateur</artifactId>
-	<version>1.1.0-SNAPSHOT</version>
-	<name>service-utilisateur</name>
-	<description>Demo project for Spring Boot</description>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.4.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.cmarchive.bank</groupId>
+    <artifactId>service-utilisateur</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>service-utilisateur</name>
+    <description>Demo project for Spring Boot</description>
 
-	<properties>
-		<java.version>1.9</java.version>
-	</properties>
+    <properties>
+        <java.version>1.9</java.version>
+    </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-oauth2</artifactId>
-			<version>2.1.2.RELEASE</version>
-		</dependency>
-		<dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-oauth2</artifactId>
+            <version>2.1.2.RELEASE</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.security.oauth.boot</groupId>
             <artifactId>spring-security-oauth2-autoconfigure</artifactId>
             <version>2.1.4.RELEASE</version>
         </dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-oauth2-resource-server</artifactId>
-			<version>5.1.5.RELEASE</version>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-resource-server</artifactId>
+            <version>5.1.5.RELEASE</version>
+        </dependency>
 
-		<dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-kubernetes-config</artifactId>
             <version>1.0.1.RELEASE</version>
@@ -57,57 +57,57 @@
             <artifactId>mapstruct-jdk8</artifactId>
             <version>1.3.0.Final</version>
         </dependency>
-		<dependency>
-			<groupId>com.okta.spring</groupId>
-			<artifactId>okta-spring-boot-starter</artifactId>
-			<version>0.6.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>com.okta.spring</groupId>
+            <artifactId>okta-spring-boot-starter</artifactId>
+            <version>0.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>2.9.2</version>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.9.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -121,18 +121,65 @@
                             <artifactId>mapstruct-processor</artifactId>
                             <version>1.3.0.Final</version>
                         </path>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							<version>1.18.6</version>
-						</path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.6</version>
+                        </path>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
 
-			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>dockerfile-maven-plugin</artifactId>
+            <plugin>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <language>spring</language>
+                    <inputSpec>${project.basedir}/src/main/resources/api.yml</inputSpec>
+                    <apiPackage>com.cmarchive.bank.serviceutilisateur.api</apiPackage>
+                    <modelPackage>com.cmarchive.bank.serviceutilisateur.model</modelPackage>
+                    <addCompileSourceRoot>true</addCompileSourceRoot>
+                    <generateSupportingFiles>false</generateSupportingFiles>
+                    <generateApis>true</generateApis>
+                    <generateApiTests>false</generateApiTests>
+                    <generateApiDocumentation>true</generateApiDocumentation>
+                    <generateModels>true</generateModels>
+                    <environmentVariables>
+                        <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                    </environmentVariables>
+                    <configOptions>
+                        <dateLibrary>java8</dateLibrary>
+                    </configOptions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>ServiceUtilisateurDoc</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/api.yml</inputSpec>
+                            <language>spring</language>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>ServiceUtilisateur</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/api.yml</inputSpec>
+                            <output>${project.basedir}/src/site/swagger/serviceutilisateur</output>
+                            <language>html</language>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
                 <dependencies>
                     <!-- To make this work on JDK 9+ -->
                     <dependency>
@@ -141,30 +188,30 @@
                         <version>1.2.0</version>
                     </dependency>
                 </dependencies>
-				<version>1.4.3</version>
-				<executions>
-					<execution>
-						<id>deploy-image</id>
-						<goals>
-							<!--<goal>build</goal>-->
+                <version>1.4.3</version>
+                <executions>
+                    <execution>
+                        <id>deploy-image</id>
+                        <goals>
+                            <!--<goal>build</goal>-->
                             <goal>push</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<repository>
-						langston8182/${project.artifactId}
-					</repository>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <repository>
+                        langston8182/${project.artifactId}
+                    </repository>
                     <buildArgs>
                         <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
                     </buildArgs>
-					<tag>
-						${project.version}
-					</tag>
-				</configuration>
-			</plugin>
+                    <tag>
+                        ${project.version}
+                    </tag>
+                </configuration>
+            </plugin>
 
-		</plugins>
-	</build>
+        </plugins>
+    </build>
 
 </project>
