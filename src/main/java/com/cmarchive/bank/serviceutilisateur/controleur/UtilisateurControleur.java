@@ -1,18 +1,23 @@
 package com.cmarchive.bank.serviceutilisateur.controleur;
 
+import com.cmarchive.bank.ressource.api.UtilisateursApi;
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
+import com.cmarchive.bank.ressource.model.UtilisateurDtos;
 import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurDejaPresentException;
 import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateursDto;
 import com.cmarchive.bank.serviceutilisateur.service.UtilisateurService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
+
 @RestController
-@RequestMapping("/")
-public class UtilisateurControleur {
+public class UtilisateurControleur implements UtilisateursApi {
 
     private UtilisateurService utilisateurService;
 
@@ -20,58 +25,56 @@ public class UtilisateurControleur {
         this.utilisateurService = utilisateurService;
     }
 
-    @GetMapping("/utilisateurs/")
     @PreAuthorize("#oauth2.hasScope('openid')")
-    public UtilisateursDto listerUtilisateur() {
-        System.out.println();
-        return utilisateurService.listerUtilisateurs();
+    @Override
+    public ResponseEntity<UtilisateurDtos> listerUtilisateur() {
+        return new ResponseEntity(utilisateurService.listerUtilisateurs(), HttpStatus.OK);
     }
 
-    @GetMapping("/utilisateurs/{id}")
     @PreAuthorize("#oauth2.hasScope('openid')")
-    public UtilisateurDto recupererUtilisateur(@PathVariable String id) {
+    @Override
+    public ResponseEntity<UtilisateurDto> recupererUtilisateur(@PathVariable String id) {
         try {
-            return utilisateurService.recupererUtilisateur(id);
+            return new ResponseEntity(utilisateurService.recupererUtilisateur(id), HttpStatus.OK);
         } catch (UtilisateurNonTrouveException unte) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, unte.getMessage(), unte);
         }
     }
 
-    @GetMapping("/utilisateurs")
     @PreAuthorize("#oauth2.hasScope('openid')")
-    public UtilisateurDto recupererUtilisateurParEmail(@RequestParam String email) {
+    @Override
+    public ResponseEntity<UtilisateurDto> recupererUtilisateurParEmail(@RequestParam String email) {
         try {
-            return utilisateurService.recupererUtilisateurParEmail(email);
+            return new ResponseEntity(utilisateurService.recupererUtilisateurParEmail(email), HttpStatus.OK);
         } catch (UtilisateurNonTrouveException unte) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, unte.getMessage(), unte);
         }
     }
 
-    @PostMapping("/utilisateurs")
     @PreAuthorize("#oauth2.hasScope('openid')")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UtilisateurDto sauvegarderUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
+    @Override
+    public ResponseEntity<UtilisateurDto> modifierUtilisateur(@Valid UtilisateurDto utilisateurDto) {
         try {
-            return utilisateurService.creerUtilisateur(utilisateurDto);
+            return new ResponseEntity(utilisateurService.modifierUtilisateur(utilisateurDto), HttpStatus.OK);
+        } catch (UtilisateurNonTrouveException unte) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, unte.getMessage(), unte);
+        }
+    }
+
+    @PreAuthorize("#oauth2.hasScope('openid')")
+    @Override
+    public ResponseEntity<UtilisateurDto> sauvegarderUtilisateur(@Valid UtilisateurDto utilisateurDto) {
+        try {
+            return new ResponseEntity(utilisateurService.creerUtilisateur(utilisateurDto), HttpStatus.CREATED);
         } catch (UtilisateurDejaPresentException udpe) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, udpe.getMessage(), udpe);
         }
     }
 
-    @PutMapping("/utilisateurs")
     @PreAuthorize("#oauth2.hasScope('openid')")
-    public UtilisateurDto modifierUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
-        try {
-            return utilisateurService.modifierUtilisateur(utilisateurDto);
-        } catch (UtilisateurNonTrouveException unte) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, unte.getMessage(), unte);
-        }
-    }
-
-    @DeleteMapping("/utilisateurs")
-    @PreAuthorize("#oauth2.hasScope('openid')")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void supprimerUtilisateur(@RequestBody UtilisateurDto utilisateurDto) {
+    @Override
+    public ResponseEntity<Void> supprimerUtilisateur(@Valid UtilisateurDto utilisateurDto) {
         utilisateurService.supprimerUtilisateur(utilisateurDto);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 }

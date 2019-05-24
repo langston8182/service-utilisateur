@@ -14,6 +14,8 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.security.Principal;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -32,12 +34,13 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.cmarchive.bank.serviceutilisateur.api"))
+                .apis(RequestHandlerSelectors.basePackage("com.cmarchive.bank.ressource.api"))
                 .paths(PathSelectors.any())
                 .build()
                 .securitySchemes(asList(securityScheme()))
                 .securityContexts(asList(securityContext()))
-                .apiInfo(apiInfo());
+                .apiInfo(apiInfo())
+                .ignoredParameterTypes(Principal.class);
     }
 
     private ApiInfo apiInfo() {

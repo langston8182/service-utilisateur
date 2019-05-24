@@ -1,13 +1,13 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
+import com.cmarchive.bank.ressource.model.UtilisateurDtos;
 import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurDejaPresentException;
 import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateursMapper;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateurs;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateursDto;
 import com.cmarchive.bank.serviceutilisateur.repository.UtilisateurRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -28,11 +28,11 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
-    public UtilisateursDto listerUtilisateurs() {
+    public UtilisateurDtos listerUtilisateurs() {
         Utilisateurs utilisateurs = new Utilisateurs()
                 .setUtilisateurs(utilisateurRepository.findAll());
 
-        return utilisateursMapper.mapVersUtilisateursDto(utilisateurs);
+        return utilisateursMapper.mapVersUtilisateurDtos(utilisateurs);
     }
 
     @Override
@@ -64,10 +64,8 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Override
     public UtilisateurDto modifierUtilisateur(UtilisateurDto utilisateurDto) {
-        UtilisateurDto utilisateurDeBdd = recupererUtilisateurParEmail(utilisateurDto.getEmail());
-
+        recupererUtilisateurParEmail(utilisateurDto.getEmail());
         Utilisateur utilisateur = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
-        utilisateur.setMotDePasse(utilisateurDeBdd.getMotDePasse());
 
         Utilisateur reponse = utilisateurRepository.save(utilisateur);
 

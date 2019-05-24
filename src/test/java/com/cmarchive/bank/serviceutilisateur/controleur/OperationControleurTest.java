@@ -1,8 +1,8 @@
 package com.cmarchive.bank.serviceutilisateur.controleur;
 
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationsDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
+import com.cmarchive.bank.ressource.model.OperationDto;
+import com.cmarchive.bank.ressource.model.OperationDtos;
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.service.OperationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -31,6 +31,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -64,11 +65,11 @@ public class OperationControleurTest {
         UtilisateurDto utilisateurDto = creerUtilisateurDto();
         OperationDto operationDto1 = creerOperationDto(utilisateurDto);
         OperationDto operationDto2 = creerOperationDto(utilisateurDto);
-        OperationsDto operationsDto = new OperationsDto()
-                .setOperationDtos(Stream.of(operationDto1, operationDto2).collect(Collectors.toList()));
+        OperationDtos operationsDto = new OperationDtos()
+                .operationDtos(Stream.of(operationDto1, operationDto2).collect(Collectors.toList()));
         given(operationService.listerOperationsParUtilisateur(ID_OKTA)).willReturn(operationsDto);
 
-        mockMvc.perform(get("/operations")
+        mockMvc.perform(get("/operations/")
                 .principal(getPincipal())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -80,20 +81,22 @@ public class OperationControleurTest {
     public void ajouterOperationAUtilisateur() throws Exception {
         UtilisateurDto utilisateurDto = creerUtilisateurDto();
         OperationDto operationDto = creerOperationDto(utilisateurDto);
+        operationDto.setUtilisateurDto(null);
         OperationDto reponse = new OperationDto()
-                .setIntitule("test")
-                .setUtilisateurDto(utilisateurDto);
+                .intitule("test")
+                .utilisateurDto(utilisateurDto);
         given(operationService.ajouterOperationAUtilisateur(anyString(), any(OperationDto.class)))
                 .willReturn(reponse);
 
-        mockMvc.perform(post("/operations")
+        mockMvc.perform(post("/operations/")
                 .principal(getPincipal())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(operationDto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.intitule", equalTo("test")))
-                .andExpect(jsonPath("$.utilisateurDto.prenom", equalTo("Cyril")));
+                .andExpect(jsonPath("$.utilisateurDto.prenom", equalTo("Cyril")))
+        .andDo(print());
     }
 
     @Test
@@ -101,12 +104,12 @@ public class OperationControleurTest {
         UtilisateurDto utilisateurDto = creerUtilisateurDto();
         OperationDto operationDto = creerOperationDto(utilisateurDto);
         OperationDto reponse = new OperationDto()
-                .setIntitule("test")
-                .setUtilisateurDto(utilisateurDto);
+                .intitule("test")
+                .utilisateurDto(utilisateurDto);
         given(operationService.modifierOperationUtilisateur(any(OperationDto.class)))
                 .willReturn(reponse);
 
-        mockMvc.perform(put("/operations")
+        mockMvc.perform(put("/operations/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(operationDto)))
@@ -121,7 +124,7 @@ public class OperationControleurTest {
         OperationDto operationDto = creerOperationDto(utilisateurDto);
         willDoNothing().given(operationService).supprimerOperation(operationDto);
 
-        mockMvc.perform(delete("/operations")
+        mockMvc.perform(delete("/operations/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(operationDto)))
@@ -131,17 +134,17 @@ public class OperationControleurTest {
 
     private OperationDto creerOperationDto(UtilisateurDto cyril) {
         return new OperationDto()
-                .setDateOperation(LocalDate.now())
-                .setIntitule("operation")
-                .setPrix(BigDecimal.TEN)
-                .setUtilisateurDto(cyril);
+                .dateOperation(LocalDate.now())
+                .intitule("operation")
+                .prix(BigDecimal.TEN)
+                .utilisateurDto(cyril);
     }
 
     private UtilisateurDto creerUtilisateurDto() {
         return new UtilisateurDto()
-                .setEmail("cyril.marchive@gmail.com")
-                .setNom("Marchive")
-                .setPrenom("Cyril");
+                .email("cyril.marchive@gmail.com")
+                .nom("Marchive")
+                .prenom("Cyril");
     }
 
     private Principal getPincipal() {
