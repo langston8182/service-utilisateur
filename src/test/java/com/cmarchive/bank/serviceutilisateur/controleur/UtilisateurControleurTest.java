@@ -1,9 +1,9 @@
 package com.cmarchive.bank.serviceutilisateur.controleur;
 
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
+import com.cmarchive.bank.ressource.model.UtilisateurDtos;
 import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurDejaPresentException;
 import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateursDto;
 import com.cmarchive.bank.serviceutilisateur.service.UtilisateurService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -57,22 +57,22 @@ public class UtilisateurControleurTest {
     @Test
     public void listerUtilisateurs() throws Exception {
         UtilisateurDto cyril = new UtilisateurDto()
-                .setEmail("cyril.marchive@gmail.com")
-                .setNom("Marchive")
-                .setPrenom("Cyril");
+                .email("cyril.marchive@gmail.com")
+                .nom("Marchive")
+                .prenom("Cyril");
         UtilisateurDto melanie = new UtilisateurDto()
-                .setEmail("melanie.boussat@gmail.com")
-                .setNom("Boussat")
-                .setPrenom("Melanie");
-        UtilisateursDto utilisateursDto = new UtilisateursDto()
-                .setUtilisateursDtos(Stream.of(cyril, melanie).collect(Collectors.toList()));
+                .email("melanie.boussat@gmail.com")
+                .nom("Boussat")
+                .prenom("Melanie");
+        UtilisateurDtos utilisateursDto = new UtilisateurDtos()
+                .utilisateurDtos(Stream.of(cyril, melanie).collect(Collectors.toList()));
         given(utilisateurService.listerUtilisateurs()).willReturn(utilisateursDto);
 
         mockMvc.perform(get("/utilisateurs/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.utilisateursDtos", hasSize(2)));
+                .andExpect(jsonPath("$.utilisateurDtos", hasSize(2)));
     }
 
     @Test
@@ -128,7 +128,7 @@ public class UtilisateurControleurTest {
         UtilisateurDto cyril = creerUtilisateurDto();
         willDoNothing().given(utilisateurService).supprimerUtilisateur(cyril);
 
-        mockMvc.perform(delete("/utilisateurs")
+        mockMvc.perform(delete("/utilisateurs/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cyril)))
@@ -140,10 +140,10 @@ public class UtilisateurControleurTest {
     public void sauvegarderUtilisateur() throws Exception {
         UtilisateurDto cyril = creerUtilisateurDto();
         UtilisateurDto reponse = new UtilisateurDto()
-                .setId("1");
+                .id("1");
         given(utilisateurService.creerUtilisateur(any(UtilisateurDto.class))).willReturn(reponse);
 
-        mockMvc.perform(post("/utilisateurs")
+        mockMvc.perform(post("/utilisateurs/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cyril)))
@@ -157,7 +157,7 @@ public class UtilisateurControleurTest {
         given(utilisateurService.creerUtilisateur(any(UtilisateurDto.class)))
                 .willThrow(UtilisateurDejaPresentException.class);
 
-        mockMvc.perform(post("/utilisateurs")
+        mockMvc.perform(post("/utilisateurs/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cyril)))
@@ -168,10 +168,10 @@ public class UtilisateurControleurTest {
     public void modifierUtilisateur() throws Exception {
         UtilisateurDto cyril = creerUtilisateurDto();
         UtilisateurDto reponse = creerUtilisateurDto()
-                .setNom("Boussat");
+                .nom("Boussat");
         given(utilisateurService.modifierUtilisateur(any(UtilisateurDto.class))).willReturn(reponse);
 
-        mockMvc.perform(put("/utilisateurs")
+        mockMvc.perform(put("/utilisateurs/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cyril)))
@@ -184,7 +184,7 @@ public class UtilisateurControleurTest {
         UtilisateurDto cyril = creerUtilisateurDto();
         given(utilisateurService.modifierUtilisateur(any(UtilisateurDto.class))).willThrow(UtilisateurNonTrouveException.class);
 
-        mockMvc.perform(put("/utilisateurs")
+        mockMvc.perform(put("/utilisateurs/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cyril)))
@@ -193,8 +193,8 @@ public class UtilisateurControleurTest {
 
     private UtilisateurDto creerUtilisateurDto() {
         return new UtilisateurDto()
-                .setEmail("cyril.marchive@gmail.com")
-                .setNom("Marchive")
-                .setPrenom("Cyril");
+                .email("cyril.marchive@gmail.com")
+                .nom("Marchive")
+                .prenom("Cyril");
     }
 }

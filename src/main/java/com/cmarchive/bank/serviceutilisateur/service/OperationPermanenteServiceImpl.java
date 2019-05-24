@@ -1,5 +1,8 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.ressource.model.OperationPermanenteDto;
+import com.cmarchive.bank.ressource.model.OperationPermanenteDtos;
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.exception.OperationNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationPermanenteMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationPermanentesMapper;
@@ -7,9 +10,6 @@ import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
 import com.cmarchive.bank.serviceutilisateur.modele.OperationPermanente;
 import com.cmarchive.bank.serviceutilisateur.modele.OperationPermanentes;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanenteDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanentesDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.repository.OperationPermanenteRepository;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +35,12 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
     }
 
     @Override
-    public OperationPermanentesDto listerOperationPermanentesParUtilisateur(String email) {
+    public OperationPermanenteDtos listerOperationPermanentesParUtilisateur(String email) {
         OperationPermanentes operationPermanentes = new OperationPermanentes()
                 .setOperationPermanentes(operationPermanenteRepository
                         .findAllByUtilisateur_Email(email));
 
-        return operationPermanentesMapper.mapVersOperationPermanentesDto(operationPermanentes);
+        return operationPermanentesMapper.mapVersOperationPermanenteDtos(operationPermanentes);
     }
 
     @Override

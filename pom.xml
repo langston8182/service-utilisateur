@@ -12,7 +12,7 @@
     <artifactId>service-utilisateur</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>service-utilisateur</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Projet de gestion des operations bancaires</description>
 
     <properties>
         <java.version>1.9</java.version>
@@ -100,6 +100,11 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.cmarchive.bank</groupId>
+            <artifactId>service-utilisateur-ressource</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -129,54 +134,6 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <version>2.3.1</version>
-                <configuration>
-                    <language>spring</language>
-                    <inputSpec>${project.basedir}/src/main/resources/api.yml</inputSpec>
-                    <apiPackage>com.cmarchive.bank.serviceutilisateur.api</apiPackage>
-                    <modelPackage>com.cmarchive.bank.serviceutilisateur.model</modelPackage>
-                    <addCompileSourceRoot>true</addCompileSourceRoot>
-                    <generateSupportingFiles>false</generateSupportingFiles>
-                    <generateApis>true</generateApis>
-                    <generateApiTests>false</generateApiTests>
-                    <generateApiDocumentation>true</generateApiDocumentation>
-                    <generateModels>true</generateModels>
-                    <environmentVariables>
-                        <hideGenerationTimestamp>true</hideGenerationTimestamp>
-                    </environmentVariables>
-                    <configOptions>
-                        <dateLibrary>java8</dateLibrary>
-                    </configOptions>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>ServiceUtilisateurDoc</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/api.yml</inputSpec>
-                            <language>spring</language>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>ServiceUtilisateur</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/api.yml</inputSpec>
-                            <output>${project.basedir}/src/site/swagger/serviceutilisateur</output>
-                            <language>html</language>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>dockerfile-maven-plugin</artifactId>

@@ -1,7 +1,7 @@
 package com.cmarchive.bank.serviceutilisateur.mapper;
 
+import com.cmarchive.bank.ressource.model.OperationPermanenteDto;
 import com.cmarchive.bank.serviceutilisateur.modele.OperationPermanente;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanenteDto;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

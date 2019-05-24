@@ -1,7 +1,7 @@
 package com.cmarchive.bank.serviceutilisateur.mapper;
 
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +30,9 @@ public class UtilisateurMapperTest {
     @Test
     public void mapVersUtilisateur() {
         UtilisateurDto utilisateurDto = new UtilisateurDto()
-                .setNom("Marchive")
-                .setEmail("cyril.marchive@gmail.com")
-                .setPrenom("Cyril")
-                .setMotDePasse("motDePasse");
+                .nom("Marchive")
+                .email("cyril.marchive@gmail.com")
+                .prenom("Cyril");
 
         Utilisateur resultat = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
 
@@ -45,8 +44,7 @@ public class UtilisateurMapperTest {
         Utilisateur utilisateur = new Utilisateur()
                 .setNom("Marchive")
                 .setEmail("cyril.marchive@gmail.com")
-                .setPrenom("Cyril")
-                .setMotDePasse("motDePasse");
+                .setPrenom("Cyril");
 
         UtilisateurDto resultat = utilisateurMapper.mapVersUtilisateurDto(utilisateur);
 

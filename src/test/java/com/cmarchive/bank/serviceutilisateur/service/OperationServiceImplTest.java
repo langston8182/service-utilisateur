@@ -1,5 +1,8 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.ressource.model.OperationDto;
+import com.cmarchive.bank.ressource.model.OperationDtos;
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.exception.OperationNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationsMapper;
@@ -7,9 +10,6 @@ import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
 import com.cmarchive.bank.serviceutilisateur.modele.Operation;
 import com.cmarchive.bank.serviceutilisateur.modele.Operations;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationsDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.repository.OperationRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,15 +56,15 @@ public class OperationServiceImplTest {
         Operation operation2 = new Operation();
         OperationDto operationDto1 = new OperationDto();
         OperationDto operationDto2 = new OperationDto();
-        OperationsDto operationsDto = new OperationsDto();
+        OperationDtos operationsDto = new OperationDtos();
         operationsDto.setOperationDtos(Stream.of(operationDto1, operationDto2).collect(Collectors.toList()));
         String email = "cyril.marchive@gmail.com";
         given(operationRepository
                 .findAllByUtilisateur_EmailOrderByDateOperationDesc(email))
                 .willReturn(Stream.of(operation1, operation2).collect(Collectors.toList()));
-        given(operationsMapper.mapVersOperationsDto(any(Operations.class))).willReturn(operationsDto);
+        given(operationsMapper.mapVersOperationDtos(any(Operations.class))).willReturn(operationsDto);
 
-        OperationsDto resultat = operationService.listerOperationsParUtilisateur(email);
+        OperationDtos resultat = operationService.listerOperationsParUtilisateur(email);
 
         then(operationRepository).should().findAllByUtilisateur_EmailOrderByDateOperationDesc(email);
         assertThat(resultat.getOperationDtos()).isNotEmpty()
@@ -95,7 +95,8 @@ public class OperationServiceImplTest {
     @Test
     public void modifierOperationUtilisateur() {
         String id = "1";
-        OperationDto operationDto = new OperationDto().setId(id);
+        OperationDto operationDto = new OperationDto()
+                .id(id);
         String email = "email";
         Operation operationBdd = new Operation()
                 .setUtilisateur(new Utilisateur().setEmail(email));
@@ -103,7 +104,7 @@ public class OperationServiceImplTest {
         Operation operationReponse = new Operation()
                 .setUtilisateur(new Utilisateur().setEmail(email));
         OperationDto operationDtoReponse = new OperationDto()
-                .setUtilisateurDto(new UtilisateurDto().setEmail(email));
+                .utilisateurDto(new UtilisateurDto().email(email));
         given(operationRepository.findById(id)).willReturn(Optional.of(operationBdd));
         given(operationMapper.mapVersOperation(operationDto)).willReturn(operation);
         given(operationRepository.save(operation)).willReturn(operationReponse);
@@ -120,7 +121,8 @@ public class OperationServiceImplTest {
     @Test
     public void modifierOperationUtilisateur_OperationNonTrouvee() {
         String id = "1";
-        OperationDto operationDto = new OperationDto().setId(id);
+        OperationDto operationDto = new OperationDto()
+                .id(id);
         given(operationRepository.findById(id)).willThrow(OperationNonTrouveException.class);
 
         Throwable thrown = catchThrowable(() -> operationService.modifierOperationUtilisateur(operationDto));

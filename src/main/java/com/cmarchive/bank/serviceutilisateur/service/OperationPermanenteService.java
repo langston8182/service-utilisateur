@@ -1,14 +1,14 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanenteDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanentesDto;
+import com.cmarchive.bank.ressource.model.OperationPermanenteDto;
+import com.cmarchive.bank.ressource.model.OperationPermanenteDtos;
 
 /**
  * Service pour les operations permanentes utilisateurs.
  */
 public interface OperationPermanenteService {
 
-    OperationPermanentesDto listerOperationPermanentesParUtilisateur(String email);
+    OperationPermanenteDtos listerOperationPermanentesParUtilisateur(String email);
     OperationPermanenteDto ajouterOperationPermanenteAUtilisateur(
             String email, OperationPermanenteDto operationPermanenteDto);
     OperationPermanenteDto modifierOperationPermanenteUtilisateur(OperationPermanenteDto operationPermanenteDto);
