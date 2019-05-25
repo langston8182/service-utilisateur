@@ -59,19 +59,35 @@ public class OperationPermanenteServiceImplTest {
         OperationPermanenteDtos operationPermanentesDto = new OperationPermanenteDtos();
         operationPermanentesDto.setOperationPermanenteDtos(
                 Stream.of(operationPermanenteDto1, operationPermanenteDto2).collect(Collectors.toList()));
-        String email = "cyril.marchive@gmail.com";
+        String idUtilisateur = "1";
         given(operationPermanenteRepository
-                .findAllByUtilisateur_Email(email))
+                .findAllByUtilisateur_Id(idUtilisateur))
                 .willReturn(Stream.of(operationPermanente1, operationPermanente2).collect(Collectors.toList()));
         given(operationPermanentesMapper
                 .mapVersOperationPermanenteDtos(any(OperationPermanentes.class)))
                 .willReturn(operationPermanentesDto);
 
-        OperationPermanenteDtos resultat = operationPermanenteService.listerOperationPermanentesParUtilisateur(email);
+        OperationPermanenteDtos resultat = operationPermanenteService.listerOperationPermanentesParUtilisateur(idUtilisateur);
 
-        then(operationPermanenteRepository).should().findAllByUtilisateur_Email(email);
+        then(operationPermanenteRepository).should().findAllByUtilisateur_Id(idUtilisateur);
         assertThat(resultat.getOperationPermanenteDtos()).isNotEmpty()
                 .containsExactly(operationPermanenteDto1, operationPermanenteDto2);
+    }
+
+    @Test
+    public void recupererOperationPermanenteParUtilisateur() {
+        UtilisateurDto utilisateurDto = new UtilisateurDto();
+        OperationPermanente operationPermanente = new OperationPermanente();
+        OperationPermanenteDto operationPermanenteDto = new OperationPermanenteDto();
+        given(utilisateurService.recupererUtilisateur("1")).willReturn(utilisateurDto);
+        given(operationPermanenteRepository.findByUtilisateur_IdAndId("1", "2")).willReturn(operationPermanente);
+        given(operationPermanenteMapper.mapVersOperationPermanenteDto(operationPermanente)).willReturn(operationPermanenteDto);
+
+        OperationPermanenteDto resultat = operationPermanenteService.recupererOperationPermanenteParUtilisateur("1", "2");
+
+        then(operationPermanenteRepository).should().findByUtilisateur_IdAndId("1", "2");
+        assertThat(resultat).isNotNull()
+                .isEqualTo(operationPermanenteDto);
     }
 
     @Test
@@ -101,7 +117,7 @@ public class OperationPermanenteServiceImplTest {
     public void modifierOperationPermanenteUtilisateur() {
         String id = "1";
         OperationPermanenteDto operationPermanenteDto = new OperationPermanenteDto()
-                .id(id);
+                .identifiant(id);
         String email = "email";
         OperationPermanente operationPermanenteBdd = new OperationPermanente()
                 .setUtilisateur(new Utilisateur().setEmail(email));
@@ -130,7 +146,7 @@ public class OperationPermanenteServiceImplTest {
     public void modifierOperationPermanenteUtilisateur_OperationPermanenteNonTrouvee() {
         String id = "1";
         OperationPermanenteDto operationPermanenteDto = new OperationPermanenteDto()
-                .id(id);
+                .identifiant(id);
         given(operationPermanenteRepository.findById(id)).willThrow(OperationNonTrouveException.class);
 
         Throwable thrown = catchThrowable(() -> operationPermanenteService

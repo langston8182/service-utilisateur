@@ -52,8 +52,10 @@ public class OperationMapperTest {
 
         OperationDto resultat = operationMapper.mapVersOperationDto(operation);
 
-        assertThat(resultat.getUtilisateurDto()).isEqualToComparingFieldByField(operation.getUtilisateur());
-        assertThat(resultat).isEqualToIgnoringGivenFields(operation, "utilisateurDto");
+        assertThat(resultat.getUtilisateurDto()).isEqualToComparingOnlyGivenFields(operation.getUtilisateur(),
+                "nom", "prenom", "email");
+        assertThat(resultat).isEqualToComparingOnlyGivenFields(operation,
+                "intitule", "prix", "dateOperation");
     }
 
     private Operation creerOperation(Utilisateur cyril) {

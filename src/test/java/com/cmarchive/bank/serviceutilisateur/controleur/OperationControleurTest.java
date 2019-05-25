@@ -1,7 +1,6 @@
 package com.cmarchive.bank.serviceutilisateur.controleur;
 
 import com.cmarchive.bank.ressource.model.OperationDto;
-import com.cmarchive.bank.ressource.model.OperationDtos;
 import com.cmarchive.bank.ressource.model.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.service.OperationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,11 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -59,23 +55,6 @@ public class OperationControleurTest {
 
     @MockBean
     private AuthenticationConfiguration authenticationConfiguration;
-
-    @Test
-    public void listerOperationUtilisateur() throws Exception {
-        UtilisateurDto utilisateurDto = creerUtilisateurDto();
-        OperationDto operationDto1 = creerOperationDto(utilisateurDto);
-        OperationDto operationDto2 = creerOperationDto(utilisateurDto);
-        OperationDtos operationsDto = new OperationDtos()
-                .operationDtos(Stream.of(operationDto1, operationDto2).collect(Collectors.toList()));
-        given(operationService.listerOperationsParUtilisateur(ID_OKTA)).willReturn(operationsDto);
-
-        mockMvc.perform(get("/operations/")
-                .principal(getPincipal())
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.operationDtos", hasSize(2)));
-    }
 
     @Test
     public void ajouterOperationAUtilisateur() throws Exception {

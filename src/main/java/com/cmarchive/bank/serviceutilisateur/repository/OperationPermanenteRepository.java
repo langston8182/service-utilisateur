@@ -14,5 +14,6 @@ public interface OperationPermanenteRepository extends JpaRepository<OperationPe
 
     List<OperationPermanente> findAllByUtilisateur_Id(String utilisateurId);
     List<OperationPermanente> findAllByUtilisateur_Email(String email);
+    OperationPermanente findByUtilisateur_IdAndId(String idUtilisateur, String idOperationPermanente);
 
 }
