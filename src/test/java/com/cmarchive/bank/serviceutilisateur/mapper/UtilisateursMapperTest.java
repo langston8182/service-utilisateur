@@ -58,6 +58,7 @@ public class UtilisateursMapperTest {
         UtilisateurDtos resultat = utilisateursMapper.mapVersUtilisateurDtos(utilisateurs);
 
         assertThat(resultat.getUtilisateurDtos()).hasSize(1);
-        assertThat(resultat.getUtilisateurDtos().get(0)).isEqualToComparingFieldByField(utilisateur);
+        assertThat(resultat.getUtilisateurDtos().get(0)).isEqualToComparingOnlyGivenFields(utilisateur,
+                "nom", "prenom", "email");
     }
 }

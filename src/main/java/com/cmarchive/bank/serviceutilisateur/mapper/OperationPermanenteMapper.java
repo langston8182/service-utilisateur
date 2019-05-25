@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = UtilisateurMapper.class)
 public interface OperationPermanenteMapper {
 
+    @Mapping(target = "id", source = "identifiant")
     @Mapping(target = "utilisateur", source = "utilisateurDto")
     OperationPermanente mapVersOperationPermanente(OperationPermanenteDto operationPermanenteDto);
 

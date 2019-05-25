@@ -58,25 +58,6 @@ public class OperationPermanenteControleurTest {
     private AuthenticationConfiguration authenticationConfiguration;
 
     @Test
-    public void listerOperationPermanenteUtilisateur() throws Exception {
-        UtilisateurDto utilisateurDto = creerUtilisateurDto();
-        OperationPermanenteDto operationPermanenteDto1 = creerOperationPermanenteDto(utilisateurDto);
-        OperationPermanenteDto operationPermanenteDto2 = creerOperationPermanenteDto(utilisateurDto);
-        OperationPermanenteDtos operationPermanentesDto = new OperationPermanenteDtos()
-                .operationPermanenteDtos(Stream.of(operationPermanenteDto1
-                        , operationPermanenteDto2).collect(Collectors.toList()));
-        given(operationPermanenteService.listerOperationPermanentesParUtilisateur(ID_OKTA))
-                .willReturn(operationPermanentesDto);
-
-        mockMvc.perform(get("/operations-permanentes/")
-                .principal(getPincipal())
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.operationPermanenteDtos", hasSize(2)));
-    }
-
-    @Test
     public void ajouterOperationPermanenteAUtilisateur() throws Exception {
         UtilisateurDto utilisateurDto = creerUtilisateurDto();
         OperationPermanenteDto operationPermanenteDto = creerOperationPermanenteDto(utilisateurDto);

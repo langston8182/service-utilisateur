@@ -35,12 +35,20 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public OperationDtos listerOperationsParUtilisateur(String email) {
+    public OperationDtos listerOperationsParUtilisateur(String idUtilisateur) {
         Operations operations = new Operations()
                 .setOperations(operationRepository
-                        .findAllByUtilisateur_EmailOrderByDateOperationDesc(email));
+                        .findAllByUtilisateur_IdOrderByDateOperationDesc(idUtilisateur));
 
         return operationsMapper.mapVersOperationDtos(operations);
+    }
+
+    @Override
+    public OperationDto recupererOperationParUtilisateur(String idUtilisateur, String idOperation) {
+        recupererUtilisateurParId(idUtilisateur);
+        Operation operation = operationRepository.findByUtilisateur_IdAndId(idUtilisateur, idOperation);
+
+        return operationMapper.mapVersOperationDto(operation);
     }
 
     @Override
@@ -66,7 +74,7 @@ public class OperationServiceImpl implements OperationService {
     }
 
     private Operation recupererOperationDansBdd(OperationDto operationDto) {
-        return operationRepository.findById(operationDto.getId())
+        return operationRepository.findById(operationDto.getIdentifiant())
                     .orElseThrow(() -> new OperationNonTrouveException("Operation non trouvee"));
     }
 
@@ -79,6 +87,11 @@ public class OperationServiceImpl implements OperationService {
 
     private Utilisateur recupererUtilisateurParEmail(String email) {
         UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateurParEmail(email);
+        return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
+    }
+
+    private Utilisateur recupererUtilisateurParId(String id) {
+        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateur(id);
         return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
     }
 }

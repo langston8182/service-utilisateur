@@ -57,6 +57,21 @@ public class OperationRepositoryTest {
     }
 
     @Test
+    public void recupererOperationParUtilisateur() {
+        Utilisateur cyril = creerUtilisateur();
+        Operation operation = creerOperation(cyril);
+        testEntityManager.persist(cyril);
+        testEntityManager.persist(operation);
+        testEntityManager.flush();
+
+        Operation resultat = operationRepository.findByUtilisateur_IdAndId(cyril.getId(), operation.getId());
+
+        assertThat(resultat).isNotNull();
+        assertThat(resultat.getIntitule()).isEqualTo("operation");
+        assertThat(resultat.getUtilisateur().getNom()).isEqualTo("Marchive");
+    }
+
+    @Test
     public void listerOperationsParUtilisateur() {
         Utilisateur cyril = creerUtilisateur();
         Operation operation1 = creerOperation(cyril);
