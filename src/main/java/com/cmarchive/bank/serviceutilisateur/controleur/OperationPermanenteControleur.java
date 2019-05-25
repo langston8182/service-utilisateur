@@ -30,21 +30,21 @@ public class OperationPermanenteControleur implements OperationsPermanentesApi {
     @Override
     public ResponseEntity<OperationPermanenteDtos> listerOperationPermanenteUtilisateur() {
         Principal principal = httpServletRequest.getUserPrincipal();
-        return new ResponseEntity(operationPermanenteService.listerOperationPermanentesParUtilisateur(principal.getName()), HttpStatus.OK);
+        return new ResponseEntity<>(operationPermanenteService.listerOperationPermanentesParUtilisateur(principal.getName()), HttpStatus.OK);
     }
 
     @PreAuthorize("#oauth2.hasScope('openid')")
     @Override
     public ResponseEntity<OperationPermanenteDto> ajouterOperationPermanenteAUtilisateur(@RequestBody OperationPermanenteDto operationPermanenteDto) {
         Principal principal = httpServletRequest.getUserPrincipal();
-        return new ResponseEntity(operationPermanenteService.ajouterOperationPermanenteAUtilisateur(principal.getName(),
+        return new ResponseEntity<>(operationPermanenteService.ajouterOperationPermanenteAUtilisateur(principal.getName(),
                 operationPermanenteDto), HttpStatus.CREATED);
     }
 
     @PreAuthorize("#oauth2.hasScope('openid')")
     @Override
     public ResponseEntity<OperationPermanenteDto> modifierOperationPermanenteUtilisateur(@RequestBody OperationPermanenteDto operationPermanenteDto) {
-        return new ResponseEntity(operationPermanenteService.modifierOperationPermanenteUtilisateur(operationPermanenteDto), HttpStatus.OK);
+        return new ResponseEntity<>(operationPermanenteService.modifierOperationPermanenteUtilisateur(operationPermanenteDto), HttpStatus.OK);
     }
 
     @PreAuthorize("#oauth2.hasScope('openid')")

@@ -28,26 +28,26 @@ public class OperationControleur implements OperationsApi {
     @Override
     public ResponseEntity<OperationDtos> listerOperationUtilisateur() {
         Principal principal = httpServletRequest.getUserPrincipal();
-        return new ResponseEntity(operationService.listerOperationsParUtilisateur(principal.getName()), HttpStatus.OK);
+        return new ResponseEntity<>(operationService.listerOperationsParUtilisateur(principal.getName()), HttpStatus.OK);
     }
 
     @PreAuthorize("#oauth2.hasScope('openid')")
     @Override
     public ResponseEntity<OperationDto> ajouterOperationAUtilisateur(@RequestBody OperationDto operationDto) {
         Principal principal = httpServletRequest.getUserPrincipal();
-        return new ResponseEntity(operationService.ajouterOperationAUtilisateur(principal.getName(), operationDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(operationService.ajouterOperationAUtilisateur(principal.getName(), operationDto), HttpStatus.CREATED);
     }
 
     @PreAuthorize("#oauth2.hasScope('openid')")
     @Override
     public ResponseEntity<OperationDto> modifierOperationUtilisateur(@RequestBody OperationDto operationDto) {
-        return new ResponseEntity(operationService.modifierOperationUtilisateur(operationDto), HttpStatus.OK);
+        return new ResponseEntity<>(operationService.modifierOperationUtilisateur(operationDto), HttpStatus.OK);
     }
 
     @PreAuthorize("#oauth2.hasScope('openid')")
     @Override
     public ResponseEntity<Void> supprimerOperationUtilisateur(@RequestBody OperationDto operationDto) {
         operationService.supprimerOperation(operationDto);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
