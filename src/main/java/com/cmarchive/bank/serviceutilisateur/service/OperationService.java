@@ -8,7 +8,8 @@ import com.cmarchive.bank.ressource.model.OperationDtos;
  */
 public interface OperationService {
 
-    OperationDtos listerOperationsParUtilisateur(String email);
+    OperationDtos listerOperationsParUtilisateur(String idUtilisateur);
+    OperationDto recupererOperationParUtilisateur(String idUtilisateur, String idOperation);
     OperationDto ajouterOperationAUtilisateur(String email, OperationDto operationDto);
     OperationDto modifierOperationUtilisateur(OperationDto operationDto);
     void supprimerOperation(OperationDto operationDto);

@@ -4,6 +4,7 @@ import com.cmarchive.bank.ressource.model.OperationDto;
 import com.cmarchive.bank.ressource.model.OperationDtos;
 import com.cmarchive.bank.ressource.model.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.exception.OperationNonTrouveException;
+import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationsMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
@@ -58,15 +59,15 @@ public class OperationServiceImplTest {
         OperationDto operationDto2 = new OperationDto();
         OperationDtos operationsDto = new OperationDtos();
         operationsDto.setOperationDtos(Stream.of(operationDto1, operationDto2).collect(Collectors.toList()));
-        String email = "cyril.marchive@gmail.com";
+        String id = "1";
         given(operationRepository
-                .findAllByUtilisateur_EmailOrderByDateOperationDesc(email))
+                .findAllByUtilisateur_IdOrderByDateOperationDesc(id))
                 .willReturn(Stream.of(operation1, operation2).collect(Collectors.toList()));
         given(operationsMapper.mapVersOperationDtos(any(Operations.class))).willReturn(operationsDto);
 
-        OperationDtos resultat = operationService.listerOperationsParUtilisateur(email);
+        OperationDtos resultat = operationService.listerOperationsParUtilisateur(id);
 
-        then(operationRepository).should().findAllByUtilisateur_EmailOrderByDateOperationDesc(email);
+        then(operationRepository).should().findAllByUtilisateur_IdOrderByDateOperationDesc(id);
         assertThat(resultat.getOperationDtos()).isNotEmpty()
                 .containsExactly(operationDto1, operationDto2);
     }
@@ -93,10 +94,38 @@ public class OperationServiceImplTest {
     }
 
     @Test
+    public void recupererOperationParUtilisateur() {
+        UtilisateurDto utilisateurDto = new UtilisateurDto();
+        Operation operation = new Operation();
+        OperationDto operationDto = new OperationDto();
+        given(utilisateurService.recupererUtilisateur("1")).willReturn(utilisateurDto);
+        given(operationRepository.findByUtilisateur_IdAndId("1", "2")).willReturn(operation);
+        given(operationMapper.mapVersOperationDto(operation)).willReturn(operationDto);
+
+        OperationDto resultat = operationService.recupererOperationParUtilisateur("1", "2");
+
+        then(operationRepository).should().findByUtilisateur_IdAndId("1", "2");
+        assertThat(resultat).isNotNull()
+                .isEqualTo(operationDto);
+    }
+
+    @Test
+    public void recupererOperationParUtilisateur_UtilisateurNonExistant() {
+        given(utilisateurService.recupererUtilisateur("1")).willThrow(UtilisateurNonTrouveException.class);
+
+        Throwable thrown = catchThrowable(() -> operationService.recupererOperationParUtilisateur("1", "2"));
+
+        verifyZeroInteractions(operationMapper);
+        verifyZeroInteractions(operationRepository);
+        assertThat(thrown).isNotNull();
+        assertThat(thrown).isExactlyInstanceOf(UtilisateurNonTrouveException.class);
+    }
+
+    @Test
     public void modifierOperationUtilisateur() {
         String id = "1";
         OperationDto operationDto = new OperationDto()
-                .id(id);
+                .identifiant(id);
         String email = "email";
         Operation operationBdd = new Operation()
                 .setUtilisateur(new Utilisateur().setEmail(email));
@@ -122,7 +151,7 @@ public class OperationServiceImplTest {
     public void modifierOperationUtilisateur_OperationNonTrouvee() {
         String id = "1";
         OperationDto operationDto = new OperationDto()
-                .id(id);
+                .identifiant(id);
         given(operationRepository.findById(id)).willThrow(OperationNonTrouveException.class);
 
         Throwable thrown = catchThrowable(() -> operationService.modifierOperationUtilisateur(operationDto));

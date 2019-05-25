@@ -146,13 +146,13 @@ public class UtilisateurServiceImplTest {
                 .setId(id)
                 .setEmail(email);
         UtilisateurDto cyrilDtoRecupereDeBdd = new UtilisateurDto()
-                .id(id)
+                .identifiant(id)
                 .email(email);
         Utilisateur cyril = spy(Utilisateur.class);
         cyril.setId(id);
         cyril.setEmail(email);
         UtilisateurDto cyrilDto = new UtilisateurDto()
-                .id(id)
+                .identifiant(id)
                 .email(email);
         given(utilisateurRepository.findByEmail(email)).willReturn(Optional.of(cyrilRecuperedeBdd));
         given(utilisateurMapper.mapVersUtilisateurDto(cyrilRecuperedeBdd)).willReturn(cyrilDtoRecupereDeBdd);

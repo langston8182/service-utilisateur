@@ -56,6 +56,21 @@ public class OperationPermanenteRepositoryTest {
         OperationPermanente resultat = testEntityManager.find(OperationPermanente.class, operationPermanente.getId());
         assertThat(resultat).isNull();
     }
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void recupererOperationPermanenteParUtilisateur() {
+        Utilisateur cyril = creerUtilisateur();
+        OperationPermanente operationPermanente = creerOperationPermanente(cyril);
+        testEntityManager.persist(cyril);
+        testEntityManager.persist(operationPermanente);
+        testEntityManager.flush();
+
+        OperationPermanente resultat = operationPermanenteRepository.findByUtilisateur_IdAndId(cyril.getId(), operationPermanente.getId());
+
+        assertThat(resultat).isNotNull();
+        assertThat(resultat.getIntitule()).isEqualTo("intitule");
+        assertThat(resultat.getUtilisateur().getNom()).isEqualTo("Marchive");
+    }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)

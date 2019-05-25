@@ -34,13 +34,23 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
         this.utilisateurMapper = utilisateurMapper;
     }
 
+
+
     @Override
-    public OperationPermanenteDtos listerOperationPermanentesParUtilisateur(String email) {
+    public OperationPermanenteDtos listerOperationPermanentesParUtilisateur(String idUtilisateur) {
         OperationPermanentes operationPermanentes = new OperationPermanentes()
                 .setOperationPermanentes(operationPermanenteRepository
-                        .findAllByUtilisateur_Email(email));
+                        .findAllByUtilisateur_Id(idUtilisateur));
 
         return operationPermanentesMapper.mapVersOperationPermanenteDtos(operationPermanentes);
+    }
+
+    @Override
+    public OperationPermanenteDto recupererOperationPermanenteParUtilisateur(String idUtilisateur, String idOperationPermanente) {
+        recupererUtilisateur(idUtilisateur);
+        OperationPermanente operationPermanente = operationPermanenteRepository.findByUtilisateur_IdAndId(idUtilisateur, idOperationPermanente);
+
+        return operationPermanenteMapper.mapVersOperationPermanenteDto(operationPermanente);
     }
 
     @Override
@@ -80,8 +90,13 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
         return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
     }
 
+    private Utilisateur recupererUtilisateur(String id) {
+        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateur(id);
+        return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
+    }
+
     private OperationPermanente recupererOperationPermanenteDansBdd(OperationPermanenteDto operationPermanenteDto) {
-        return operationPermanenteRepository.findById(operationPermanenteDto.getId())
+        return operationPermanenteRepository.findById(operationPermanenteDto.getIdentifiant())
                 .orElseThrow(() -> new OperationNonTrouveException("Operation permanente non trouvee"));
     }
 }
