@@ -1,13 +1,13 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
+import com.cmarchive.bank.ressource.model.UtilisateurDtos;
 import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurDejaPresentException;
 import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateursMapper;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateurs;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateursDto;
 import com.cmarchive.bank.serviceutilisateur.repository.UtilisateurRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,15 +47,15 @@ public class UtilisateurServiceImplTest {
         Utilisateur melanie = new Utilisateur();
         UtilisateurDto cyrilDto = new UtilisateurDto();
         UtilisateurDto melanieDto = new UtilisateurDto();
-        UtilisateursDto utilisateursDto = new UtilisateursDto();
-        utilisateursDto.setUtilisateursDtos(Stream.of(cyrilDto, melanieDto).collect(Collectors.toList()));
+        UtilisateurDtos utilisateursDto = new UtilisateurDtos();
+        utilisateursDto.utilisateurDtos(Stream.of(cyrilDto, melanieDto).collect(Collectors.toList()));
         given(utilisateurRepository.findAll()).willReturn(Stream.of(cyril, melanie).collect(Collectors.toList()));
-        given(utilisateursMapper.mapVersUtilisateursDto(any(Utilisateurs.class))).willReturn(utilisateursDto);
+        given(utilisateursMapper.mapVersUtilisateurDtos(any(Utilisateurs.class))).willReturn(utilisateursDto);
 
-        UtilisateursDto resultat = utilisateurService.listerUtilisateurs();
+        UtilisateurDtos resultat = utilisateurService.listerUtilisateurs();
 
         then(utilisateurRepository).should().findAll();
-        assertThat(resultat.getUtilisateursDtos()).isNotEmpty()
+        assertThat(resultat.getUtilisateurDtos()).isNotEmpty()
                 .containsExactly(cyrilDto, melanieDto);
     }
 
@@ -144,19 +144,16 @@ public class UtilisateurServiceImplTest {
         String email = "cyril.marchive@gmail.com";
         Utilisateur cyrilRecuperedeBdd = new Utilisateur()
                 .setId(id)
-                .setEmail(email)
-                .setMotDePasse("motDePasse");
+                .setEmail(email);
         UtilisateurDto cyrilDtoRecupereDeBdd = new UtilisateurDto()
-                .setId(id)
-                .setEmail(email)
-                .setMotDePasse("motDePasse");
+                .id(id)
+                .email(email);
         Utilisateur cyril = spy(Utilisateur.class);
         cyril.setId(id);
         cyril.setEmail(email);
         UtilisateurDto cyrilDto = new UtilisateurDto()
-                .setId(id)
-                .setEmail(email)
-                .setMotDePasse("motDePasseModifie");
+                .id(id)
+                .email(email);
         given(utilisateurRepository.findByEmail(email)).willReturn(Optional.of(cyrilRecuperedeBdd));
         given(utilisateurMapper.mapVersUtilisateurDto(cyrilRecuperedeBdd)).willReturn(cyrilDtoRecupereDeBdd);
         given(utilisateurMapper.mapVersUtilisateur(cyrilDto)).willReturn(cyril);
@@ -167,7 +164,6 @@ public class UtilisateurServiceImplTest {
 
         then(utilisateurRepository).should().save(cyril);
         then(utilisateurRepository).should().findByEmail(email);
-        then(cyril).should().setMotDePasse("motDePasse");
         assertThat(resultat).isNotNull()
                 .isEqualTo(cyrilDto);
     }
@@ -176,7 +172,7 @@ public class UtilisateurServiceImplTest {
     public void modifierUtilisateur_UtilisateurInexistant() {
         String email = "cyril.marchive@gmail.com";
         UtilisateurDto cyril = new UtilisateurDto()
-                .setEmail(email);
+                .email(email);
         given(utilisateurRepository.findByEmail(email)).willReturn(Optional.empty());
 
         Throwable thrown = catchThrowable(() -> utilisateurService.modifierUtilisateur(cyril));

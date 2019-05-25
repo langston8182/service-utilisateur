@@ -1,8 +1,8 @@
 package com.cmarchive.bank.serviceutilisateur.controleur;
 
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanenteDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanentesDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
+import com.cmarchive.bank.ressource.model.OperationPermanenteDto;
+import com.cmarchive.bank.ressource.model.OperationPermanenteDtos;
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.service.OperationPermanenteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -62,13 +62,13 @@ public class OperationPermanenteControleurTest {
         UtilisateurDto utilisateurDto = creerUtilisateurDto();
         OperationPermanenteDto operationPermanenteDto1 = creerOperationPermanenteDto(utilisateurDto);
         OperationPermanenteDto operationPermanenteDto2 = creerOperationPermanenteDto(utilisateurDto);
-        OperationPermanentesDto operationPermanentesDto = new OperationPermanentesDto()
-                .setOperationPermanenteDtos(Stream.of(operationPermanenteDto1
+        OperationPermanenteDtos operationPermanentesDto = new OperationPermanenteDtos()
+                .operationPermanenteDtos(Stream.of(operationPermanenteDto1
                         , operationPermanenteDto2).collect(Collectors.toList()));
         given(operationPermanenteService.listerOperationPermanentesParUtilisateur(ID_OKTA))
                 .willReturn(operationPermanentesDto);
 
-        mockMvc.perform(get("/operations-permanentes")
+        mockMvc.perform(get("/operations-permanentes/")
                 .principal(getPincipal())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -80,14 +80,15 @@ public class OperationPermanenteControleurTest {
     public void ajouterOperationPermanenteAUtilisateur() throws Exception {
         UtilisateurDto utilisateurDto = creerUtilisateurDto();
         OperationPermanenteDto operationPermanenteDto = creerOperationPermanenteDto(utilisateurDto);
+        operationPermanenteDto.setUtilisateurDto(null);
         OperationPermanenteDto reponse = new OperationPermanenteDto()
-                .setIntitule("test")
-                .setUtilisateurDto(utilisateurDto);
+                .intitule("test")
+                .utilisateurDto(utilisateurDto);
         given(operationPermanenteService.ajouterOperationPermanenteAUtilisateur(
                 anyString(), any(OperationPermanenteDto.class)))
                 .willReturn(reponse);
 
-        mockMvc.perform(post("/operations-permanentes")
+        mockMvc.perform(post("/operations-permanentes/")
                 .principal(getPincipal())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -102,12 +103,12 @@ public class OperationPermanenteControleurTest {
         UtilisateurDto utilisateurDto = creerUtilisateurDto();
         OperationPermanenteDto operationPermanenteDto = creerOperationPermanenteDto(utilisateurDto);
         OperationPermanenteDto reponse = new OperationPermanenteDto()
-                .setIntitule("test")
-                .setUtilisateurDto(utilisateurDto);
+                .intitule("test")
+                .utilisateurDto(utilisateurDto);
         given(operationPermanenteService.modifierOperationPermanenteUtilisateur(any(OperationPermanenteDto.class)))
                 .willReturn(reponse);
 
-        mockMvc.perform(put("/operations-permanentes")
+        mockMvc.perform(put("/operations-permanentes/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(operationPermanenteDto)))
@@ -122,7 +123,7 @@ public class OperationPermanenteControleurTest {
         OperationPermanenteDto operationPermanenteDto = creerOperationPermanenteDto(utilisateurDto);
         willDoNothing().given(operationPermanenteService).supprimerOperationPermanente(operationPermanenteDto);
 
-        mockMvc.perform(delete("/operations-permanentes")
+        mockMvc.perform(delete("/operations-permanentes/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(operationPermanenteDto)))
@@ -132,17 +133,17 @@ public class OperationPermanenteControleurTest {
 
     private OperationPermanenteDto creerOperationPermanenteDto(UtilisateurDto cyril) {
         return new OperationPermanenteDto()
-                .setJour(12)
-                .setIntitule("operation")
-                .setPrix(BigDecimal.TEN)
-                .setUtilisateurDto(cyril);
+                .jour(12)
+                .intitule("operation")
+                .prix(BigDecimal.TEN)
+                .utilisateurDto(cyril);
     }
 
     private UtilisateurDto creerUtilisateurDto() {
         return new UtilisateurDto()
-                .setEmail("cyril.marchive@gmail.com")
-                .setNom("Marchive")
-                .setPrenom("Cyril");
+                .email("cyril.marchive@gmail.com")
+                .nom("Marchive")
+                .prenom("Cyril");
     }
 
     private Principal getPincipal() {

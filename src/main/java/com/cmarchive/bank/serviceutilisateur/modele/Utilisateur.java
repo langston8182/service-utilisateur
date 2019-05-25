@@ -32,5 +32,4 @@ public class Utilisateur {
 
     @Column(unique = true)
     private String email;
-    private String motDePasse;
 }

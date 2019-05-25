@@ -1,7 +1,7 @@
 package com.cmarchive.bank.serviceutilisateur.mapper;
 
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

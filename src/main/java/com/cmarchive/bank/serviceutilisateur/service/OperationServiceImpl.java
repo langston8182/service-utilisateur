@@ -1,5 +1,8 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.ressource.model.OperationDto;
+import com.cmarchive.bank.ressource.model.OperationDtos;
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.exception.OperationNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationsMapper;
@@ -7,9 +10,6 @@ import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
 import com.cmarchive.bank.serviceutilisateur.modele.Operation;
 import com.cmarchive.bank.serviceutilisateur.modele.Operations;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationsDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.repository.OperationRepository;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +35,12 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public OperationsDto listerOperationsParUtilisateur(String email) {
+    public OperationDtos listerOperationsParUtilisateur(String email) {
         Operations operations = new Operations()
                 .setOperations(operationRepository
                         .findAllByUtilisateur_EmailOrderByDateOperationDesc(email));
 
-        return operationsMapper.mapVersOperationsDto(operations);
+        return operationsMapper.mapVersOperationDtos(operations);
     }
 
     @Override

@@ -1,11 +1,11 @@
 package com.cmarchive.bank.serviceutilisateur.mapper;
 
+import com.cmarchive.bank.ressource.model.OperationDto;
+import com.cmarchive.bank.ressource.model.OperationDtos;
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.modele.Operation;
 import com.cmarchive.bank.serviceutilisateur.modele.Operations;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationsDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +40,8 @@ public class OperationsMapperTest {
     public void mapVersOperations() {
         UtilisateurDto utilisateurDto = creerUtilisateurDto();
         OperationDto operationDto = creerOperationDto(utilisateurDto);
-        OperationsDto operationsDto = new OperationsDto()
-                .setOperationDtos(singletonList(operationDto));
+        OperationDtos operationsDto = new OperationDtos()
+                .operationDtos(singletonList(operationDto));
 
         Operations resultat = operationsMapper.mapVersOperations(operationsDto);
 
@@ -58,7 +58,7 @@ public class OperationsMapperTest {
         Operations operations = new Operations()
                 .setOperations(singletonList(operation));
 
-        OperationsDto resultat = operationsMapper.mapVersOperationsDto(operations);
+        OperationDtos resultat = operationsMapper.mapVersOperationDtos(operations);
 
         assertThat(resultat.getOperationDtos()).hasSize(1);
         assertThat(resultat.getOperationDtos().get(0).getUtilisateurDto()).isEqualToComparingFieldByField(utilisateur);
@@ -83,16 +83,16 @@ public class OperationsMapperTest {
 
     private OperationDto creerOperationDto(UtilisateurDto cyril) {
         return new OperationDto()
-                .setDateOperation(LocalDate.now())
-                .setIntitule("operation")
-                .setPrix(BigDecimal.TEN)
-                .setUtilisateurDto(cyril);
+                .dateOperation(LocalDate.now())
+                .intitule("operation")
+                .prix(BigDecimal.TEN)
+                .utilisateurDto(cyril);
     }
 
     private UtilisateurDto creerUtilisateurDto() {
         return new UtilisateurDto()
-                .setEmail("cyril.marchive@gmail.com")
-                .setNom("Marchive")
-                .setPrenom("Cyril");
+                .email("cyril.marchive@gmail.com")
+                .nom("Marchive")
+                .prenom("Cyril");
     }
 }
