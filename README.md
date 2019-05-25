@@ -3,15 +3,33 @@
 - **1.0.0-SNAPSHOT** : initialisation du projet
 
 # Objectif
-Serveur de resources permettant de gérer les utilisateurs de l'application bancaires.
+Serveur de resources RestFull permettant de gérer les utilisateurs de l'application bancaires.
 Utilise les verbes **CRUD** pour la gestion des utilisateurs.
 
 # Technique
 Nécéssite une connection oauth2 et d'un jeton JWT pour fonctionner :
+
 https://github.com/langston8182/bank-oauth2-authorization-server
+
 Il faut avant tout démarrer le serveur d'autorisation.
 
 >Port d'écoute : 8100
+
+# Hateoas
+Respecte toutes les couches du modèle de maturité de Richardson et notamment le niveau 3 concernant le contrôle Hypermedia.
+
+# Swagger
+Utilisation du modèle de spécification Swagger pour documenter l'Api.
+
+http://localhost:8100/swagger-ui.html
+
+Toutes les ressources et Api sont générées grâce au plugin maven **swagger-codegen-maven-plugin**
+
+La documentation swagger se trouve dans le projet [github ressource]. Dans ce projet lancer la commande suivante pour générer les ressources.
+
+```sh
+$ mvn clean install
+```
 
 # Postman :
 Se loguer pour récupérer le token JWT
@@ -171,3 +189,5 @@ Ajouter dans le *pom.xml*
 
 # Contributeur
 Cyril Marchive (cyril.marchive@gmail.com)
+
+[github ressource]: https://github.com/langston8182/service-utilisateur-ressource
