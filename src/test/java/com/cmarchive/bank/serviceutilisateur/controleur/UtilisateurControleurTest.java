@@ -135,13 +135,11 @@ public class UtilisateurControleurTest {
 
     @Test
     public void supprimerUtilisateur() throws Exception {
-        UtilisateurDto cyril = creerUtilisateurDto();
-        willDoNothing().given(utilisateurService).supprimerUtilisateur(cyril);
+        willDoNothing().given(utilisateurService).supprimerUtilisateur("1");
 
-        mockMvc.perform(delete("/utilisateurs/")
+        mockMvc.perform(delete("/utilisateurs/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(cyril)))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$").doesNotExist());
     }

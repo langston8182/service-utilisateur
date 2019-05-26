@@ -161,13 +161,8 @@ public class OperationPermanenteServiceImplTest {
 
     @Test
     public void supprimerOperationPermanente() {
-        OperationPermanente operationPermanente = new OperationPermanente();
-        OperationPermanenteDto operationPermanenteDto = new OperationPermanenteDto();
-        given(operationPermanenteMapper.mapVersOperationPermanente(operationPermanenteDto))
-                .willReturn(operationPermanente);
+        operationPermanenteService.supprimerOperationPermanente("1");
 
-        operationPermanenteService.supprimerOperationPermanente(operationPermanenteDto);
-
-        then(operationPermanenteRepository).should().delete(operationPermanente);
+        then(operationPermanenteRepository).should().deleteById("1");
     }
 }

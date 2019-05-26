@@ -6,6 +6,7 @@ import com.cmarchive.bank.serviceutilisateur.service.OperationPermanenteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,8 +40,8 @@ public class OperationPermanenteControleur implements OperationsPermanentesApi {
 
     @PreAuthorize("#oauth2.hasScope('openid')")
     @Override
-    public ResponseEntity<Void> supprimerOperationPermanenteUtilisateur(@RequestBody OperationPermanenteDto operationPermanenteDto) {
-        operationPermanenteService.supprimerOperationPermanente(operationPermanenteDto);
+    public ResponseEntity<Void> supprimerOperationPermanenteUtilisateur(@PathVariable String idOperationPermanente) {
+        operationPermanenteService.supprimerOperationPermanente(idOperationPermanente);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

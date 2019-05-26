@@ -184,12 +184,8 @@ public class UtilisateurServiceImplTest {
 
     @Test
     public void supprimerUtilisateur() {
-        Utilisateur cyril = new Utilisateur();
-        UtilisateurDto cyrilDto = new UtilisateurDto();
-        given(utilisateurMapper.mapVersUtilisateur(cyrilDto)).willReturn(cyril);
+        utilisateurService.supprimerUtilisateur("1");
 
-        utilisateurService.supprimerUtilisateur(cyrilDto);
-
-        then(utilisateurRepository).should().delete(cyril);
+        then(utilisateurRepository).should().deleteById("1");
     }
 }

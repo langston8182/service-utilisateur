@@ -101,8 +101,8 @@ public class UtilisateurControleur implements UtilisateursApi {
 
     @PreAuthorize("#oauth2.hasScope('openid')")
     @Override
-    public ResponseEntity<Void> supprimerUtilisateur(@Valid UtilisateurDto utilisateurDto) {
-        utilisateurService.supprimerUtilisateur(utilisateurDto);
+    public ResponseEntity<Void> supprimerUtilisateur(@PathVariable String id) {
+        utilisateurService.supprimerUtilisateur(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
