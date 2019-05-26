@@ -78,11 +78,8 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
     }
 
     @Override
-    public void supprimerOperationPermanente(OperationPermanenteDto operationPermanenteDto) {
-        OperationPermanente operationPermanente =
-                operationPermanenteMapper.mapVersOperationPermanente(operationPermanenteDto);
-
-        operationPermanenteRepository.delete(operationPermanente);
+    public void supprimerOperationPermanente(String id) {
+        operationPermanenteRepository.deleteById(id);
     }
 
     private Utilisateur recupererUtilisateurParEmail(String email) {

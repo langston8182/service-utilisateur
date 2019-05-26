@@ -73,8 +73,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
-    public void supprimerUtilisateur(UtilisateurDto utilisateurDto) {
-        Utilisateur utilisateur = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
-        utilisateurRepository.delete(utilisateur);
+    public void supprimerUtilisateur(String id) {
+        utilisateurRepository.deleteById(id);
     }
 }

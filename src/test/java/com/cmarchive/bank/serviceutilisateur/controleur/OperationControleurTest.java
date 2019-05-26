@@ -99,14 +99,11 @@ public class OperationControleurTest {
 
     @Test
     public void supprimerOperationUtilisateur() throws Exception {
-        UtilisateurDto utilisateurDto = creerUtilisateurDto();
-        OperationDto operationDto = creerOperationDto(utilisateurDto);
-        willDoNothing().given(operationService).supprimerOperation(operationDto);
+        willDoNothing().given(operationService).supprimerOperation("1");
 
-        mockMvc.perform(delete("/operations/")
+        mockMvc.perform(delete("/operations/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(operationDto)))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$").doesNotExist());
     }

@@ -1,7 +1,6 @@
 package com.cmarchive.bank.serviceutilisateur.controleur;
 
 import com.cmarchive.bank.ressource.model.OperationPermanenteDto;
-import com.cmarchive.bank.ressource.model.OperationPermanenteDtos;
 import com.cmarchive.bank.ressource.model.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.service.OperationPermanenteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,11 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.security.Principal;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -100,14 +96,11 @@ public class OperationPermanenteControleurTest {
 
     @Test
     public void supprimerOperationPermanenteUtilisateur() throws Exception {
-        UtilisateurDto utilisateurDto = creerUtilisateurDto();
-        OperationPermanenteDto operationPermanenteDto = creerOperationPermanenteDto(utilisateurDto);
-        willDoNothing().given(operationPermanenteService).supprimerOperationPermanente(operationPermanenteDto);
+        willDoNothing().given(operationPermanenteService).supprimerOperationPermanente("1");
 
-        mockMvc.perform(delete("/operations-permanentes/")
+        mockMvc.perform(delete("/operations-permanentes/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(operationPermanenteDto)))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$").doesNotExist());
     }
