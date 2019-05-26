@@ -79,10 +79,8 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public void supprimerOperation(OperationDto operationDto) {
-        Operation operation = operationMapper.mapVersOperation(operationDto);
-
-        operationRepository.delete(operation);
+    public void supprimerOperation(String id) {
+        operationRepository.deleteById(id);
     }
 
     private Utilisateur recupererUtilisateurParEmail(String email) {

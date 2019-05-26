@@ -18,6 +18,7 @@ import java.security.Principal;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 @Configuration
 @ConfigurationProperties(prefix = "swagger.doc")
@@ -37,8 +38,8 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
                 .build()
-                .securitySchemes(asList(securityScheme()))
-                .securityContexts(asList(securityContext()))
+                .securitySchemes(singletonList(securityScheme()))
+                .securityContexts(singletonList(securityContext()))
                 .apiInfo(apiInfo())
                 .ignoredParameterTypes(Principal.class);
     }

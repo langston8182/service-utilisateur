@@ -165,12 +165,8 @@ public class OperationServiceImplTest {
 
     @Test
     public void supprimerOperation() {
-        Operation operation = new Operation();
-        OperationDto operationDto = new OperationDto();
-        given(operationMapper.mapVersOperation(operationDto)).willReturn(operation);
+        operationService.supprimerOperation("1");
 
-        operationService.supprimerOperation(operationDto);
-
-        then(operationRepository).should().delete(operation);
+        then(operationRepository).should().deleteById("1");
     }
 }
