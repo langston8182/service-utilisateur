@@ -85,10 +85,10 @@ public class OperationControleurTest {
         OperationDto reponse = new OperationDto()
                 .intitule("test")
                 .utilisateurDto(utilisateurDto);
-        given(operationService.modifierOperationUtilisateur(any(OperationDto.class)))
+        given(operationService.modifierOperationUtilisateur(anyString(), any(OperationDto.class)))
                 .willReturn(reponse);
 
-        mockMvc.perform(put("/operations/")
+        mockMvc.perform(put("/operations/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(operationDto)))

@@ -34,8 +34,10 @@ public class OperationPermanenteControleur implements OperationsPermanentesApi {
 
     @PreAuthorize("#oauth2.hasScope('openid')")
     @Override
-    public ResponseEntity<OperationPermanenteDto> modifierOperationPermanenteUtilisateur(@RequestBody OperationPermanenteDto operationPermanenteDto) {
-        return new ResponseEntity<>(operationPermanenteService.modifierOperationPermanenteUtilisateur(operationPermanenteDto), HttpStatus.OK);
+    public ResponseEntity<OperationPermanenteDto> modifierOperationPermanenteUtilisateur(
+            @PathVariable String idOperationPermanente, @RequestBody OperationPermanenteDto operationPermanenteDto) {
+        return new ResponseEntity<>(operationPermanenteService
+                .modifierOperationPermanenteUtilisateur(idOperationPermanente, operationPermanenteDto), HttpStatus.OK);
     }
 
     @PreAuthorize("#oauth2.hasScope('openid')")

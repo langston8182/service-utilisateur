@@ -82,10 +82,10 @@ public class OperationPermanenteControleurTest {
         OperationPermanenteDto reponse = new OperationPermanenteDto()
                 .intitule("test")
                 .utilisateurDto(utilisateurDto);
-        given(operationPermanenteService.modifierOperationPermanenteUtilisateur(any(OperationPermanenteDto.class)))
+        given(operationPermanenteService.modifierOperationPermanenteUtilisateur(anyString(), any(OperationPermanenteDto.class)))
                 .willReturn(reponse);
 
-        mockMvc.perform(put("/operations-permanentes/")
+        mockMvc.perform(put("/operations-permanentes/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(operationPermanenteDto)))

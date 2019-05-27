@@ -11,7 +11,7 @@ public interface OperationService {
     OperationDtos listerOperationsParUtilisateur(String idUtilisateur);
     OperationDto recupererOperationParUtilisateur(String idUtilisateur, String idOperation);
     OperationDto ajouterOperationAUtilisateur(String email, OperationDto operationDto);
-    OperationDto modifierOperationUtilisateur(OperationDto operationDto);
+    OperationDto modifierOperationUtilisateur(String idOperation, OperationDto operationDto);
     void supprimerOperation(String id);
 
 }

@@ -65,8 +65,8 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
     }
 
     @Override
-    public OperationPermanenteDto modifierOperationPermanenteUtilisateur(OperationPermanenteDto operationPermanenteDto) {
-        OperationPermanente operationPermanenteBdd = recupererOperationPermanenteDansBdd(operationPermanenteDto);
+    public OperationPermanenteDto modifierOperationPermanenteUtilisateur(String idOperationPermanente, OperationPermanenteDto operationPermanenteDto) {
+        OperationPermanente operationPermanenteBdd = recupererOperationPermanenteDansBdd(idOperationPermanente);
 
         OperationPermanente operationPermanente =
                 operationPermanenteMapper.mapVersOperationPermanente(operationPermanenteDto);
@@ -92,8 +92,8 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
         return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
     }
 
-    private OperationPermanente recupererOperationPermanenteDansBdd(OperationPermanenteDto operationPermanenteDto) {
-        return operationPermanenteRepository.findById(operationPermanenteDto.getIdentifiant())
+    private OperationPermanente recupererOperationPermanenteDansBdd(String id) {
+        return operationPermanenteRepository.findById(id)
                 .orElseThrow(() -> new OperationNonTrouveException("Operation permanente non trouvee"));
     }
 }

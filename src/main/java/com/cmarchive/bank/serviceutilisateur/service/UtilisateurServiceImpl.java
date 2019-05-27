@@ -63,8 +63,8 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
-    public UtilisateurDto modifierUtilisateur(UtilisateurDto utilisateurDto) {
-        recupererUtilisateurParEmail(utilisateurDto.getEmail());
+    public UtilisateurDto modifierUtilisateur(String idUtilisateur, UtilisateurDto utilisateurDto) {
+        recupererUtilisateur(idUtilisateur);
         Utilisateur utilisateur = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
 
         Utilisateur reponse = utilisateurRepository.save(utilisateur);

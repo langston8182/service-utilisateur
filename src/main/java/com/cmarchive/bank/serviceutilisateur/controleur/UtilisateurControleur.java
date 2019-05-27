@@ -75,9 +75,9 @@ public class UtilisateurControleur implements UtilisateursApi {
 
     @PreAuthorize("#oauth2.hasScope('openid')")
     @Override
-    public ResponseEntity<UtilisateurDto> modifierUtilisateur(@Valid UtilisateurDto utilisateurDto) {
+    public ResponseEntity<UtilisateurDto> modifierUtilisateur(@PathVariable String id, @Valid UtilisateurDto utilisateurDto) {
         try {
-            UtilisateurDto resultat = utilisateurService.modifierUtilisateur(utilisateurDto);
+            UtilisateurDto resultat = utilisateurService.modifierUtilisateur(id, utilisateurDto);
             creerHateoasUtilisateurRel(resultat);
             resultat.add(creerHateoasListeUtilisateur());
             return new ResponseEntity<>(resultat, HttpStatus.OK);

@@ -134,7 +134,7 @@ public class OperationPermanenteServiceImplTest {
                 .willReturn(operationPermanenteDtoReponse);
 
         OperationPermanenteDto resultat = operationPermanenteService.modifierOperationPermanenteUtilisateur(
-                operationPermanenteDto);
+                id, operationPermanenteDto);
 
         then(operationPermanenteRepository).should().findById(id);
         then(operationPermanenteRepository).should().save(operationPermanente);
@@ -150,7 +150,7 @@ public class OperationPermanenteServiceImplTest {
         given(operationPermanenteRepository.findById(id)).willThrow(OperationNonTrouveException.class);
 
         Throwable thrown = catchThrowable(() -> operationPermanenteService
-                .modifierOperationPermanenteUtilisateur(operationPermanenteDto));
+                .modifierOperationPermanenteUtilisateur(id, operationPermanenteDto));
 
         assertThat(thrown).isNotNull();
         assertThat(thrown).isExactlyInstanceOf(OperationNonTrouveException.class);

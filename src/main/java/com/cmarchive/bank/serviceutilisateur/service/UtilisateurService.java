@@ -12,6 +12,6 @@ public interface UtilisateurService {
     UtilisateurDto recupererUtilisateurParEmail(String email);
     UtilisateurDto recupererUtilisateur(String id);
     UtilisateurDto creerUtilisateur(UtilisateurDto utilisateurDto);
-    UtilisateurDto modifierUtilisateur(UtilisateurDto utilisateurDto);
+    UtilisateurDto modifierUtilisateur(String idUtilisateur, UtilisateurDto utilisateurDto);
     void supprimerUtilisateur(String id);
 }

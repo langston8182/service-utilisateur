@@ -19,7 +19,6 @@ credentials.yml
 *.iml
 *.ipr
 
-src/site
 
 ### NetBeans ###
 /nbproject/private/

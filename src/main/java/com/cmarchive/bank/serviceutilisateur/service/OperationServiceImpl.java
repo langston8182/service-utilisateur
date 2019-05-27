@@ -62,8 +62,8 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public OperationDto modifierOperationUtilisateur(OperationDto operationDto) {
-        Operation operationBdd = recupererOperationDansBdd(operationDto);
+    public OperationDto modifierOperationUtilisateur(String idOperation, OperationDto operationDto) {
+        Operation operationBdd = recupererOperationDansBdd(idOperation);
 
         Operation operation = operationMapper.mapVersOperation(operationDto);
         operation.setUtilisateur(operationBdd.getUtilisateur());
@@ -73,8 +73,8 @@ public class OperationServiceImpl implements OperationService {
         return operationMapper.mapVersOperationDto(reponse);
     }
 
-    private Operation recupererOperationDansBdd(OperationDto operationDto) {
-        return operationRepository.findById(operationDto.getIdentifiant())
+    private Operation recupererOperationDansBdd(String id) {
+        return operationRepository.findById(id)
                     .orElseThrow(() -> new OperationNonTrouveException("Operation non trouvee"));
     }
 
