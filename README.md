@@ -188,6 +188,50 @@ Ajouter dans le *pom.xml*
 </dependency>
 ```
 
+# Création d'un tag
+
+#### Préparation du tag
+
+- Modififier le fichier **README** et modifier le tag
+- Modififier le fichier **pom.xml** et modifier le tag
+- Lancer la commande
+```sh
+$ mvn clean install
+```
+Et vérifier qu'il n'y a aucune erreur.
+
+- Effectuer tous les test d'intégration postman.
+- Aller dans le répertoire `target` et vérifier que le jar est présent avec la bonne version.
+- Pusher sur master les modifications du readme et du pom. avec comme message :
+> Release 1.0.0
+
+#### Création du tag
+
+```sh
+$ git tag 1.0.0
+$ git push origin --tags
+```
+
+- Vérifier dans github que la release est bien créée.
+- Editer la release pour ajouter un titre et une description.
+- Vérifier le commit relatif au tag. Ce commit ne doit contenir que le changement de version.
+
+#### Dockerhub
+
+- Lancer les commandes maven suivantes:
+```sh
+$ mvn dockerfile:build
+$ mvn dockerfile:push
+```
+- Vérifier dans dockerhub que le tag a bien été crée.
+
+#### Préparation à la prochaine release
+
+- Modifier le fichier **README.md** pour ajouter le prochain *SNAPSHOT*
+- Modifier le fichier **pom.xml** pour modifier le tag avec prochain *SNAPSHOT*
+- pusher les modification sur github.
+
+
 # Contributeur
 Cyril Marchive (cyril.marchive@gmail.com)
 
