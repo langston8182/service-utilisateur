@@ -154,16 +154,16 @@ public class UtilisateurServiceImplTest {
         UtilisateurDto cyrilDto = new UtilisateurDto()
                 .identifiant(id)
                 .email(email);
-        given(utilisateurRepository.findByEmail(email)).willReturn(Optional.of(cyrilRecuperedeBdd));
+        given(utilisateurRepository.findById(id)).willReturn(Optional.of(cyrilRecuperedeBdd));
         given(utilisateurMapper.mapVersUtilisateurDto(cyrilRecuperedeBdd)).willReturn(cyrilDtoRecupereDeBdd);
         given(utilisateurMapper.mapVersUtilisateur(cyrilDto)).willReturn(cyril);
         given(utilisateurRepository.save(cyril)).willReturn(cyril);
         given(utilisateurMapper.mapVersUtilisateurDto(cyril)).willReturn(cyrilDto);
 
-        UtilisateurDto resultat = utilisateurService.modifierUtilisateur(cyrilDto);
+        UtilisateurDto resultat = utilisateurService.modifierUtilisateur(id, cyrilDto);
 
         then(utilisateurRepository).should().save(cyril);
-        then(utilisateurRepository).should().findByEmail(email);
+        then(utilisateurRepository).should().findById(id);
         assertThat(resultat).isNotNull()
                 .isEqualTo(cyrilDto);
     }
@@ -171,13 +171,14 @@ public class UtilisateurServiceImplTest {
     @Test
     public void modifierUtilisateur_UtilisateurInexistant() {
         String email = "cyril.marchive@gmail.com";
+        String id = "1";
         UtilisateurDto cyril = new UtilisateurDto()
                 .email(email);
-        given(utilisateurRepository.findByEmail(email)).willReturn(Optional.empty());
+        given(utilisateurRepository.findById(id)).willReturn(Optional.empty());
 
-        Throwable thrown = catchThrowable(() -> utilisateurService.modifierUtilisateur(cyril));
+        Throwable thrown = catchThrowable(() -> utilisateurService.modifierUtilisateur(id, cyril));
 
-        then(utilisateurRepository).should().findByEmail(email);
+        then(utilisateurRepository).should().findById(id);
         assertThat(thrown).isNotNull();
         assertThat(thrown).isExactlyInstanceOf(UtilisateurNonTrouveException.class);
     }

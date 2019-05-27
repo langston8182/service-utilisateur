@@ -29,6 +29,7 @@ import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -177,9 +178,9 @@ public class UtilisateurControleurTest {
         UtilisateurDto cyril = creerUtilisateurDto();
         UtilisateurDto reponse = creerUtilisateurDto()
                 .nom("Boussat");
-        given(utilisateurService.modifierUtilisateur(any(UtilisateurDto.class))).willReturn(reponse);
+        given(utilisateurService.modifierUtilisateur(anyString(), any(UtilisateurDto.class))).willReturn(reponse);
 
-        mockMvc.perform(put("/utilisateurs/")
+        mockMvc.perform(put("/utilisateurs/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cyril)))
@@ -190,9 +191,9 @@ public class UtilisateurControleurTest {
     @Test
     public void modifierUtilisateur_UtilisateurInexistant() throws Exception {
         UtilisateurDto cyril = creerUtilisateurDto();
-        given(utilisateurService.modifierUtilisateur(any(UtilisateurDto.class))).willThrow(UtilisateurNonTrouveException.class);
+        given(utilisateurService.modifierUtilisateur(anyString(), any(UtilisateurDto.class))).willThrow(UtilisateurNonTrouveException.class);
 
-        mockMvc.perform(put("/utilisateurs/")
+        mockMvc.perform(put("/utilisateurs/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(cyril)))

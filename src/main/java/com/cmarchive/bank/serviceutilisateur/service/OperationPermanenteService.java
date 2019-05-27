@@ -12,7 +12,7 @@ public interface OperationPermanenteService {
     OperationPermanenteDto recupererOperationPermanenteParUtilisateur(String idUtilisateur, String idOperationPermanente);
     OperationPermanenteDto ajouterOperationPermanenteAUtilisateur(
             String email, OperationPermanenteDto operationPermanenteDto);
-    OperationPermanenteDto modifierOperationPermanenteUtilisateur(OperationPermanenteDto operationPermanenteDto);
+    OperationPermanenteDto modifierOperationPermanenteUtilisateur(String idOperationPermanente, OperationPermanenteDto operationPermanenteDto);
     void supprimerOperationPermanente(String id);
 
 }

@@ -139,7 +139,7 @@ public class OperationServiceImplTest {
         given(operationRepository.save(operation)).willReturn(operationReponse);
         given(operationMapper.mapVersOperationDto(operationReponse)).willReturn(operationDtoReponse);
 
-        OperationDto resultat = operationService.modifierOperationUtilisateur(operationDto);
+        OperationDto resultat = operationService.modifierOperationUtilisateur(id, operationDto);
 
         then(operationRepository).should().findById(id);
         then(operationRepository).should().save(operation);
@@ -154,7 +154,7 @@ public class OperationServiceImplTest {
                 .identifiant(id);
         given(operationRepository.findById(id)).willThrow(OperationNonTrouveException.class);
 
-        Throwable thrown = catchThrowable(() -> operationService.modifierOperationUtilisateur(operationDto));
+        Throwable thrown = catchThrowable(() -> operationService.modifierOperationUtilisateur(id, operationDto));
 
         assertThat(thrown).isNotNull();
         assertThat(thrown).isExactlyInstanceOf(OperationNonTrouveException.class);

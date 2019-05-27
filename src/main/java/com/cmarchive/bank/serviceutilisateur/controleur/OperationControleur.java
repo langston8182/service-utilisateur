@@ -33,8 +33,8 @@ public class OperationControleur implements OperationsApi {
 
     @PreAuthorize("#oauth2.hasScope('openid')")
     @Override
-    public ResponseEntity<OperationDto> modifierOperationUtilisateur(@RequestBody OperationDto operationDto) {
-        return new ResponseEntity<>(operationService.modifierOperationUtilisateur(operationDto), HttpStatus.OK);
+    public ResponseEntity<OperationDto> modifierOperationUtilisateur(@PathVariable String idOperation, @RequestBody OperationDto operationDto) {
+        return new ResponseEntity<>(operationService.modifierOperationUtilisateur(idOperation, operationDto), HttpStatus.OK);
     }
 
     @PreAuthorize("#oauth2.hasScope('openid')")
