@@ -79,7 +79,21 @@ il s'agit d'un pipeline as code. Fly est un interpreteur de commandes pour manip
 ### Installation :
 https://github.com/concourse/concourse-docker
 
+https://concoursetutorial.com/
+
+Pour se connecter à l'application les identifiants par defaut sont test / test
+
 #### Commandes fly:
+Pour installer fly cliquer pour telecharger le binaire suivant l'os utilise
+
+![okta autorisation](images/Sélection_011.png)
+
+Puis lancer les commandes suivantes:
+```sh
+$ chmod 0755 fly
+$ sudo mv fly /usr/bin/
+
+```
 
 - Créer un token de connexion
 ```sh
@@ -100,6 +114,8 @@ $ alias fly="fly -t tutorial"
 ```sh
 $ fly sp -p service-utilisateur -c ci/pipeline.yml -l credentials.yml
 ```
+
+Ne pas oublier de mettre le pipeline en eveil a partir de l'interface web.
 
 #### Utilisation :
 Pour le projet, un triger est lance dès que un commit est fait sur la branche master.
