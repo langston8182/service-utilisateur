@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfiguration;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
@@ -58,6 +57,21 @@ public class OperationRepositoryTest {
     }
 
     @Test
+    public void recupererOperationParUtilisateur() {
+        Utilisateur cyril = creerUtilisateur();
+        Operation operation = creerOperation(cyril);
+        testEntityManager.persist(cyril);
+        testEntityManager.persist(operation);
+        testEntityManager.flush();
+
+        Operation resultat = operationRepository.findByUtilisateur_IdAndId(cyril.getId(), operation.getId());
+
+        assertThat(resultat).isNotNull();
+        assertThat(resultat.getIntitule()).isEqualTo("operation");
+        assertThat(resultat.getUtilisateur().getNom()).isEqualTo("Marchive");
+    }
+
+    @Test
     public void listerOperationsParUtilisateur() {
         Utilisateur cyril = creerUtilisateur();
         Operation operation1 = creerOperation(cyril);
@@ -74,18 +88,35 @@ public class OperationRepositoryTest {
         assertThat(resultat.get(0).getDateOperation()).isAfter(resultat.get(1).getDateOperation());
     }
 
+    @Test
+    public void listerOperationsParEmailUtilisateur() {
+        Utilisateur cyril = creerUtilisateur();
+        Operation operation1 = creerOperation(cyril);
+        Operation operation2 = creerOperation(cyril);
+        operation2.setDateOperation(LocalDate.now().plusDays(1));
+        testEntityManager.persist(cyril);
+        testEntityManager.persist(operation1);
+        testEntityManager.persist(operation2);
+        testEntityManager.flush();
+
+        List<Operation> resultat = operationRepository.findAllByUtilisateur_EmailOrderByDateOperationDesc(cyril.getEmail());
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(0).getDateOperation()).isAfter(resultat.get(1).getDateOperation());
+    }
+
     private Operation creerOperation(Utilisateur cyril) {
         return new Operation()
-                    .setDateOperation(LocalDate.now())
-                    .setIntitule("operation")
-                    .setPrix(BigDecimal.TEN)
-                    .setUtilisateur(cyril);
+                .setDateOperation(LocalDate.now())
+                .setIntitule("operation")
+                .setPrix(BigDecimal.TEN)
+                .setUtilisateur(cyril);
     }
 
     private Utilisateur creerUtilisateur() {
         return new Utilisateur()
-                    .setEmail("cyril.marchive@gmail.com")
-                    .setNom("Marchive")
-                    .setPrenom("Cyril");
+                .setEmail("cyril.marchive@gmail.com")
+                .setNom("Marchive")
+                .setPrenom("Cyril");
     }
 }

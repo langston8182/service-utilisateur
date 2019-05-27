@@ -1,8 +1,7 @@
 package com.cmarchive.bank.serviceutilisateur.controleur;
 
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanenteDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanentesDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
+import com.cmarchive.bank.ressource.model.OperationPermanenteDto;
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.service.OperationPermanenteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -19,11 +18,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.security.Principal;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -37,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(secure=false)
 public class OperationPermanenteControleurTest {
 
+    private static final String ID_OKTA = "idOkta";
     @Autowired
     private MockMvc mockMvc;
 
@@ -56,35 +54,19 @@ public class OperationPermanenteControleurTest {
     private AuthenticationConfiguration authenticationConfiguration;
 
     @Test
-    public void listerOperationPermanenteUtilisateur() throws Exception {
-        UtilisateurDto utilisateurDto = creerUtilisateurDto();
-        OperationPermanenteDto operationPermanenteDto1 = creerOperationPermanenteDto(utilisateurDto);
-        OperationPermanenteDto operationPermanenteDto2 = creerOperationPermanenteDto(utilisateurDto);
-        OperationPermanentesDto operationPermanentesDto = new OperationPermanentesDto()
-                .setOperationPermanenteDtos(Stream.of(operationPermanenteDto1
-                        , operationPermanenteDto2).collect(Collectors.toList()));
-        given(operationPermanenteService.listerOperationPermanentesParUtilisateur("1"))
-                .willReturn(operationPermanentesDto);
-
-        mockMvc.perform(get("/operations-permanentes/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.operationPermanenteDtos", hasSize(2)));
-    }
-
-    @Test
     public void ajouterOperationPermanenteAUtilisateur() throws Exception {
         UtilisateurDto utilisateurDto = creerUtilisateurDto();
         OperationPermanenteDto operationPermanenteDto = creerOperationPermanenteDto(utilisateurDto);
+        operationPermanenteDto.setUtilisateurDto(null);
         OperationPermanenteDto reponse = new OperationPermanenteDto()
-                .setIntitule("test")
-                .setUtilisateurDto(utilisateurDto);
+                .intitule("test")
+                .utilisateurDto(utilisateurDto);
         given(operationPermanenteService.ajouterOperationPermanenteAUtilisateur(
                 anyString(), any(OperationPermanenteDto.class)))
                 .willReturn(reponse);
 
-        mockMvc.perform(post("/operations-permanentes/1")
+        mockMvc.perform(post("/operations-permanentes/")
+                .principal(getPincipal())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(operationPermanenteDto)))
@@ -98,12 +80,12 @@ public class OperationPermanenteControleurTest {
         UtilisateurDto utilisateurDto = creerUtilisateurDto();
         OperationPermanenteDto operationPermanenteDto = creerOperationPermanenteDto(utilisateurDto);
         OperationPermanenteDto reponse = new OperationPermanenteDto()
-                .setIntitule("test")
-                .setUtilisateurDto(utilisateurDto);
+                .intitule("test")
+                .utilisateurDto(utilisateurDto);
         given(operationPermanenteService.modifierOperationPermanenteUtilisateur(any(OperationPermanenteDto.class)))
                 .willReturn(reponse);
 
-        mockMvc.perform(put("/operations-permanentes")
+        mockMvc.perform(put("/operations-permanentes/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(operationPermanenteDto)))
@@ -114,30 +96,31 @@ public class OperationPermanenteControleurTest {
 
     @Test
     public void supprimerOperationPermanenteUtilisateur() throws Exception {
-        UtilisateurDto utilisateurDto = creerUtilisateurDto();
-        OperationPermanenteDto operationPermanenteDto = creerOperationPermanenteDto(utilisateurDto);
-        willDoNothing().given(operationPermanenteService).supprimerOperationPermanente(operationPermanenteDto);
+        willDoNothing().given(operationPermanenteService).supprimerOperationPermanente("1");
 
-        mockMvc.perform(delete("/operations-permanentes")
+        mockMvc.perform(delete("/operations-permanentes/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(operationPermanenteDto)))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andExpect(jsonPath("$").doesNotExist());
     }
 
     private OperationPermanenteDto creerOperationPermanenteDto(UtilisateurDto cyril) {
         return new OperationPermanenteDto()
-                .setJour(12)
-                .setIntitule("operation")
-                .setPrix(BigDecimal.TEN)
-                .setUtilisateurDto(cyril);
+                .jour(12)
+                .intitule("operation")
+                .prix(BigDecimal.TEN)
+                .utilisateurDto(cyril);
     }
 
     private UtilisateurDto creerUtilisateurDto() {
         return new UtilisateurDto()
-                .setEmail("cyril.marchive@gmail.com")
-                .setNom("Marchive")
-                .setPrenom("Cyril");
+                .email("cyril.marchive@gmail.com")
+                .nom("Marchive")
+                .prenom("Cyril");
+    }
+
+    private Principal getPincipal() {
+        return () -> ID_OKTA;
     }
 }

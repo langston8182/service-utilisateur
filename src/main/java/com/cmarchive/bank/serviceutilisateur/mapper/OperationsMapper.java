@@ -1,7 +1,8 @@
 package com.cmarchive.bank.serviceutilisateur.mapper;
 
+import com.cmarchive.bank.ressource.model.OperationDtos;
 import com.cmarchive.bank.serviceutilisateur.modele.Operations;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationsDto;
+import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -9,8 +10,8 @@ import org.mapstruct.Mapping;
 public interface OperationsMapper {
 
     @Mapping(target = "operations", source = "operationDtos")
-    Operations mapVersOperations(OperationsDto operationsDto);
+    Operations mapVersOperations(OperationDtos operationDtos);
 
-    @Mapping(target = "operationDtos", source = "operations")
-    OperationsDto mapVersOperationsDto(Operations operations);
+    @InheritInverseConfiguration
+    OperationDtos mapVersOperationDtos(Operations operations);
 }

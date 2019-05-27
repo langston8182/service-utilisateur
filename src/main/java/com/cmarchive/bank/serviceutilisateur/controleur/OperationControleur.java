@@ -1,45 +1,46 @@
 package com.cmarchive.bank.serviceutilisateur.controleur;
 
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationsDto;
+import com.cmarchive.bank.ressource.api.OperationsApi;
+import com.cmarchive.bank.ressource.model.OperationDto;
 import com.cmarchive.bank.serviceutilisateur.service.OperationService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 
 @RestController
-@RequestMapping("/")
-public class OperationControleur {
+public class OperationControleur implements OperationsApi {
 
     private OperationService operationService;
+    private HttpServletRequest httpServletRequest;
 
-    public OperationControleur(OperationService operationService) {
+    public OperationControleur(OperationService operationService, HttpServletRequest httpServletRequest) {
         this.operationService = operationService;
+        this.httpServletRequest = httpServletRequest;
     }
 
-    @GetMapping("/operations/{utilisateurId}")
-    @PreAuthorize("#oauth2.hasScope('USER')")
-    public OperationsDto listerOperationUtilisateur(@PathVariable String utilisateurId) {
-        return operationService.listerOperationsParUtilisateur(utilisateurId);
+    @PreAuthorize("#oauth2.hasScope('openid')")
+    @Override
+    public ResponseEntity<OperationDto> ajouterOperationAUtilisateur(@RequestBody OperationDto operationDto) {
+        Principal principal = httpServletRequest.getUserPrincipal();
+        return new ResponseEntity<>(operationService.ajouterOperationAUtilisateur(principal.getName(), operationDto), HttpStatus.CREATED);
     }
 
-    @PostMapping("/operations/{utilisateurId}")
-    @PreAuthorize("#oauth2.hasScope('USER')")
-    @ResponseStatus(HttpStatus.CREATED)
-    public OperationDto ajouterOperationAUtilisateur(@PathVariable String utilisateurId,
-                                                     @RequestBody OperationDto operationDto) {
-        return operationService.ajouterOperationAUtilisateur(utilisateurId, operationDto);
+    @PreAuthorize("#oauth2.hasScope('openid')")
+    @Override
+    public ResponseEntity<OperationDto> modifierOperationUtilisateur(@RequestBody OperationDto operationDto) {
+        return new ResponseEntity<>(operationService.modifierOperationUtilisateur(operationDto), HttpStatus.OK);
     }
 
-    @PutMapping("/operations")
-    @PreAuthorize("#oauth2.hasScope('USER')")
-    public OperationDto modifierOperationUtilisateur(@RequestBody OperationDto operationDto) {
-        return operationService.modifierOperationUtilisateur(operationDto);
-    }
-
-    @DeleteMapping("/operations")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void supprimerOperationUtilisateur(@RequestBody OperationDto operationDto) {
-        operationService.supprimerOperation(operationDto);
+    @PreAuthorize("#oauth2.hasScope('openid')")
+    @Override
+    public ResponseEntity<Void> supprimerOperationUtilisateur(@PathVariable String idOperation) {
+        operationService.supprimerOperation(idOperation);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

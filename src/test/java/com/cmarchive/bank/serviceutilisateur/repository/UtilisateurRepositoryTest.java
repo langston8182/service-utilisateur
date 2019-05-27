@@ -3,12 +3,10 @@ package com.cmarchive.bank.serviceutilisateur.repository;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -17,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @DataJpaTest
@@ -63,22 +60,6 @@ public class UtilisateurRepositoryTest {
     }
 
     @Test
-    public void sauvegarderUtilisateur_EmailDejaPresent() {
-        Utilisateur test = new Utilisateur()
-                .setEmail("cyril.marchive@gmail.com")
-                .setNom("Test")
-                .setPrenom("Test");
-        Utilisateur cyril = creerUtilisateur();
-        testEntityManager.persist(test);
-        testEntityManager.flush();
-
-        Throwable thrown = catchThrowable(() -> utilisateurRepository.save(cyril));
-
-        assertThat(thrown).isNotNull();
-        assertThat(thrown).isExactlyInstanceOf(DataIntegrityViolationException.class);
-    }
-
-    @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     public void modifierUtilisateur() {
         Utilisateur test = new Utilisateur()
@@ -98,10 +79,22 @@ public class UtilisateurRepositoryTest {
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
-    public void recupererUtilisateur() {
+    public void recupererUtilisateurParEmail() {
         Utilisateur cyril  = creerUtilisateur();
         testEntityManager.persist(cyril);
         testEntityManager.flush();
+
+        Optional<Utilisateur> resultat = utilisateurRepository.findByEmail("cyril.marchive@gmail.com");
+
+        assertThat(resultat.get()).isNotNull()
+                .isEqualTo(cyril);
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void recupererUtilisateurParId() {
+        Utilisateur cyril  = creerUtilisateur();
+        testEntityManager.persistAndFlush(cyril);
 
         Optional<Utilisateur> resultat = utilisateurRepository.findById(cyril.getId());
 

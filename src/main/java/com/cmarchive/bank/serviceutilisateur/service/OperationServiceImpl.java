@@ -1,5 +1,8 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.ressource.model.OperationDto;
+import com.cmarchive.bank.ressource.model.OperationDtos;
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.exception.OperationNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationsMapper;
@@ -7,9 +10,6 @@ import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
 import com.cmarchive.bank.serviceutilisateur.modele.Operation;
 import com.cmarchive.bank.serviceutilisateur.modele.Operations;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationsDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.repository.OperationRepository;
 import org.springframework.stereotype.Service;
 
@@ -35,17 +35,25 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public OperationsDto listerOperationsParUtilisateur(String utilisateurId) {
+    public OperationDtos listerOperationsParUtilisateur(String idUtilisateur) {
         Operations operations = new Operations()
                 .setOperations(operationRepository
-                        .findAllByUtilisateur_IdOrderByDateOperationDesc(utilisateurId));
+                        .findAllByUtilisateur_IdOrderByDateOperationDesc(idUtilisateur));
 
-        return operationsMapper.mapVersOperationsDto(operations);
+        return operationsMapper.mapVersOperationDtos(operations);
     }
 
     @Override
-    public OperationDto ajouterOperationAUtilisateur(String utilisateurId, OperationDto operationDto) {
-        Utilisateur utilisateur = recupererUtilisateurParId(utilisateurId);
+    public OperationDto recupererOperationParUtilisateur(String idUtilisateur, String idOperation) {
+        recupererUtilisateurParId(idUtilisateur);
+        Operation operation = operationRepository.findByUtilisateur_IdAndId(idUtilisateur, idOperation);
+
+        return operationMapper.mapVersOperationDto(operation);
+    }
+
+    @Override
+    public OperationDto ajouterOperationAUtilisateur(String email, OperationDto operationDto) {
+        Utilisateur utilisateur = recupererUtilisateurParEmail(email);
         Operation operation = operationMapper.mapVersOperation(operationDto);
         operation.setUtilisateur(utilisateur);
 
@@ -66,19 +74,22 @@ public class OperationServiceImpl implements OperationService {
     }
 
     private Operation recupererOperationDansBdd(OperationDto operationDto) {
-        return operationRepository.findById(operationDto.getId())
+        return operationRepository.findById(operationDto.getIdentifiant())
                     .orElseThrow(() -> new OperationNonTrouveException("Operation non trouvee"));
     }
 
     @Override
-    public void supprimerOperation(OperationDto operationDto) {
-        Operation operation = operationMapper.mapVersOperation(operationDto);
-
-        operationRepository.delete(operation);
+    public void supprimerOperation(String id) {
+        operationRepository.deleteById(id);
     }
 
-    private Utilisateur recupererUtilisateurParId(String utilisateurId) {
-        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateur(utilisateurId);
+    private Utilisateur recupererUtilisateurParEmail(String email) {
+        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateurParEmail(email);
+        return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
+    }
+
+    private Utilisateur recupererUtilisateurParId(String id) {
+        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateur(id);
         return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
     }
 }

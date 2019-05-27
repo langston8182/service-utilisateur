@@ -1,18 +1,16 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
+import com.cmarchive.bank.ressource.model.UtilisateurDtos;
 import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurDejaPresentException;
 import com.cmarchive.bank.serviceutilisateur.exception.UtilisateurNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateursMapper;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateurs;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateursDto;
 import com.cmarchive.bank.serviceutilisateur.repository.UtilisateurRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
-import javax.validation.ConstraintViolationException;
 
 @Service
 public class UtilisateurServiceImpl implements UtilisateurService {
@@ -30,11 +28,18 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
-    public UtilisateursDto listerUtilisateurs() {
+    public UtilisateurDtos listerUtilisateurs() {
         Utilisateurs utilisateurs = new Utilisateurs()
                 .setUtilisateurs(utilisateurRepository.findAll());
 
-        return utilisateursMapper.mapVersUtilisateursDto(utilisateurs);
+        return utilisateursMapper.mapVersUtilisateurDtos(utilisateurs);
+    }
+
+    @Override
+    public UtilisateurDto recupererUtilisateurParEmail(String email) {
+        Utilisateur utilisateur = utilisateurRepository.findByEmail(email)
+                .orElseThrow(() -> new UtilisateurNonTrouveException("L'utilisateur n'a pas ete trouve"));
+        return utilisateurMapper.mapVersUtilisateurDto(utilisateur);
     }
 
     @Override
@@ -59,10 +64,8 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
     @Override
     public UtilisateurDto modifierUtilisateur(UtilisateurDto utilisateurDto) {
-        UtilisateurDto utilisateurDeBdd = recupererUtilisateur(utilisateurDto.getId());
-
+        recupererUtilisateurParEmail(utilisateurDto.getEmail());
         Utilisateur utilisateur = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
-        utilisateur.setMotDePasse(utilisateurDeBdd.getMotDePasse());
 
         Utilisateur reponse = utilisateurRepository.save(utilisateur);
 
@@ -70,8 +73,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     }
 
     @Override
-    public void supprimerUtilisateur(UtilisateurDto utilisateurDto) {
-        Utilisateur utilisateur = utilisateurMapper.mapVersUtilisateur(utilisateurDto);
-        utilisateurRepository.delete(utilisateur);
+    public void supprimerUtilisateur(String id) {
+        utilisateurRepository.deleteById(id);
     }
 }

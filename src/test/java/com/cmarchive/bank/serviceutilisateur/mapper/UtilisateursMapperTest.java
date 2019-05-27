@@ -1,9 +1,9 @@
 package com.cmarchive.bank.serviceutilisateur.mapper;
 
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
+import com.cmarchive.bank.ressource.model.UtilisateurDtos;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateurs;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateursDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +34,11 @@ public class UtilisateursMapperTest {
     @Test
     public void mapVersUtilisateurs() {
         UtilisateurDto utilisateurDto = new UtilisateurDto()
-                .setEmail("cyril.marchive@gmail.com")
-                .setNom("Marchive")
-                .setPrenom("Cyril")
-                .setMotDePasse("motDePasse");
-        UtilisateursDto utilisateursDto = new UtilisateursDto()
-                .setUtilisateursDtos(singletonList(utilisateurDto));
+                .email("cyril.marchive@gmail.com")
+                .nom("Marchive")
+                .prenom("Cyril");
+        UtilisateurDtos utilisateursDto = new UtilisateurDtos()
+                .utilisateurDtos(singletonList(utilisateurDto));
 
         Utilisateurs resultat = utilisateursMapper.mapVersUtilisateurs(utilisateursDto);
 
@@ -52,14 +51,14 @@ public class UtilisateursMapperTest {
         Utilisateur utilisateur = new Utilisateur()
                 .setEmail("cyril.marchive@gmail.com")
                 .setNom("Marchive")
-                .setPrenom("Cyril")
-                .setMotDePasse("motDePasse");
+                .setPrenom("Cyril");
         Utilisateurs utilisateurs = new Utilisateurs()
                 .setUtilisateurs(singletonList(utilisateur));
 
-        UtilisateursDto resultat = utilisateursMapper.mapVersUtilisateursDto(utilisateurs);
+        UtilisateurDtos resultat = utilisateursMapper.mapVersUtilisateurDtos(utilisateurs);
 
-        assertThat(resultat.getUtilisateursDtos()).hasSize(1);
-        assertThat(resultat.getUtilisateursDtos().get(0)).isEqualToComparingFieldByField(utilisateur);
+        assertThat(resultat.getUtilisateurDtos()).hasSize(1);
+        assertThat(resultat.getUtilisateurDtos().get(0)).isEqualToComparingOnlyGivenFields(utilisateur,
+                "nom", "prenom", "email");
     }
 }

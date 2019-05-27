@@ -1,16 +1,16 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
+import com.cmarchive.bank.ressource.model.OperationPermanenteDto;
+import com.cmarchive.bank.ressource.model.OperationPermanenteDtos;
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.exception.OperationNonTrouveException;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationPermanenteMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.OperationPermanentesMapper;
 import com.cmarchive.bank.serviceutilisateur.mapper.UtilisateurMapper;
-import com.cmarchive.bank.serviceutilisateur.modele.*;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanenteDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanentesDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
+import com.cmarchive.bank.serviceutilisateur.modele.OperationPermanente;
+import com.cmarchive.bank.serviceutilisateur.modele.OperationPermanentes;
+import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
 import com.cmarchive.bank.serviceutilisateur.repository.OperationPermanenteRepository;
-import com.cmarchive.bank.serviceutilisateur.repository.OperationRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,18 +34,28 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
         this.utilisateurMapper = utilisateurMapper;
     }
 
+
+
     @Override
-    public OperationPermanentesDto listerOperationPermanentesParUtilisateur(String utilisateurId) {
+    public OperationPermanenteDtos listerOperationPermanentesParUtilisateur(String idUtilisateur) {
         OperationPermanentes operationPermanentes = new OperationPermanentes()
                 .setOperationPermanentes(operationPermanenteRepository
-                        .findAllByUtilisateur_Id(utilisateurId));
+                        .findAllByUtilisateur_Id(idUtilisateur));
 
-        return operationPermanentesMapper.mapVersOperationPermanentesDto(operationPermanentes);
+        return operationPermanentesMapper.mapVersOperationPermanenteDtos(operationPermanentes);
     }
 
     @Override
-    public OperationPermanenteDto ajouterOperationPermanenteAUtilisateur(String utilisateurId, OperationPermanenteDto operationPermanenteDto) {
-        Utilisateur utilisateur = recupererUtilisateurParId(utilisateurId);
+    public OperationPermanenteDto recupererOperationPermanenteParUtilisateur(String idUtilisateur, String idOperationPermanente) {
+        recupererUtilisateur(idUtilisateur);
+        OperationPermanente operationPermanente = operationPermanenteRepository.findByUtilisateur_IdAndId(idUtilisateur, idOperationPermanente);
+
+        return operationPermanenteMapper.mapVersOperationPermanenteDto(operationPermanente);
+    }
+
+    @Override
+    public OperationPermanenteDto ajouterOperationPermanenteAUtilisateur(String email, OperationPermanenteDto operationPermanenteDto) {
+        Utilisateur utilisateur = recupererUtilisateurParEmail(email);
         OperationPermanente operationPermanente = operationPermanenteMapper
                 .mapVersOperationPermanente(operationPermanenteDto);
         operationPermanente.setUtilisateur(utilisateur);
@@ -68,20 +78,22 @@ public class OperationPermanenteServiceImpl implements OperationPermanenteServic
     }
 
     @Override
-    public void supprimerOperationPermanente(OperationPermanenteDto operationPermanenteDto) {
-        OperationPermanente operationPermanente =
-                operationPermanenteMapper.mapVersOperationPermanente(operationPermanenteDto);
-
-        operationPermanenteRepository.delete(operationPermanente);
+    public void supprimerOperationPermanente(String id) {
+        operationPermanenteRepository.deleteById(id);
     }
 
-    private Utilisateur recupererUtilisateurParId(String utilisateurId) {
-        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateur(utilisateurId);
+    private Utilisateur recupererUtilisateurParEmail(String email) {
+        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateurParEmail(email);
+        return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
+    }
+
+    private Utilisateur recupererUtilisateur(String id) {
+        UtilisateurDto utilisateurDto = utilisateurService.recupererUtilisateur(id);
         return utilisateurMapper.mapVersUtilisateur(utilisateurDto);
     }
 
     private OperationPermanente recupererOperationPermanenteDansBdd(OperationPermanenteDto operationPermanenteDto) {
-        return operationPermanenteRepository.findById(operationPermanenteDto.getId())
+        return operationPermanenteRepository.findById(operationPermanenteDto.getIdentifiant())
                 .orElseThrow(() -> new OperationNonTrouveException("Operation permanente non trouvee"));
     }
 }

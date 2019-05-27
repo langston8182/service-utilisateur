@@ -1,0 +1,40 @@
+server:
+  port: 8100
+spring:
+  application:
+    name: utilisateur
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  datasource:
+
+    # db-service si le service tourne dans un container ou k8s,  localhost sinon
+    host: localhost
+    port: 3306
+    url: jdbc:mariadb://${spring.datasource.host}:${spring.datasource.port}/bank
+    username: spring
+    password: spring
+    driver-class-name: org.mariadb.jdbc.Driver
+    initialization-mode: always
+    validationQuery:
+      SELECT 1
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+
+okta:
+  server: https://dev-847930.okta.com
+  oauth2:
+    issuer: ${okta.server}/oauth2/default
+    clientId: 0oalbqv5tDtNvYWwY356
+    clientSecret: kKdzYKFoS9GBhiY7G3ryS2XCzHCuUs8TJX6HACOr
+
+swagger:
+  doc:
+    tokenEndPoint: ${okta.server}/oauth2/default/v1/token
+    authorizeEndPoint: ${okta.server}/oauth2/default/v1/authorize
+    clientId: 0oal0hinwkCPwTJG4356
+    clientSecret: n5vONXfNaozgnoEP7Q4T0VNz2S7NOrsHD3s1YAs3

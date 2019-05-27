@@ -1,11 +1,11 @@
 package com.cmarchive.bank.serviceutilisateur.mapper;
 
+import com.cmarchive.bank.ressource.model.OperationPermanenteDto;
+import com.cmarchive.bank.ressource.model.OperationPermanenteDtos;
+import com.cmarchive.bank.ressource.model.UtilisateurDto;
 import com.cmarchive.bank.serviceutilisateur.modele.OperationPermanente;
 import com.cmarchive.bank.serviceutilisateur.modele.OperationPermanentes;
 import com.cmarchive.bank.serviceutilisateur.modele.Utilisateur;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanenteDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationPermanentesDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.UtilisateurDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +38,8 @@ public class OperationPermanentesMapperTest {
     public void mapVersOperationPermanentes() {
         UtilisateurDto utilisateurDto = creerUtilisateurDto();
         OperationPermanenteDto operationPermanenteDto = creerOperationPermanenteDto(utilisateurDto);
-        OperationPermanentesDto operationPermanentesDto = new OperationPermanentesDto()
-                .setOperationPermanenteDtos(singletonList(operationPermanenteDto));
+        OperationPermanenteDtos operationPermanentesDto = new OperationPermanenteDtos()
+                .operationPermanenteDtos(singletonList(operationPermanenteDto));
 
         OperationPermanentes resultat = operationPermanentesMapper.mapVersOperationPermanentes(operationPermanentesDto);
 
@@ -56,12 +56,13 @@ public class OperationPermanentesMapperTest {
         OperationPermanentes operationPermanentes = new OperationPermanentes()
                 .setOperationPermanentes(singletonList(operationPermanente));
 
-        OperationPermanentesDto resultat = operationPermanentesMapper.mapVersOperationPermanentesDto(operationPermanentes);
+        OperationPermanenteDtos resultat = operationPermanentesMapper.mapVersOperationPermanenteDtos(operationPermanentes);
 
         assertThat(resultat.getOperationPermanenteDtos()).hasSize(1);
         assertThat(resultat.getOperationPermanenteDtos().get(0)
-                .getUtilisateurDto()).isEqualToComparingFieldByField(utilisateur);
-        assertThat(resultat.getOperationPermanenteDtos().get(0)).isEqualToIgnoringGivenFields(operationPermanente, "utilisateurDto");
+                .getUtilisateurDto()).isEqualToComparingOnlyGivenFields(utilisateur, "nom", "prenom", "email");
+        assertThat(resultat.getOperationPermanenteDtos().get(0)).isEqualToComparingOnlyGivenFields(operationPermanente,
+                "intitule", "prix", "jour");
     }
 
     private OperationPermanente creerOperationPermanente(Utilisateur cyril) {
@@ -81,16 +82,16 @@ public class OperationPermanentesMapperTest {
 
     private OperationPermanenteDto creerOperationPermanenteDto(UtilisateurDto cyril) {
         return new OperationPermanenteDto()
-                .setJour(12)
-                .setIntitule("operation")
-                .setPrix(BigDecimal.TEN)
-                .setUtilisateurDto(cyril);
+                .jour(12)
+                .intitule("operation")
+                .prix(BigDecimal.TEN)
+                .utilisateurDto(cyril);
     }
 
     private UtilisateurDto creerUtilisateurDto() {
         return new UtilisateurDto()
-                .setEmail("cyril.marchive@gmail.com")
-                .setNom("Marchive")
-                .setPrenom("Cyril");
+                .email("cyril.marchive@gmail.com")
+                .nom("Marchive")
+                .prenom("Cyril");
     }
 }

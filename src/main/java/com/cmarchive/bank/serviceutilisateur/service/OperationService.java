@@ -1,16 +1,17 @@
 package com.cmarchive.bank.serviceutilisateur.service;
 
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationDto;
-import com.cmarchive.bank.serviceutilisateur.modele.dto.OperationsDto;
+import com.cmarchive.bank.ressource.model.OperationDto;
+import com.cmarchive.bank.ressource.model.OperationDtos;
 
 /**
  * Service pour les operations utilisateurs.
  */
 public interface OperationService {
 
-    OperationsDto listerOperationsParUtilisateur(String utilisateurId);
-    OperationDto ajouterOperationAUtilisateur(String utilisateurId, OperationDto operationDto);
+    OperationDtos listerOperationsParUtilisateur(String idUtilisateur);
+    OperationDto recupererOperationParUtilisateur(String idUtilisateur, String idOperation);
+    OperationDto ajouterOperationAUtilisateur(String email, OperationDto operationDto);
     OperationDto modifierOperationUtilisateur(OperationDto operationDto);
-    void supprimerOperation(OperationDto operationDto);
+    void supprimerOperation(String id);
 
 }

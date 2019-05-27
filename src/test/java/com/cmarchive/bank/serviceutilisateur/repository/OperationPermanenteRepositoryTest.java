@@ -56,6 +56,21 @@ public class OperationPermanenteRepositoryTest {
         OperationPermanente resultat = testEntityManager.find(OperationPermanente.class, operationPermanente.getId());
         assertThat(resultat).isNull();
     }
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void recupererOperationPermanenteParUtilisateur() {
+        Utilisateur cyril = creerUtilisateur();
+        OperationPermanente operationPermanente = creerOperationPermanente(cyril);
+        testEntityManager.persist(cyril);
+        testEntityManager.persist(operationPermanente);
+        testEntityManager.flush();
+
+        OperationPermanente resultat = operationPermanenteRepository.findByUtilisateur_IdAndId(cyril.getId(), operationPermanente.getId());
+
+        assertThat(resultat).isNotNull();
+        assertThat(resultat.getIntitule()).isEqualTo("intitule");
+        assertThat(resultat.getUtilisateur().getNom()).isEqualTo("Marchive");
+    }
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
@@ -70,6 +85,24 @@ public class OperationPermanenteRepositoryTest {
         testEntityManager.flush();
 
         List<OperationPermanente> resultat = operationPermanenteRepository.findAllByUtilisateur_Id(cyril.getId());
+
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(1).getJour()).isEqualTo(2);
+    }
+
+    @Test
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    public void listerOperationPermanenteParEmailUtilisateur() {
+        Utilisateur cyril = creerUtilisateur();
+        OperationPermanente operationPermanente1 = creerOperationPermanente(cyril);
+        OperationPermanente operationPermanente2 = creerOperationPermanente(cyril);
+        operationPermanente2.setJour(2);
+        testEntityManager.persist(cyril);
+        testEntityManager.persist(operationPermanente1);
+        testEntityManager.persist(operationPermanente2);
+        testEntityManager.flush();
+
+        List<OperationPermanente> resultat = operationPermanenteRepository.findAllByUtilisateur_Email(cyril.getEmail());
 
         assertThat(resultat).hasSize(2);
         assertThat(resultat.get(1).getJour()).isEqualTo(2);
