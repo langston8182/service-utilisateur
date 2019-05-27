@@ -1,0 +1,24 @@
+{
+	"id": "77e211d0-5556-4b43-8308-a5970f78c393",
+	"values": [
+		{
+			"key": "token",
+			"value": "eyJraWQiOiJxMFNQQlVlOVRsZHBkQzhDUXdoRmg2RUF2STdZYk9hOUZkQ3FxeFVlaW9JIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULmFhZ2FDaDhoci13UkVjSnhUQk9GVGVteUZraXlUbU13d0xNSEtjNnQ5eFUiLCJpc3MiOiJodHRwczovL2Rldi04NDc5MzAub2t0YS5jb20vb2F1dGgyL2RlZmF1bHQiLCJhdWQiOiJhcGk6Ly9kZWZhdWx0IiwiaWF0IjoxNTU4OTI0MTI5LCJleHAiOjE1NTg5Mjc3MjksImNpZCI6IjBvYWwwaGlud2tDUHdUSkc0MzU2IiwidWlkIjoiMDB1a3oxd3h4dGJSOTdMSkEzNTYiLCJzY3AiOlsib3BlbmlkIl0sInN1YiI6ImN5cmlsLm1hcmNoaXZlQGdtYWlsLmNvbSJ9.KERMFTjQCsFn0IN9nrQ3-rggk-CxcFiZO2YuIFSDkBXOMEABl4-tRtSCeUzxVES_P2NXj0-on4UooBxx77bgjHLw_7OYRDEH_6BGFBIemZ4fePa_rcH4tEq45CPoRL8199Jxw-v-dAL5jY611SNVECgdAZtLsojfhKCa-0E-eYwYh-Om8OPbmxP_bXbWzeLIvsK2zfG1Er4OyEBJvqDdNnUVRGf1zdQsJ47lRVKGzB_lgPl3GuJohhjbnlIqZS67GeSu-VhZQ_ZE-pch69q4Y4E8Q5c2_Pm_YbCj5evz4e2NeZNu_0tMfEozzwUVY6feFQuzQ55tfGdE38OGYTDOtw",
+			"enabled": true
+		},
+		{
+			"key": "operationId",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "operationPermanenteId",
+			"value": "",
+			"enabled": true
+		}
+	],
+	"name": "My Workspace Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2019-05-27T03:45:32.191Z",
+	"_postman_exported_using": "Postman/7.1.0"
+}
