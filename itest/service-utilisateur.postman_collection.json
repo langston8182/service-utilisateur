@@ -1,0 +1,756 @@
+{
+	"info": {
+		"_postman_id": "55cb15d2-86a0-4b31-a42c-6695a3009988",
+		"name": "service-utilisateur",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "operations-permanentes",
+			"item": [
+				{
+					"name": "Ajoute une operation permanente a un utilisateur",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "739c9050-e5f3-4475-bddf-e976b77c33bc",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"var operationPermanenteId = jsonData.identifiant;",
+									"pm.globals.set(\"operationPermanenteId\", operationPermanenteId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"intitule\": \"Videotron\",\n  \"jour\": 12,\n  \"prix\": 60,\n  \"utilisateurDto\": {\n    \"email\": \"cyril.marchive@gmail.com\",\n    \"identifiant\": 1,\n    \"nom\": \"Marchive\",\n    \"prenom\": \"Cyril\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{host}}/operations-permanentes/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"operations-permanentes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "{{host}}/operations-permanentes/{{operationPermanenteId}}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b295a214-ad26-4a06-96bf-6d8a6b4421d8",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/operations-permanentes/{{operationPermanenteId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"operations-permanentes",
+								"{{operationPermanenteId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "operations",
+			"item": [
+				{
+					"name": "Ajoute une operation a un utilisateur",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3a0863cd-2e4d-4a9e-a04d-0a9cc99122e8",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"var jsonData = pm.response.json();",
+									"var operationId = jsonData.identifiant;",
+									"pm.globals.set(\"operationId\", operationId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"dateOperation\": \"2017-07-21\",\n  \"intitule\": \"Hydro Quebec\",\n  \"prix\": 100,\n  \"utilisateurDto\": {\n    \"email\": \"cyril.marchive@gmail.com\",\n    \"identifiant\": 1,\n    \"nom\": \"Marchive\",\n    \"prenom\": \"Cyril\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{host}}/operations/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"operations",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Supprimer une operation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "34d5f460-e635-402f-af44-ee3a89f25b68",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/operations/{{operationId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"operations",
+								"{{operationId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "utilisateurs",
+			"item": [
+				{
+					"name": "Liste les utilisateurs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2f38f987-b12c-41fb-a0ee-eccf7090855b",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Your test name\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.utilisateurDtos.length).to.eql(2);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "text/html",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}/utilisateurs/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"utilisateurs",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Recuperer un utilisateur par son email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "28779fbd-cbc1-4f38-b0d6-325195af27b1",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Test reponse\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.nom).to.eql(\"Marchive\");",
+									"    pm.expect(jsonData.email).to.eql(\"cyril.marchive@gmail.com\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/utilisateurs?email=cyril.marchive@gmail.com",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"utilisateurs"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "cyril.marchive@gmail.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Creer un utilisateur",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "15d148c5-3a98-42b5-9384-a8d6d55241e9",
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Test reponse et cree variable globale utilisateurId\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    ",
+									"    pm.globals.set(\"utilisateurId\", jsonData.identifiant);",
+									"    ",
+									"    pm.expect(jsonData.nom).to.eql(\"Marchive\");",
+									"    pm.expect(jsonData.prenom).to.eql(\"Leane\");",
+									"    pm.expect(jsonData.email).to.eql(\"leane.marchive@gmail.com\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"leane.marchive@gmail.com\",\n  \"nom\": \"Marchive\",\n  \"prenom\": \"Leane\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/utilisateurs/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"utilisateurs",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modifier un utilisateur",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e0014a96-7228-4fad-ba31-9c3b9ae2a2aa",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"cyril.marchive@gmail.com\",\n  \"identifiant\": 1,\n  \"nom\": \"Marchive\",\n  \"prenom\": \"Anthoine\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/utilisateurs/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"utilisateurs",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": " Supprimer un utilisateur",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "27523594-3ef1-47ca-a002-1947ab844438",
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/utilisateurs/{{utilisateurId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"utilisateurs",
+								"{{utilisateurId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": " Recupere un utilisateur par son identifiant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2691ac58-c4a8-41d9-9397-0e8127da8e5a",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Test reponse\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.identifiant).to.eql(\"1\");",
+									"    pm.expect(jsonData.email).to.eql(\"cyril.marchive@gmail.com\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/utilisateurs/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"utilisateurs",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Liste les operations permanentes d'un utilisateur",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8ff29a19-3680-40ef-be9c-f845a286886b",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/utilisateurs/1/operations-permanentes/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"utilisateurs",
+								"1",
+								"operations-permanentes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Liste les operations d'un utilisateur",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5c021ae3-3ec8-40e9-953b-92319f3448c6",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/utilisateurs/1/operations/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"utilisateurs",
+								"1",
+								"operations",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
