@@ -76,6 +76,69 @@
 					"response": []
 				},
 				{
+					"name": "Modifier une operation permanente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "edbcbf14-b332-49f2-b8a9-6520325af2a6",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"intitule\": \"Salaire\",\n  \"jour\": 12,\n  \"prix\": 1000,\n  \"utilisateurDto\": {\n    \"email\": \"cyril.marchive@gmail.com\",\n    \"identifiant\": 1,\n    \"nom\": \"Marchive\",\n    \"prenom\": \"Cyril\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{host}}/operations-permanentes/{{operationPermanenteId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"operations-permanentes",
+								"{{operationPermanenteId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "{{host}}/operations-permanentes/{{operationPermanenteId}}",
 					"event": [
 						{
@@ -194,6 +257,69 @@
 							"path": [
 								"operations",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modifier une operation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "19bade35-7291-4032-9dff-559473b93d6d",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{token}}",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"value": "Bearer",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"dateOperation\": \"2017-07-21\",\n  \"intitule\": \"Videotron\",\n  \"prix\": 50,\n  \"utilisateurDto\": {\n    \"email\": \"cyril.marchive@gmail.com\",\n    \"identifiant\": 1,\n    \"nom\": \"Marchive\",\n    \"prenom\": \"Cyril\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{host}}/operations/{{operationId}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"operations",
+								"{{operationId}}"
 							]
 						}
 					},
@@ -517,16 +643,16 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"cyril.marchive@gmail.com\",\n  \"identifiant\": 1,\n  \"nom\": \"Marchive\",\n  \"prenom\": \"Anthoine\"\n}"
+							"raw": "{\n  \"email\": \"martine.marchive@gmail.com\",\n  \"nom\": \"Marchive\",\n  \"prenom\": \"Martine\"\n}"
 						},
 						"url": {
-							"raw": "{{host}}/utilisateurs/",
+							"raw": "{{host}}/utilisateurs/{{utilisateurId}}",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"utilisateurs",
-								""
+								"{{utilisateurId}}"
 							]
 						}
 					},
