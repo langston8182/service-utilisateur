@@ -1,6 +1,10 @@
 # Version
 
-- **1.1.0-SNAPSHOT** :
+- **1.1.0** :
+    - Utilisation de l'Idass Okta pour l'authentification et l'autorisation,
+    - Respect du niveau 2 du modèle de maturité (Verbes Delete et Put)
+    - Respect du niveau 3 du modèle de maturité (Hateoas)
+    - Intégration de swagger et du générateur de code (Api et modèle)
 - **1.0.0** : initialisation du projet
 
 # Objectif
