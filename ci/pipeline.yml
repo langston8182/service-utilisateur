@@ -9,7 +9,7 @@ resources:
     type: docker-image
     source:
       repository: langston8182/service-utilisateur
-      tag: 1.0.0-SNAPSHOT
+      tag: 1.1.1-SNAPSHOT
       username: {{dockerhub-username}}
       password: {{dockerhub-password}}
 

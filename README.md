@@ -213,8 +213,8 @@ Ajouter dans le *pom.xml*
 
 #### Préparation du tag
 
-- Modififier le fichier **README** et modifier le tag
-- Modififier le fichier **pom.xml** et modifier le tag
+- Modifier le fichier **README** et modifier le tag
+- Modifier le fichier **pom.xml** et modifier le tag
 - Lancer la commande
 ```sh
 $ mvn clean install
@@ -250,6 +250,7 @@ $ mvn dockerfile:push
 
 - Modifier le fichier **README.md** pour ajouter le prochain *SNAPSHOT*
 - Modifier le fichier **pom.xml** pour modifier le tag avec prochain *SNAPSHOT*
+- Modifier le fichier **pipeline.xml** et modifier le tag avec le prochain *SNAPSHOT*
 - pusher les modification sur github.
 
 
