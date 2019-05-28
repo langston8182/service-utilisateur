@@ -1,5 +1,6 @@
 # Version
 
+- **1.1.1-SNAPSHOT** :
 - **1.1.0** :
     - Utilisation de l'Idass Okta pour l'authentification et l'autorisation,
     - Respect du niveau 2 du modèle de maturité (Verbes Delete et Put)
