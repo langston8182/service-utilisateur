@@ -215,13 +215,24 @@ Ajouter dans le *pom.xml*
 
 - Modifier le fichier **README** et modifier le tag
 - Modifier le fichier **pom.xml** et modifier le tag
+- Modifier le fichier **pipeline.yml** et modifier le tag
+- Modifier le fichier **docker-compose.yml** et modifier le tag
+- Effectuer tous les test d'intégration postman.
+- Effectuer les tests docker\
+Modifier l'adresse ip de la Bdd dans le fichier *application.yml* et mettre celle de docker
+> 172.17.0.1 (docker inspect <id container>)
+```sh
+$ mvn clean install -DskipTests
+$ mvn dockerfile:build
+$ docker-compose up -d
+```
+Effectuer les tests d'integration en modifiant l'adresse ip sur postman (localhost => 172.17.0.1)
 - Lancer la commande
 ```sh
 $ mvn clean install
 ```
 Et vérifier qu'il n'y a aucune erreur.
 
-- Effectuer tous les test d'intégration postman.
 - Aller dans le répertoire `target` et vérifier que le jar est présent avec la bonne version.
 - Pusher sur master les modifications du readme et du pom. avec comme message :
 > Release 1.0.0
@@ -250,7 +261,8 @@ $ mvn dockerfile:push
 
 - Modifier le fichier **README.md** pour ajouter le prochain *SNAPSHOT*
 - Modifier le fichier **pom.xml** pour modifier le tag avec prochain *SNAPSHOT*
-- Modifier le fichier **pipeline.xml** et modifier le tag avec le prochain *SNAPSHOT*
+- Modifier le fichier **pipeline.yml** et modifier le tag avec le prochain *SNAPSHOT*
+- Modifier le fichier **docker-compose.yml** et modifier le tag avec le prochain *SNAPSHOT*
 - pusher les modification sur github.
 
 
