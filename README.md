@@ -267,6 +267,7 @@ Modifier ensuite le fichier *pom.ml*
 # Création d'un tag
 
 #### Préparation du tag
+
 - Modifier le fichier **README** et modifier le tag
 - Modifier le fichier **pom.xml** et modifier le tag
 - Modifier le fichier **pipeline.yml** et modifier le tag
