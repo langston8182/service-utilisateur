@@ -21,7 +21,7 @@
     <repositories>
         <repository>
             <id>maven-group</id>
-            <url>http://localhost:8081/repository/maven-public/</url>
+            <url>http://172.17.0.1:8081/repository/maven-public/</url>
         </repository>
     </repositories>
 
