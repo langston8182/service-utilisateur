@@ -1,5 +1,6 @@
 # Version
 
+- **1.1.2-SNAPSHOT** :
 - **1.1.1** :
     - Correction d'un fix lors de la generation du jar avec maven
 - **1.1.0** :
