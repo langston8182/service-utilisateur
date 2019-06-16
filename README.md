@@ -211,6 +211,59 @@ Ajouter dans le *pom.xml*
 </dependency>
 ```
 
+# Nexus
+
+#### Lancement
+
+Pour démarrer Nexus utiliser l'image docker
+```sh
+$ docker pull sonatype/nexus3
+$ docker run -d -p 8081:8081 --name nexus sonatype/nexus3
+```
+Credentials :
+> admin\
+> admin123
+
+#### Configuration
+Ajuster le fichier *settings.xml* et ajouter les lignes suivantes :
+
+```xml
+<servers>
+    <server>
+      <id>nexus-snapshots</id>
+      <username>admin</username>
+      <password>admin123</password>
+    </server>
+    <server>
+      <id>nexus-releases</id>
+      <username>admin</username>
+      <password>admin123</password>
+    </server>
+</servers>
+
+<mirrors>
+    <mirror>
+      <id>central</id>
+      <name>central</name>
+      <url>http://localhost:8081/repository/maven-public/</url>
+      <mirrorOf>*</mirrorOf>
+    </mirror>
+</mirrors>
+```
+Modifier ensuite le fichier *pom.ml*
+```xml
+<properties>
+    <java.version>11</java.version>
+</properties>
+
+<repositories>
+    <repository>
+        <id>maven-group</id>
+        <url>http://localhost:8081/repository/maven-public/</url>
+    </repository>
+</repositories>
+```  
+
 # Création d'un tag
 
 #### Préparation du tag
@@ -252,12 +305,19 @@ $ git push origin --tags
 
 #### Dockerhub
 
-- Lancer les commandes maven suivantes:
+- Lancer les commandes maven suivantes :
 ```sh
 $ mvn dockerfile:build
 $ mvn dockerfile:push
 ```
 - Vérifier dans dockerhub que le tag a bien été crée.
+
+#### Nexus
+
+- Lancer la commande maven suivante :
+```sh
+$ mvn deploy
+```
 
 #### Préparation à la prochaine release
 
@@ -266,6 +326,11 @@ $ mvn dockerfile:push
 - Modifier le fichier **pipeline.yml** et modifier le tag avec le prochain *SNAPSHOT*
 - Modifier le fichier **docker-compose.yml** et modifier le tag avec le prochain *SNAPSHOT*
 - pusher les modification sur github.
+- Lancer les commandes maven suivantes :
+```sh
+$ mvn dockerfile:build
+$ mvn dockerfile:push
+```
 
 
 # Contributeur
