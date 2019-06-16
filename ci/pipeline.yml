@@ -3,7 +3,7 @@ resources:
     type: git
     source:
       uri: https://github.com/langston8182/service-utilisateur.git
-      branch: master
+      branch: develop
 
   - name: docker-image
     type: docker-image
