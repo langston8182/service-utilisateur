@@ -215,10 +215,15 @@ Ajouter dans le *pom.xml*
 
 #### Lancement
 
+Au premier demarrage de Nexus il faut créer un volume docker
+```sh
+$ docker volume create --name nexus-data
+```
+
 Pour démarrer Nexus utiliser l'image docker
 ```sh
 $ docker pull sonatype/nexus3
-$ docker run -d -p 8081:8081 --name nexus sonatype/nexus3
+$ docker run -d -p 8081:8081 --name nexus -v nexus-data:/nexus-data sonatype/nexus3
 ```
 Credentials :
 > admin\
